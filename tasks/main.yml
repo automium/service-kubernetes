@@ -1,0 +1,17 @@
+---
+
+- import_tasks: consul.yml
+
+- import_tasks: configure.yml
+
+- import_tasks: configure-others.yml
+  tags: others
+
+- import_tasks: configure-bootstrap.yml
+  tags: bootstrap
+
+- import_tasks: copy-cert.yml
+
+- import_tasks: deploy.yml
+
+- import_tasks: post-conf.yml

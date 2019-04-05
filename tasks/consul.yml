@@ -1,0 +1,95 @@
+---
+
+- name: consul | render consul_check.sh
+  set_fact:
+    consul_check_sh: |
+      #!/bin/bash
+      status="$(kubectl --kubeconfig /root/.kube/config get nodes {{ ansible_hostname }} | awk 'NR > 1' | awk '{print $2}')"
+      echo $status
+      if [[ $status == "NotReady" ]]; then
+       echo "Node $HOSTNAME dead"
+       exit 1
+      elif [[ $status == "Ready" ]]; then
+       echo "Node is OK"
+       exit 0
+      else
+        echo not found
+        exit 3
+      fi
+- name: consul | create consul_check.sh
+  copy:
+    content: "{{ consul_check_sh }}"
+    dest: /usr/local/bin/kubernetes_check_node
+    mode: 0555
+    backup: yes
+
+- name: consul | render consul service
+  set_fact:
+    consul_template_render: |
+      - name: "{{ name }}"
+      {% if etcd is sameas true %}
+      - name: "{{ cluster_name }}-etcd"
+        checks:
+          - args: ["/usr/local/bin/etcdctl", "--ca-file=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem", "--endpoint=https://127.0.0.1:2379", "cluster-health", "|", "grep", "{{ ansible_default_ipv4['address']  }}", "|", "grep", "healthy"]
+            interval: "10s"
+      {% endif %}
+      {% if master is sameas true %}
+      - name: "{{ cluster_name }}-kube-master"
+        checks:
+          - args: ["/usr/local/bin/kubernetes_check_node"]
+            interval: "30s"
+      {% endif %}
+      {% if node is sameas true %}
+      - name: "{{ cluster_name }}-kube-node"
+      {% endif %}
+
+- name: consul | convert from string to object
+  set_fact:
+    consul_template: "{{ consul_template_render | from_yaml }}"
+
+- name: consul | create requirement file for consul ansible role
+  copy:
+    content: |
+      - src: entercloudsuite.consul
+        version: 1.0.1
+    dest: /usr/src/cloud/consul_requirement.yml
+  tags: image
+
+- name: consul | ensure roles directory exist
+  file: path=/usr/src/cloud/roles state=directory
+  tags: image
+
+- name: consul | install role entercloudsuite.consul
+  shell: |
+    source venv/bin/activate
+    ansible-galaxy install -r consul_requirement.yml -p roles
+  args:
+    chdir: /usr/src/cloud
+    executable: /bin/bash
+    creates: roles/entercloudsuite.consul
+  tags: image
+
+- name: consul | start consul role
+  include_role: name=entercloudsuite.consul
+  vars:
+    consul_version: 1.4.4
+    consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
+    consul_configs:
+      main:
+        bind_addr: "{{ ansible_default_ipv4['address'] }}"
+        client_addr: 0.0.0.0
+        node_name: "{{ ansible_hostname }}"
+        data_dir: "{{ consul_data_dir }}"
+        encrypt: "{{ consul_encrypt }}"
+        datacenter: "{{ consul_datacenter }}"
+        enable_syslog: true
+        server: false
+        ui: true
+        enable_script_checks: true
+        services: "{{ consul_template }}"
+        rejoin_after_leave: true
+        retry_join:
+          - "{{ consul }}"
+
+- name: consul | restart consul service
+  service: name=consul state=restarted

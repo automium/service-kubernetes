@@ -1,0 +1,27 @@
+---
+
+language: python
+python: 2.7
+sudo: required
+
+services:
+  - docker
+
+stages:
+  - unittest
+  - build
+  - deploy
+  - test
+  - release
+
+jobs:
+  include:
+    - stage: unittest
+      script: bash cicd/unittest.sh
+    - stage: build
+      script: bash cicd/build.sh
+#    - stage: deploy
+#      script: bash cicd/provisioner.sh openstack
+#    - stage: release
+#      script: bash cicd/release.sh
+#      if: branch = master

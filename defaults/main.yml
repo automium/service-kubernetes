@@ -1,0 +1,11 @@
+---
+
+name: name
+cluster_name: cluster_name
+consul: 127.0.0.1
+consul_port: 8500
+consul_datacenter: test
+consul_encrypt: "K8n07GA/ZoANSmJ5zkvgOg=="
+etcd: true
+master: true
+node: true

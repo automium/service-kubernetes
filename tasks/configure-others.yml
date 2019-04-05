@@ -1,0 +1,162 @@
+---
+
+- name: configure-others | create Inventory From Consul
+  command: "/usr/src/cloud/consul_io.py"
+  register: command_output
+
+- name: configure-others | preset variables for others nodes
+  set_fact:
+    cluster_name: "{{ cluster_name }}"
+    dynamic_inventory_from_consul: "{{ command_output.stdout |from_json }}"
+    etcd_name: "{{ cluster_name }}-etcd"
+    kube_master_name: "{{ cluster_name }}-kube-master"
+    kube_node_name: "{{ cluster_name }}-kube-node"
+
+- name: configure-others | preset variables for others nodes
+  set_fact:
+    etcd_name_up: "{{ etcd_name }}_up"
+    kube_master_name_up: "{{ kube_master_name }}_up"
+    kube_node_name_up: "{{ kube_node_name }}_up"
+
+- name: configure-others | print etcd_name kube_master_name kube_node_name
+  debug:
+    msg: "{{ etcd_name }} - {{kube_master_name}} - {{ kube_node_name }}"
+
+- name: configure-others | print etcd_name_up kube_master_name_up kube_node_name_up
+  debug:
+    msg: "{{ kube_node_name_up }} - {{ kube_master_name_up }} - {{ etcd_name_up }}"
+
+- name: configure-others | create list of Host in Cluster ( select host witch name {{cluster_name}} )
+  set_fact:
+    render_host_list_all: |
+      {%- for host in dynamic_inventory_from_consul.all %}
+      {% if cluster_name in dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename %}
+      - {{host}}
+      {% endif %}
+      {% endfor %}
+
+- name: configure-others | configure Variables cluster_host_list_all host_list_etcd host_list_kube_master host_list_kube_node
+  set_fact:
+    cluster_host_list_all: "{{render_host_list_all | from_yaml }}"
+    host_list_etcd: "{{ dynamic_inventory_from_consul[etcd_name] |default('') }}"
+    host_list_kube_master: "{{ dynamic_inventory_from_consul[kube_master_name] | default('') }}"
+    host_list_kube_node: "{{ dynamic_inventory_from_consul[kube_node_name] | default('') }}"
+
+- name: configure-others | configure Variables cluster_host_list_all host_list_etcd host_list_kube_master host_list_kube_node
+  set_fact:
+    host_list_etcd_up: "{{ dynamic_inventory_from_consul[etcd_name_up] |default('') }}"
+    host_list_kube_master_up: "{{ dynamic_inventory_from_consul[kube_master_name_up] | default('') }}"
+    host_list_kube_node_up: "{{ dynamic_inventory_from_consul[kube_node_name_up] | default('') }}"
+
+- name: configure-others | show all consul inventory
+  debug:
+    var: dynamic_inventory_from_consul
+
+- name: configure-others | print node for service
+  debug:
+    var: cluster_host_list_all
+- debug:
+    var: host_list_etcd
+- debug:
+    var: host_list_kube_master
+- debug:
+    var: host_list_kube_node
+
+- name: configure-others | print node for service up
+  debug:
+    var: host_list_etcd_up
+- debug:
+    var: host_list_kube_master_up
+- debug:
+    var: host_list_kube_node_up
+
+- name: configure-others | render dinamic inventory
+  set_fact:
+    dynamic_invertory: |
+      [all]
+      {% if ansible_default_ipv4['address'] in cluster_host_list_all %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}} etcd_member_name={{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }}
+      {% endif %}
+      {% for host in cluster_host_list_all %}
+      {% if host != ansible_default_ipv4['address'] %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename }} ansible_host={{host}} etcd_member_name={{ dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename }}
+      {% endif %}
+      {% endfor %}
+
+      [etcd]
+      {% if ansible_default_ipv4['address'] in host_list_etcd  %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
+      {% endif %}
+      {% for host in host_list_etcd_up %}
+      {% if host != ansible_default_ipv4['address'] %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename }} ansible_host={{host}}
+      {% endif %}
+      {% endfor %}
+
+      [kube-master]
+      {% if ansible_default_ipv4['address'] in host_list_kube_master %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
+      {% endif %}
+      {% for host in host_list_kube_master_up %}
+      {% if host != ansible_default_ipv4['address'] %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename }} ansible_host={{host}}
+      {% endif %}
+      {% endfor %}
+
+      [kube-node]
+      {% if ansible_default_ipv4['address'] in host_list_kube_node %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
+      {% endif %}
+      {% for host in host_list_kube_node_up %}
+      {% if host != ansible_default_ipv4['address'] %}
+      {{ dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename }} ansible_host={{host}}
+      {% endif %}
+      {% endfor %}
+
+      [k8s-cluster:children]
+      kube-master
+      kube-node
+
+- name: configure-others | create ssl/etcd folder
+  file:
+    path: /etc/ssl/etcd
+    state: directory
+    mode: 0755
+
+- name: configure-others | create ssl/etcd/ssl folder
+  file:
+    path: /etc/ssl/etcd/ssl
+    state: directory
+    mode: 0755
+
+- name: configure-others | copy cets from ETCD
+  synchronize:
+    src: root@{{ cluster_name }}-etcd.service.automium.consul:/etc/ssl/etcd/ssl/{{ item }}
+    dest: /etc/ssl/etcd/ssl/
+    rsync_opts: "-av"
+  with_items:
+    - ca-key.pem
+    - ca.pem
+
+- name: configure-others | create kubernetes folder
+  file:
+    path: /etc/kubernetes/
+    state: directory
+    mode: 0755
+
+- name: configure-others | create kubernetes/ssl folder
+  file:
+    path: /etc/kubernetes/ssl
+    state: directory
+    mode: 0755
+
+- name: configure-others | copy kubernetes certs
+  synchronize:
+    src: root@{{ cluster_name }}-kube-master.service.automium.consul:/etc/kubernetes/ssl/{{ item }}
+    dest: /etc/kubernetes/ssl/
+    rsync_opts: "-av"
+  with_items:
+    - ca.crt
+    - ca.key
+    - sa.key
+    - sa.pub

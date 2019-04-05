@@ -1,0 +1,41 @@
+---
+
+- name: run the main role
+  hosts: 127.0.0.1
+  roles:
+    - role: ansible-kubernetes
+  post_tasks:
+    - name: install local kubernetes requirements
+      shell: |
+        source venv/bin/activate
+        ansible-playbook --connection=local -i inventory/local/hosts.ini cluster.yml -e download_localhost=true -e kube_version=v1.12.6
+      args:
+        chdir: /usr/src/cloud/kubespray
+        executable: /bin/bash
+      tags: image
+    - name: reset state of all kubernetes components
+      shell: |
+        source venv/bin/activate
+        ansible-playbook --connection=local -i inventory/local/hosts.ini reset.yml -e reset_confirmation=yes
+      args:
+        chdir: /usr/src/cloud/kubespray
+        executable: /bin/bash
+      tags: image
+
+- name: clean up image
+  hosts: 127.0.0.1
+  tags: image
+  tasks:
+    - name: stop consul
+      service: name=consul state=stopped enabled=no
+    - name: clean /opt/consul/data
+      file: path=/opt/consul/data state=absent
+    - name: cleanup image
+      shell: |
+        cloud-init clean -l -s
+        rm -rf /var/lib/cloud
+        rm -rf /run/cloud-init
+        rm -rf /home/ubuntu/.ssh/authorized_keys
+        rm -rf /root/.ssh/authorized_keys
+      args:
+        removes: /var/lib/cloud

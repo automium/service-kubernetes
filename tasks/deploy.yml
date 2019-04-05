@@ -1,0 +1,34 @@
+---
+
+- name: deploy | ensure virtualenv requirements are installed
+  package: name="{{ item }}"
+  with_items:
+    - libffi-dev
+    - libssl-dev
+    - python-minimal
+    - python-pip
+    - virtualenv
+  tags: image
+
+- name: deploy | checkout kubespray repo
+  git:
+    repo: 'https://github.com/kubernetes-sigs/kubespray'
+    dest: /usr/src/cloud/kubespray
+    version: master
+    update: no
+  tags: image
+
+- name: deploy | install python requirements
+  pip:
+    requirements: "/usr/src/cloud/kubespray/requirements.txt"
+    virtualenv: "/usr/src/cloud/kubespray/venv"
+  tags: image
+
+- name: deploy | kubespray
+  shell: |
+    export HOME=/root
+    source venv/bin/activate
+    ansible-playbook --connection=local --limit {{ ansible_hostname }} -i /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/hosts.ini cluster.yml >> /var/log/cloud-scripts.log 2>&1
+  args:
+    chdir: /usr/src/cloud/kubespray
+    executable: /bin/bash

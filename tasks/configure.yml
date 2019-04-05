@@ -1,0 +1,63 @@
+---
+
+- name: configure | create kubespray dir
+  file:
+    path: /usr/src/cloud/kubespray
+    state: directory
+    mode: 0755
+  tags: image
+
+- name: configure | git clone kubespray
+  git:
+    repo: https://github.com/kubernetes-sigs/kubespray.git
+    version: master
+    dest: /usr/src/cloud/kubespray
+  tags: image
+
+- name: install pip
+  package: name=python-pip
+  tags: image
+
+- name: configure | install consul.py
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - python-consul==1.0.0
+    - netaddr
+  tags: image
+
+- name: configure | print env variales cluster_name
+  debug:
+    msg: "{{ cluster_name }}"
+
+- name: configure | print env name
+  debug:
+    msg: "{{ name }}"
+
+- name: configure | render consul_io.ini
+  set_fact:
+    consul_io_ini: |
+      [consul]
+      bulk_load = false
+      datacenter = {{ consul_datacenter }}
+      url = http://{{ consul }}:{{ consul_port }}
+      servers_suffix = ""
+      suffixes = true
+      tags = false
+      kv_groups=ansible/groups
+      kv_metadata=ansible/metadata
+      availability = false
+      available_suffix = _up
+      unavailable_suffix = _down
+
+- name: configure | create consul_io.ini
+  copy:
+    content: "{{ consul_io_ini }}"
+    dest: /usr/src/cloud/consul_io.ini
+
+- name: configure | install consul_io.py
+  get_url:
+    url: https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/consul_io.py
+    mode: 600
+    dest: /usr/src/cloud/consul_io.py
+  tags: image

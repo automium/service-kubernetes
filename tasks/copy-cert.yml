@@ -1,0 +1,17 @@
+---
+
+- name: copy-cert | copy sample inventory to inventory/{{ cluster_name }}
+  synchronize:
+    src: /usr/src/cloud/kubespray/inventory/sample/
+    dest: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}
+
+- name: copy-cert | copy dynamic inventory to file
+  copy:
+    content: "{{ dynamic_invertory }}"
+    dest: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/hosts.ini
+
+- name: copy-cert | set ignore_assert_errors to true
+  lineinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    regexp: '^#ignore_assert_errors: false'
+    line: 'ignore_assert_errors: true'
