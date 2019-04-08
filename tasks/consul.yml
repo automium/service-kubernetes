@@ -26,7 +26,7 @@
 - name: consul | render consul service
   set_fact:
     consul_template_render: |
-      - name: "{{ name }}"
+      - name: "{{ ansible_hostname }}"
       {% if etcd is sameas true %}
       - name: "{{ cluster_name }}-etcd"
         checks:
@@ -70,7 +70,9 @@
   tags: image
 
 - name: consul | start consul role
-  include_role: name=entercloudsuite.consul
+  include_role:
+    name: entercloudsuite.consul
+    public: yes
   vars:
     consul_version: 1.4.4
     consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"

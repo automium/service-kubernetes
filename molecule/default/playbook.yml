@@ -33,6 +33,7 @@
     - name: cleanup image
       shell: |
         cloud-init clean -l -s
+        rm /var/log/cloud-scripts.log
         rm -rf /var/lib/cloud
         rm -rf /run/cloud-init
         rm -rf /home/ubuntu/.ssh/authorized_keys
