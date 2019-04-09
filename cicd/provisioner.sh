@@ -44,7 +44,7 @@ variable "consul_datacenter" { default = "automium" }
 
 # service config
 
-variable "provisioner_role" { default = "https://github.com/automium/ansible-kubernetes" }
+variable "provisioner_role" { default = "https://github.com/automium/service-kubernetes" }
 variable "provisioner_role_version" { default = "master" }
 variable "master" { default = "true" }
 variable "node" { default = "true" }

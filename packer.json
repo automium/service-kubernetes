@@ -19,7 +19,7 @@
   "provisioners": [
     {
       "destination": "/tmp/",
-      "source": "/home/travis/build/automium/ansible-kubernetes",
+      "source": "/home/travis/build/automium/service-kubernetes",
       "type": "file"
     },
     {

@@ -1,7 +1,7 @@
 Ansible Role: kubernetes 
 ======================================
 
-[![Build Status](https://travis-ci.org/automium/ansible-kubernetes.svg?branch=master)](https://travis-ci.org/automium/ansible-kubernetes)
+[![Build Status](https://travis-ci.org/automium/service-kubernetes.svg?branch=master)](https://travis-ci.org/automium/service-kubernetes)
 [![Galaxy](https://img.shields.io/badge/galaxy-automium.kubernetes-blue.svg?style=flat-square)](https://galaxy.ansible.com/automium/kubernetes)  
 
 Installs kubernetes on Ubuntu 16.04 (Xenial)
@@ -20,7 +20,7 @@ Run with default vars:
 
     - hosts: all
       roles:
-        - { role: ansible-kubernetes }
+        - { role: service-kubernetes }
 
 ## Testing
 
@@ -40,7 +40,7 @@ Destroy the Docker container with the command `molecule destroy`.
 
 To run all the steps with just one command, run `molecule test`. 
 
-In order to run the role targeting a VM, use the playbook_deploy.yml file for example with the following command: `ansible-playbook ansible-kubernetes/molecule/default/playbook_deploy.yml -i VM_IP_OR_FQDN, -u ubuntu --private-key private.pem`.  
+In order to run the role targeting a VM, use the playbook_deploy.yml file for example with the following command: `ansible-playbook service-kubernetes/molecule/default/playbook_deploy.yml -i VM_IP_OR_FQDN, -u ubuntu --private-key private.pem`.  
 
 ## License
 

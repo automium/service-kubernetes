@@ -3,7 +3,7 @@
 - name: run the main role
   hosts: 127.0.0.1
   roles:
-    - role: ansible-kubernetes
+    - role: service-kubernetes
   post_tasks:
     - name: install local kubernetes requirements
       shell: |

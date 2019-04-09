@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: ansible-kubernetes
+  role_name: service-kubernetes
   author: Jacopo Secchiero
   description: Playbook for kubernetes.
   company: Enter srl

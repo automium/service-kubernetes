@@ -4,6 +4,6 @@ services:
   molecule:
     image: fminzoni/molecule
     volumes:
-      - .:/root/src/ansible-kubernetes
+      - .:/root/src/service-kubernetes
       - /var/run/docker.sock:/var/run/docker.sock
-    working_dir: /root/src/ansible-kubernetes
+    working_dir: /root/src/service-kubernetes
