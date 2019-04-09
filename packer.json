@@ -29,7 +29,7 @@
     }
   ],
   "variables": {
-    "source_image": "aec7fe62-4db0-4956-9a1d-4e575a87ddfc",
+    "source_image": "d034f3bd-2bce-4579-99c1-0df39c9afe04",
     "image_name": "kubernetes-{{env `TRAVIS_BRANCH`}}-{{env `TRAVIS_BUILD_NUMBER`}}",
     "instance_name": "kubernetes",
     "flavor":  "e3standard.x4",
