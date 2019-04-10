@@ -20,6 +20,8 @@ jobs:
       script: bash cicd/unittest.sh
     - stage: build
       script: bash cicd/build.sh
+    - stage: build
+      script: bash cicd/container.sh
 #    - stage: deploy
 #      script: bash cicd/provisioner.sh openstack
 #    - stage: release
