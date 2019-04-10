@@ -18,8 +18,8 @@
   ],
   "provisioners": [
     {
-      "destination": "/tmp/",
-      "source": "/home/travis/build/automium/service-kubernetes",
+      "destination": "/tmp/service-kubernetes",
+      "source": "{{ pwd }}",
       "type": "file"
     },
     {
@@ -33,7 +33,7 @@
     "image_name": "kubernetes-{{env `TRAVIS_BRANCH`}}-{{env `TRAVIS_BUILD_NUMBER`}}",
     "instance_name": "kubernetes",
     "flavor":  "e3standard.x4",
-    "region":  "nl-ams1",
+    "region":  "{{env `OS_REGION_NAME`}}",
     "tenant":  "{{env `OS_TENANT`}}",
     "username":  "{{env `OS_USERNAME`}}",
     "password":  "{{env `OS_PASSWORD`}}",

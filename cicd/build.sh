@@ -5,12 +5,14 @@ set -x
 
 # Prerequisuite
 
+sudo apt-get update
+sudo apt-get install unzip wget python-pip -y
+pip install --upgrade pip
 pip install ansible==2.7.10
 wget -O packer.zip https://releases.hashicorp.com/packer/1.3.1/packer_1.3.1_linux_amd64.zip
 unzip -o packer.zip
 sudo apt-get update
 sudo apt-get install qemu-utils -y
-pip install --upgrade pip
 pip install python-swiftclient==3.6.0 python-openstackclient==3.17.0
 
 # Check integrity of ovftool
@@ -40,12 +42,8 @@ mkdir openstack
 mv $IMAGE_NAME.qcow2 openstack/$IMAGE_NAME.qcow2
 openstack object create automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
 
-# Print something while waiting the end of the jobs
-# or travis will kill this in 10m
-while [ -n "$(jobs)"  ]; do
-  echo -en "\a"
-  sleep 5
-done
+# TODO travis will kill this in 10m
+wait
 
 # Upload image for vcd to swift (link to vsphere)
 touch temp && swift upload automium-catalog-images --object-name vcd/$IMAGE_NAME.ova -H "X-Object-Manifest: automium-catalog-images/vsphere/$IMAGE_NAME.ova" temp
