@@ -51,7 +51,7 @@
   copy:
     content: |
       - src: entercloudsuite.consul
-        version: 1.0.1
+        version: 1.0.2
     dest: /usr/src/cloud/consul_requirement.yml
   tags: image
 
