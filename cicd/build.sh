@@ -39,6 +39,13 @@ openstack object create automium-catalog-images vsphere/$IMAGE_NAME.ova &
 mkdir openstack
 mv $IMAGE_NAME.qcow2 openstack/$IMAGE_NAME.qcow2
 openstack object create automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
-wait
+
+# Print something while waiting the end of the jobs
+# or travis will kill this in 10m
+while [ -n "$(jobs)"  ]; do
+  echo -en "\a"
+  sleep 5
+done
+
 # Upload image for vcd to swift (link to vsphere)
 touch temp && swift upload automium-catalog-images --object-name vcd/$IMAGE_NAME.ova -H "X-Object-Manifest: automium-catalog-images/vsphere/$IMAGE_NAME.ova" temp
