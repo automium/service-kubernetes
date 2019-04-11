@@ -27,19 +27,19 @@
   set_fact:
     consul_template_render: |
       - name: "{{ identity }}"
-      {% if etcd is sameas true %}
+      {% if etcd == 'true' %}
       - name: "{{ cluster_name }}-etcd"
         checks:
           - args: ["/usr/local/bin/etcdctl", "--ca-file=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem", "--endpoint=https://127.0.0.1:2379", "cluster-health", "|", "grep", "{{ ansible_default_ipv4['address']  }}", "|", "grep", "healthy"]
             interval: "10s"
       {% endif %}
-      {% if master is sameas true %}
+      {% if master == 'true' %}
       - name: "{{ cluster_name }}-kube-master"
         checks:
           - args: ["/usr/local/bin/kubernetes_check_node"]
             interval: "30s"
       {% endif %}
-      {% if node is sameas true %}
+      {% if node == 'true' %}
       - name: "{{ cluster_name }}-kube-node"
       {% endif %}
 
