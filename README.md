@@ -25,6 +25,7 @@ cd provisioner
 
 edit, build and test locally
 ```
-docker-compose -f docker-compose.dev.yml build
+docker-compose pull
+docker-compose -f docker-compose.dev.yml build --no-cache --pull
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm deploy
 ```
