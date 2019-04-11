@@ -1,8 +1,8 @@
 version: '3'
 services:
   deploy:
-    image: automium\service-kubernetes
-    container_name: automium-kubernetes
+    image: automium/service-kubernetes
+    container_name: automium-service-kubernetes
     logging:
       driver: "json-file"
       options:

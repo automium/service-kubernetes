@@ -1,6 +1,7 @@
 version: '3'
 services:
   deploy:
-    image: automiumservice-kubernetes
+    container_name: automium-service-kubernetes-dev
+    image: automium-service-kubernetes-dev
     build:
       context: .
