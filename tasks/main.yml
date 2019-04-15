@@ -10,6 +10,12 @@
 - import_tasks: configure-bootstrap.yml
   tags: bootstrap
 
+- import_tasks: configure-others.yml
+  when:
+    - etcd == "false"
+    - master == "false"
+    - node == "true"
+
 - import_tasks: copy-cert.yml
 
 - import_tasks: deploy.yml
