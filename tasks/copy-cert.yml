@@ -18,7 +18,7 @@
 
 - name: add vars to etcd
   tags:
-  - others
+    - others
   blockinfile:
     path: /usr/src/cloud/kubespray/inventory/{{ lookup('env','cluster_name') }}/group_vars/etcd.yml
     block: |
