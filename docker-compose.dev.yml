@@ -5,3 +5,5 @@ services:
     image: automium-service-kubernetes-dev
     build:
       context: .
+    volumes:
+      - "/tmp/${NAME}_terraform:/usr/src/provisioner/.terraform"
