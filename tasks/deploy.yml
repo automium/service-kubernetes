@@ -12,9 +12,9 @@
 
 - name: deploy | checkout kubespray repo
   git:
-    repo: 'https://github.com/kubernetes-sigs/kubespray'
+    repo: "https://github.com/kubernetes-sigs/kubespray"
     dest: /usr/src/cloud/kubespray
-    version: master
+    version: "{{ kubespray_version }}"
     update: no
   tags: image
 
