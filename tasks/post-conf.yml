@@ -65,9 +65,8 @@
     permissions: r
     recursive: yes
     state: present
-
-# fact etcd, master, node set in 10-consul.yaml line 32 - 34
-- name: create leave cluster service
+  # fact etcd, master, node set in 10-consul.yaml line 32 - 34
+- name: post-conf | create leave cluster service
   set_fact:
     cluster_leave: |
       #!/bin/bash
@@ -82,7 +81,7 @@
       {% endif %}
       echo end scrpt
 
-- name: Copy leave script to destination
+- name: post-conf | copy leave script to destination
   copy:
     content: "{{ cluster_leave }}"
     dest: /usr/local/bin/remove_node.sh
@@ -103,7 +102,7 @@
       [Install]
       WantedBy=multi-user.target
 
-- name: Copy cluster_leave
+- name: post-conf | copy cluster_leave
   copy:
     content: "{{ cluster_leave_systemd }}"
     dest: /etc/systemd/system/cluster-leave.service
