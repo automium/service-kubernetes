@@ -7,13 +7,6 @@
     mode: 0755
   tags: image
 
-- name: configure | git clone kubespray
-  git:
-    repo: https://github.com/kubernetes-sigs/kubespray.git
-    version: master
-    dest: /usr/src/cloud/kubespray
-  tags: image
-
 - name: install pip
   package: name=python-pip
   tags: image
