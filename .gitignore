@@ -14,4 +14,4 @@ ansible-role-*
 *.swo
 *.swn
 config.tf
-.env
+*.env
