@@ -22,6 +22,10 @@
 
 - import_tasks: configure-cluster-leave.yaml
 
-- import_tasks: post-conf.yml
+- import_tasks: post-conf-master-etcd.yml
   when:
     - etcd == "true" or master == "true"
+
+- import_tasks: post-conf-node.yml
+  when:
+    - node == "true"
