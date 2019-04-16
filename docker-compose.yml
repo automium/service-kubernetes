@@ -10,5 +10,5 @@ services:
       options:
         max-size: "50m"
     env_file:
-      - ${CONFIG}
+      - ${CONFIG:-.env}
     network_mode: host
