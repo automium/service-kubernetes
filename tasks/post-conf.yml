@@ -1,5 +1,4 @@
 ---
-
 - name: post-conf | grant access to folder /etc/ssl/etcd consul user
   acl:
     path: /etc/ssl/etcd
@@ -7,7 +6,6 @@
     etype: user
     permissions: rx
     state: present
-
 - name: post-conf | grant access to folder /etc/ssl/etcd/ssl consul user
   acl:
     path: /etc/ssl/etcd/ssl
@@ -15,7 +13,6 @@
     etype: user
     permissions: rx
     state: present
-
 - name: post-conf | set clustername
   set_fact:
     cluster_name: "{{ cluster_name }}"
@@ -39,7 +36,6 @@
     etype: user
     permissions: rx
     state: present
-
 - name: post-conf | grant access to folder /root/.kube
   acl:
     path: /root/.kube
@@ -47,7 +43,6 @@
     etype: user
     permissions: rx
     state: present
-
 - name: post-conf | grant access to folder /root/.kube/config
   acl:
     path: "/root/.kube/config"
@@ -56,7 +51,6 @@
     permissions: r
     recursive: yes
     state: present
-
 - name: post-conf | allow access to kubeconfig
   acl:
     path: "/root/.kube/config"
@@ -65,52 +59,3 @@
     permissions: r
     recursive: yes
     state: present
-  # fact etcd, master, node set in 10-consul.yaml line 32 - 34
-- name: post-conf | create leave cluster service
-  set_fact:
-    cluster_leave: |
-      #!/bin/bash
-      echo remove {{ansible_hostname}} from kubernetes cluster
-      /usr/local/bin/kubectl --kubeconfig=/root/.kube/config delete node {{ansible_hostname}}
-      echo get RaftID
-      {% if etcd %}
-      REMOVE_NODE=$(/usr/local/bin/etcdctl --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem --key-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem --endpoint=https://127.0.0.1:2379 member list | grep {{ansible_hostname}} | awk {'print $1'} | tr -d :)
-      echo remove $REMOVE_NODE from etcd cluster
-      /usr/local/bin/etcdctl --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem --key-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem --endpoint=https://127.0.0.1:2379 member remove $REMOVE_NODE
-      echo remove node $REMOVE_NODE from etcd cluster
-      {% endif %}
-      echo end scrpt
-
-- name: post-conf | copy leave script to destination
-  copy:
-    content: "{{ cluster_leave }}"
-    dest: /usr/local/bin/remove_node.sh
-    mode: 0755
-
-- name: template systemd unit
-  set_fact:
-    cluster_leave_systemd: |
-      [Unit]
-      Description=Remove node "%H" from cluster
-      Before=halt.target shutdown.target
-
-      [Service]
-      ExecStart=/bin/true
-      ExecStop=/usr/local/bin/remove_node.sh
-      RemainAfterExit=yes
-
-      [Install]
-      WantedBy=multi-user.target
-
-- name: post-conf | copy cluster_leave
-  copy:
-    content: "{{ cluster_leave_systemd }}"
-    dest: /etc/systemd/system/cluster-leave.service
-    mode: 0655
-
-- name: activate and enable cluster-leave.service
-  systemd:
-    name: cluster-leave.service
-    state: started
-    daemon_reload: yes
-    enabled: yes

@@ -20,4 +20,8 @@
 
 - import_tasks: deploy.yml
 
+- import_tasks: configure-cluster-leave.yaml
+
 - import_tasks: post-conf.yml
+  when:
+    - etcd == "true" or master == "true"
