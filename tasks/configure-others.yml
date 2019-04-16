@@ -154,3 +154,5 @@
     - ca.key
     - sa.key
     - sa.pub
+  when:
+    - etcd == "true" or master == "true"
