@@ -8,4 +8,4 @@ services:
     build:
       context: .
     volumes:
-      - "/tmp/${CONFIG}_terraform:/usr/src/provisioner/.terraform"
+      - "/tmp/${CONFIG:-.env}_terraform:/usr/src/provisioner/.terraform"
