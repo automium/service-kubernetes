@@ -19,9 +19,9 @@ jobs:
     - stage: unittest
       script: bash cicd/unittest.sh
     - stage: build
-      script: bash cicd/build.sh
+      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/build.sh; fi'
     - stage: build
-      script: bash cicd/container.sh
+      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/container.sh; fi'
 #    - stage: deploy
 #      script: bash cicd/provisioner.sh openstack
 #    - stage: release
