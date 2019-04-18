@@ -18,6 +18,12 @@
     update: no
   tags: image
 
+- name: Apply pach
+  patch:
+    src: kubespray.patch
+    dest: /usr/src/cloud/kubespray/roles/etcd/tasks/gen_certs_script.yml
+    state: present
+
 - name: deploy | install python requirements
   pip:
     requirements: "/usr/src/cloud/kubespray/requirements.txt"

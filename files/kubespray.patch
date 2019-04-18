@@ -1,0 +1,12 @@
+diff --git a/roles/etcd/tasks/gen_certs_script.yml b/roles/etcd/tasks/gen_certs_script.yml
+index 4d94060b..63208d54 100644
+--- a/roles/etcd/tasks/gen_certs_script.yml
++++ b/roles/etcd/tasks/gen_certs_script.yml
+@@ -68,7 +68,6 @@
+   delegate_to: "{{groups['etcd'][0]}}"
+   when:
+     - gen_certs|default(false)
+-    - inventory_hostname == groups['etcd'][0]
+   notify: set etcd_secret_changed
+ 
+ - name: Gen_certs | Gather etcd master certs
