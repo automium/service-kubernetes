@@ -94,6 +94,8 @@
       [Unit]
       Description=Remove node "%H" from cluster
       Before=halt.target shutdown.target
+      After=etcd.service
+      RequiredBy=etcd.service
 
       [Service]
       ExecStart=/bin/true
