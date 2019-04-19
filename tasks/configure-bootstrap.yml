@@ -36,7 +36,7 @@
 - debug:
     var: host_list_etcd
 - debug:
-    var: host_list_kube_master  
+    var: host_list_kube_master
 - debug:
     var: host_list_kube_node
 
