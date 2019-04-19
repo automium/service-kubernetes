@@ -16,7 +16,7 @@
     regexp: '^#ignore_assert_errors: false'
     line: 'ignore_assert_errors: true'
 
-- name: add vars to etcd
+- name: copy-cert | set ignore_assert_errors to true
   tags:
     - others
   blockinfile:
