@@ -1,73 +1,6 @@
 ---
-
-- name: post-conf | grant access to folder /etc/ssl/etcd consul user
-  acl:
-    path: /etc/ssl/etcd
-    entity: consul
-    etype: user
-    permissions: rx
-    state: present
-
-- name: post-conf | grant access to folder /etc/ssl/etcd/ssl consul user
-  acl:
-    path: /etc/ssl/etcd/ssl
-    entity: consul
-    etype: user
-    permissions: rx
-    state: present
-
-- name: post-conf | set clustername
-  set_fact:
-    cluster_name: "{{ cluster_name }}"
-
-- name: post-conf | grant access multiple file
-  acl:
-    path: "{{item}}"
-    entity: consul
-    etype: user
-    permissions: rx
-    state: present
-  with_items:
-    - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem
-    - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem
-    - /etc/ssl/etcd/ssl/ca.pem
-
-- name: post-conf | grant access to folder /root/
-  acl:
-    path: /root
-    entity: consul
-    etype: user
-    permissions: rx
-    state: present
-
-- name: post-conf | grant access to folder /root/.kube
-  acl:
-    path: /root/.kube
-    entity: consul
-    etype: user
-    permissions: rx
-    state: present
-
-- name: post-conf | grant access to folder /root/.kube/config
-  acl:
-    path: "/root/.kube/config"
-    entity: consul
-    etype: user
-    permissions: r
-    recursive: yes
-    state: present
-
-- name: post-conf | allow access to kubeconfig
-  acl:
-    path: "/root/.kube/config"
-    entity: consul
-    etype: user
-    permissions: r
-    recursive: yes
-    state: present
-
 # fact etcd, master, node set in 10-consul.yaml line 32 - 34
-- name: create leave cluster service
+- name: post-conf | create leave cluster service
   set_fact:
     cluster_leave: |
       #!/bin/bash
@@ -81,13 +14,11 @@
       echo remove node $REMOVE_NODE from etcd cluster
       {% endif %}
       echo end scrpt
-
-- name: Copy leave script to destination
+- name: post-conf | copy leave script to destination
   copy:
     content: "{{ cluster_leave }}"
     dest: /usr/local/bin/remove_node.sh
     mode: 0755
-
 - name: template systemd unit
   set_fact:
     cluster_leave_systemd: |
@@ -104,13 +35,11 @@
 
       [Install]
       WantedBy=multi-user.target
-
-- name: Copy cluster_leave
+- name: post-conf | copy cluster_leave
   copy:
     content: "{{ cluster_leave_systemd }}"
     dest: /etc/systemd/system/cluster-leave.service
     mode: 0655
-
 - name: activate and enable cluster-leave.service
   systemd:
     name: cluster-leave.service

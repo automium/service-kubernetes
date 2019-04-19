@@ -1,0 +1,61 @@
+---
+- name: post-conf | grant access to folder /etc/ssl/etcd consul user
+  acl:
+    path: /etc/ssl/etcd
+    entity: consul
+    etype: user
+    permissions: rx
+    state: present
+- name: post-conf | grant access to folder /etc/ssl/etcd/ssl consul user
+  acl:
+    path: /etc/ssl/etcd/ssl
+    entity: consul
+    etype: user
+    permissions: rx
+    state: present
+- name: post-conf | set clustername
+  set_fact:
+    cluster_name: "{{ cluster_name }}"
+
+- name: post-conf | grant access multiple file
+  acl:
+    path: "{{item}}"
+    entity: consul
+    etype: user
+    permissions: rx
+    state: present
+  with_items:
+    - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem
+    - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem
+    - /etc/ssl/etcd/ssl/ca.pem
+
+- name: post-conf | grant access to folder /root/
+  acl:
+    path: /root
+    entity: consul
+    etype: user
+    permissions: rx
+    state: present
+- name: post-conf | grant access to folder /root/.kube
+  acl:
+    path: /root/.kube
+    entity: consul
+    etype: user
+    permissions: rx
+    state: present
+- name: post-conf | grant access to folder /root/.kube/config
+  acl:
+    path: "/root/.kube/config"
+    entity: consul
+    etype: user
+    permissions: r
+    recursive: yes
+    state: present
+- name: post-conf | allow access to kubeconfig
+  acl:
+    path: "/root/.kube/config"
+    entity: consul
+    etype: user
+    permissions: r
+    recursive: yes
+    state: present

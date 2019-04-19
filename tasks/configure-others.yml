@@ -107,7 +107,7 @@
       {% if ansible_default_ipv4['address'] in host_list_kube_node %}
       {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
       {% endif %}
-      {% for host in host_list_kube_node_up %}
+      {% for host in host_list_kube_node %}
       {% if host != ansible_default_ipv4['address'] %}
       {{ dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename }} ansible_host={{host}}
       {% endif %}
@@ -154,3 +154,5 @@
     - ca.key
     - sa.key
     - sa.pub
+  when:
+    - etcd == "true" or master == "true"
