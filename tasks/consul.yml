@@ -38,19 +38,42 @@
         checks:
           - args: ["/usr/local/bin/kubernetes_check_node"]
             interval: "30s"
+      - name: "{{ cluster_name }}-kube-apiserver"
+        check:
+          - tcp: localhost:6443
+            interval: 10s
+            timeout: 3s
+      - name: "{{ cluster_name }}-kube-schedule"
+        check:
+          - tcp: localhost:10251
+            interval: 10s
+            timeout: 3s
+      - name: "{{ cluster_name }}-kube-controll"
+        check:
+          - tcp: localhost:10252
+            interval: 10s
+            timeout: 3s
       {% endif %}
-      {% if node == 'true' %}
-      - name: "{{ cluster_name }}-kube-node"
+      {% if node == 'true' or master == 'true' %}
       - name: "{{ cluster_name }}-kubelet"
         check:
           - tcp: localhost:10250
             interval: 10s
             timeout: 1s
+      - name: "{{ cluster_name }}-kubelet-health"
+        check:
+          - http: http://localhost:10248/healthz
+            method: "GET"
+            interval: 30s
+            timeout: 5s
       - name: "{{ cluster_name }}-kube-proxy"
         check:
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
+      {% endif %}
+      {% if node == 'true' %}
+      - name: "{{ cluster_name }}-kube-node"
       {% endif %}
 
 - name: consul | convert from string to object
