@@ -1,3 +1,12 @@
 ---
+- name: post-conf-master-etcd | remove kubernetes loadbalancer address into hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: ".*{{ apiserver_loadbalancer_domain_name }}$"
+    line: "{{ loadbalancer_apiserver_address }} {{ apiserver_loadbalancer_domain_name }}"
+    state: absent
+    backup: yes
+    unsafe_writes: yes
+
 - name: post-conf-node | reboot
   command: /sbin/shutdown -r +1

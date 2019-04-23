@@ -72,3 +72,19 @@
       [k8s-cluster:children]
       kube-master
       kube-node
+# record remove in master-postconf
+- name: configure-bootstrap | Create "{{ cluster_name }}-etcd.service.automium.consul" record in /etc/hosts for consul boostrap
+  lineinfile:
+    state: present
+    path: /etc/hosts
+    line: "{{ ansible_default_ipv4['address'] }} {{ cluster_name }}-etcd.service.automium.consul"
+  when:
+    - etcd == "true"
+
+- name: configure-bootstrap | Create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
+  lineinfile:
+    state: present
+    path: /etc/hosts
+    line: "{{ ansible_default_ipv4['address'] }} {{ cluster_name }}-kube-apiserver.service.automium.consul"
+  when:
+    - master == "true"
