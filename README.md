@@ -3,31 +3,30 @@ Automium Service: kubernetes
 
 [![Build Status](https://travis-ci.org/automium/service-kubernetes.svg?branch=master)](https://travis-ci.org/automium/service-kubernetes)
 
-## example
+this project is meant to be used by [automium provisioner](https://github.com/automium/provisioner)
 
-create a .env file, see .env.example
+## variables
 
-`PROVISIONER_ROLE` and `PROVISIONER_ROLE_VERSION` define which role and which version is used to be deployed
+### MASTER
 
-then deploy it
+if true configure the instance as a kubernetes master node
+
+### NODE
+
+if true configure the instance as a kubernetes worker node
+
+### ETCD
+
+if true configure the instance as a etcd node
+
+## usage
+
+setup service var:
 ```
-export CONFIG=.env
-docker-compose pull
-docker-compose run --rm deploy
+export SERVICE=automium/service-kubernetes
+export MASTER=true
+export NODE=true
+export ETCD=true
 ```
 
-## contribute
-
-download the repo
-```
-git clone https://github.com/automium/provisioner.git
-cd provisioner
-```
-
-edit, build and test locally
-```
-export CONFIG=.env
-docker pull automium/service-provisioner
-docker-compose -f docker-compose.dev.yml build --no-cache --pull
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm deploy
-```
+and follow the guide [here](https://github.com/automium/provisioner/blob/master/README.md#guide)
