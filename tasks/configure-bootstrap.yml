@@ -1,7 +1,7 @@
 ---
 
 - name: configure-bootstrap | create inventory from consul
-  command: "/usr/src/cloud/consul_io.py"
+  command: "/usr/src/cloud/venv/bin/python /usr/src/cloud/consul_io.py"
   register: command_output
 
 - name: configure-bootstrap | preset variables for bootstrap node
