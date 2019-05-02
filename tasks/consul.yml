@@ -23,14 +23,25 @@
     mode: 0555
     backup: yes
 
+- name: consul | create etcd_consul_check.py
+  copy:
+    src: etcd_consul_check.py
+    dest: /usr/local/bin/etcd_consul_check.py
+    mode: 0555
+    backup: yes
+
 - name: consul | render consul service
   set_fact:
     consul_template_render: |
       - name: "{{ identity }}"
       {% if etcd == 'true' %}
-      - name: "{{ cluster_name }}-etcd"
+      - name: "{{ cluster_name }}-etcd_old"
         checks:
           - args: ["/usr/local/bin/etcdctl", "--ca-file=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem", "--endpoint=https://127.0.0.1:2379", "cluster-health", "|", "grep", "{{ ansible_default_ipv4['address']  }}", "|", "grep", "healthy"]
+            interval: "10s"
+      - name: "{{ cluster_name }}-etcd"
+        checks:
+          - args: ["/usr/local/bin/etcd_consul_check.py", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
             interval: "10s"
       {% endif %}
       {% if master == 'true' %}
