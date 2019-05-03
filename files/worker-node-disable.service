@@ -1,0 +1,11 @@
+[Unit]
+Description=Remove worker "%H" from cluster
+Before=docker.service halt.target shutdown.target
+
+[Service]
+ExecStart=/bin/true
+ExecStop=/usr/local/bin/kubectl --kubeconfig=/root/.kube/config delete node %H
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

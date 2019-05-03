@@ -1,3 +1,26 @@
 ---
+- name: post-conf-node | copy cordon script
+  copy:
+    src: worker-node-cordon.sh
+    dest: /usr/local/bin/worker-node-cordon.sh
+    owner: root
+    group: root
+    mode: 0755
+- name: post-conf-node | copy systemd service
+  copy:
+    src: worker-node-disable.service
+    dest: /etc/systemd/system/worker-node-disable.service
+    owner: root
+    group: root
+    mode: 0644
+- name: post-conf-node | enable systemd service
+  systemd:
+    name: worker-node-disable
+    state: enabled
+    daemon_reload: yes
+- name: post-conf-node | start systemd service
+  systemd:
+    name: worker-node-disable
+    state: started
 - name: post-conf-node | reboot
   command: /sbin/shutdown -r +1
