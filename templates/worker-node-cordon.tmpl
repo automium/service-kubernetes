@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# First, check if there are running pods on worker node we're going to dismiss.
+# Otherwise, run `drain` on worker node before deleting it from master.
+# NOTE: with `drain` command is passed `--ignore-daemonsets` option.
+
+# Ref:
+# - https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
+# - https://kubernetes.io/docs/tasks/administer-cluster/cluster-management/
+
+export CLUSTER_NAME={{ cluster_name }}
+
+kubectl_get_pods () {
+    POD_NUMS=$(ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+               "kubectl get pods --all-namespaces --field-selector spec.nodeName=${HOSTNAME} -o=custom-columns=NAME:metadata.name | wc -l")
+    echo ${POD_NUMS}
+}
+
+kubectl_drain () {
+    ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+    "kubectl drain ${HOSTNAME} --ignore-daemonsets"
+    sleep 10
+}
+
+kubectl_delete_node () {
+    ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+    "kubectl delete node ${HOSTNAME}"
+    sleep 10
+}
+
+if [[ kubectl_get_pods == 1 ]]; then
+    echo "There are no pods running on this node."
+    kubectl_delete_node
+else
+    echo "There are some pods running on this node."
+    kubectl_drain
+    kubectl_delete_node
+fi

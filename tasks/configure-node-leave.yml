@@ -1,0 +1,24 @@
+---
+
+- name: configure-node-leave | copy cordon script
+  template:
+    src: worker-node-cordon.tmpl
+    dest: /usr/local/bin/kubernetes-scripts/worker-node-cordon
+    owner: root
+    group: root
+    mode: 0755
+
+- name: configure-node-leave | copy systemd service
+  copy:
+    src: worker-node-disable.service
+    dest: /etc/systemd/system/worker-node-disable.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure-node-leave | activate systemd service
+  systemd:
+    name: worker-node-disable
+    enabled: yes
+    daemon_reload: yes
+    state: started
