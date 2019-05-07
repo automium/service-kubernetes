@@ -27,6 +27,8 @@ export SERVICE=automium/service-kubernetes
 export MASTER=true
 export NODE=true
 export ETCD=true
+export RANCHER_URL=http://rancher.local
+export RANCHER_CLUSTER_TOKEN=237dh928gd2
 ```
 
 and follow the guide [here](https://github.com/automium/provisioner/blob/master/README.md#guide)
