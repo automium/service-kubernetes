@@ -72,8 +72,9 @@
       [k8s-cluster:children]
       kube-master
       kube-node
-# record remove in master-postconf
-- name: configure-bootstrap | Create "{{ cluster_name }}-etcd.service.automium.consul" record in /etc/hosts for consul boostrap
+
+# record to remove in master-postconf
+- name: configure-bootstrap | create "{{ cluster_name }}-etcd.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present
     path: /etc/hosts
@@ -81,7 +82,7 @@
   when:
     - etcd == "true"
 
-- name: configure-bootstrap | Create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
+- name: configure-bootstrap | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present
     path: /etc/hosts

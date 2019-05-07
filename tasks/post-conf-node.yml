@@ -1,4 +1,5 @@
 ---
+
 - name: post-conf-node | remove kubernetes loadbalancer address into hosts file
   lineinfile:
     dest: /etc/hosts

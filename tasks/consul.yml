@@ -54,12 +54,12 @@
           - tcp: localhost:6443
             interval: 10s
             timeout: 3s
-      - name: "{{ cluster_name }}-kube-schedule"
+      - name: "{{ cluster_name }}-kube-scheduler"
         check:
           - tcp: localhost:10251
             interval: 10s
             timeout: 3s
-      - name: "{{ cluster_name }}-kube-controll"
+      - name: "{{ cluster_name }}-kube-controller-manager"
         check:
           - tcp: localhost:10252
             interval: 10s
