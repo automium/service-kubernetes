@@ -1,5 +1,5 @@
 ---
-- name: post-conf-master-etcd | remove kubernetes loadbalancer address into hosts file
+- name: post-conf-node | remove kubernetes loadbalancer address into hosts file
   lineinfile:
     dest: /etc/hosts
     regexp: ".*{{ apiserver_loadbalancer_domain_name }}$"

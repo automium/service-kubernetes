@@ -1,23 +1,23 @@
 ---
-- name: post-conf | grant access to folder /etc/ssl/etcd consul user
+- name: post-conf-master-etcd | grant access to folder /etc/ssl/etcd consul user
   acl:
     path: /etc/ssl/etcd
     entity: consul
     etype: user
     permissions: rx
     state: present
-- name: post-conf | grant access to folder /etc/ssl/etcd/ssl consul user
+- name: post-conf-master-etcd | grant access to folder /etc/ssl/etcd/ssl consul user
   acl:
     path: /etc/ssl/etcd/ssl
     entity: consul
     etype: user
     permissions: rx
     state: present
-- name: post-conf | set clustername
+- name: post-conf-master-etcd | set clustername
   set_fact:
     cluster_name: "{{ cluster_name }}"
 
-- name: post-conf | grant access multiple file
+- name: post-conf-master-etcd | grant access multiple file
   acl:
     path: "{{item}}"
     entity: consul
@@ -29,21 +29,21 @@
     - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem
     - /etc/ssl/etcd/ssl/ca.pem
 
-- name: post-conf | grant access to folder /root/
+- name: post-conf-master-etcd | grant access to folder /root/
   acl:
     path: /root
     entity: consul
     etype: user
     permissions: rx
     state: present
-- name: post-conf | grant access to folder /root/.kube
+- name: post-conf-master-etcd | grant access to folder /root/.kube
   acl:
     path: /root/.kube
     entity: consul
     etype: user
     permissions: rx
     state: present
-- name: post-conf | grant access to folder /root/.kube/config
+- name: post-conf-master-etcd | grant access to folder /root/.kube/config
   acl:
     path: "/root/.kube/config"
     entity: consul
@@ -51,7 +51,7 @@
     permissions: r
     recursive: yes
     state: present
-- name: post-conf | allow access to kubeconfig
+- name: post-conf-master-etcd | allow access to kubeconfig
   acl:
     path: "/root/.kube/config"
     entity: consul
@@ -60,7 +60,7 @@
     recursive: yes
     state: present
 
-- name: post-conf | wait etcd service is up
+- name: post-conf-master-etcd | wait etcd service is up
   uri:
     url: http://{{consul}}:{{consul_port}}/v1/health/checks/{{ cluster_name }}-etcd
     method: GET
@@ -71,7 +71,7 @@
     - 'url.json[0].Status == "passing"'
   retries: 6000
 
-- name: post-conf | clear etcd record in /etc/hosts for use consul
+- name: post-conf-master-etcd | clear etcd record in /etc/hosts for use consul
   lineinfile:
     state: absent
     path: /etc/hosts
@@ -79,7 +79,7 @@
   when:
     - etcd == "true"
 
-- name: configure-bootstrap | clear "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
+- name: post-conf-master-etcd | clear "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: absent
     path: /etc/hosts
@@ -95,3 +95,5 @@
     state: absent
     backup: yes
     unsafe_writes: yes
+
+- name: post-conf-master-etcd |

@@ -49,15 +49,15 @@
       etcd_member_in_cluster:
         rc: 1
 
-- name: show master up 0 ( will change wit api-server-up take from consul inventory)
+- name: copy-cert | show master up 0 ( will change wit api-server-up take from consul inventory)
   debug:
     var: host_list_kube_master_up[0]
 
-- name: show master flag ( true of false )
+- name: copy-cert | show master flag ( true of false )
   debug:
     var: master
 
-- name: configure host IP
+- name: copy-cert | configure host IP
   set_fact:
     loadbalancer_apiserver_address: >-
       {% if master == "true" %}
@@ -69,7 +69,7 @@
   set_fact:
     apiserver_loadbalancer_domain_name: "{{ cluster_name }}-kube-apiserver.service.automium.consul"
 
-- name: Debug loadbalancer_apiserver_address
+- name: copy-cert | Debug loadbalancer_apiserver_address
   debug:
     var: loadbalancer_apiserver_address
 
