@@ -1,4 +1,5 @@
 ---
+
 - name: post-conf | grant access to folder /etc/ssl/etcd consul user
   acl:
     path: /etc/ssl/etcd
@@ -6,6 +7,7 @@
     etype: user
     permissions: rx
     state: present
+
 - name: post-conf | grant access to folder /etc/ssl/etcd/ssl consul user
   acl:
     path: /etc/ssl/etcd/ssl
@@ -13,6 +15,7 @@
     etype: user
     permissions: rx
     state: present
+
 - name: post-conf | set clustername
   set_fact:
     cluster_name: "{{ cluster_name }}"
@@ -36,6 +39,7 @@
     etype: user
     permissions: rx
     state: present
+
 - name: post-conf | grant access to folder /root/.kube
   acl:
     path: /root/.kube
@@ -43,6 +47,7 @@
     etype: user
     permissions: rx
     state: present
+
 - name: post-conf | grant access to folder /root/.kube/config
   acl:
     path: "/root/.kube/config"
@@ -51,6 +56,7 @@
     permissions: r
     recursive: yes
     state: present
+
 - name: post-conf | allow access to kubeconfig
   acl:
     path: "/root/.kube/config"
