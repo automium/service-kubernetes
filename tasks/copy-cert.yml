@@ -34,6 +34,12 @@
     regexp: '^loadbalancer_apiserver_healthcheck_port'
     line: '#loadbalancer_apiserver_healthcheck_port'
 
+- name: copy-cert | comment defaut openstack_blockstorage_ignore_volume_az
+  lineinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    regexp: '^openstack_blockstorage_ignore_volume_az'
+    line: '#loadbalancer_apiserver_healthcheck_port'
+
 - name: copy-cert | set all etcd member as alive
   tags:
     - others
@@ -71,6 +77,8 @@
   blockinfile:
     path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
     block: |
+      cloud_provider: "openstack"
+      openstack_blockstorage_ignore_volume_az: true
       apiserver_loadbalancer_domain_name: "{{ apiserver_loadbalancer_domain_name }}"
       loadbalancer_apiserver_localhost: false
       loadbalancer_apiserver:
