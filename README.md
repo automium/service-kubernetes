@@ -19,6 +19,14 @@ if true configure the instance as a kubernetes worker node
 
 if true configure the instance as a etcd node
 
+### RANCHER_URL
+
+rancher http url
+
+### RANCHER_CLUSTER_TOKEN
+
+rancher token
+
 ## usage
 
 setup service var:

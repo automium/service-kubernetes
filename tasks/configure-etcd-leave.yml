@@ -5,15 +5,16 @@
   set_fact:
     cluster_etcd_leave: |
       #!/bin/bash
-      CLEANUP_NEEDED=$(curl -sS http://${consul}:${consul_port}/v1/kv/${cluster_name}/${identity}/cleanup/{{ ansible_hostname }})
+      CLEANUP_NEEDED=$(curl -sS http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/{{ identity }}/cleanup/{{ ansible_hostname }})
       if [ -z "$CLEANUP_NEEDED" ]; then
+        echo Cleanup is not needed
         exit 0
       fi
       echo remove {{ ansible_hostname }} from etcd cluster
       echo get RaftID
-      REMOVE_NODE=$(/usr/local/bin/etcdctl --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem --key-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem --endpoint=https://127.0.0.1:2379 member list | grep {{ansible_hostname}} | awk {'print $1'} | tr -d :)
+      REMOVE_NODE=$(/usr/local/bin/etcdctl --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem --key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem --endpoint=https://127.0.0.1:2379 member list | grep {{ansible_hostname}} | awk {'print $1'} | tr -d :)
       echo remove $REMOVE_NODE from etcd cluster
-      /usr/local/bin/etcdctl --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem --key-file=/etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem --endpoint=https://127.0.0.1:2379 member remove $REMOVE_NODE
+      /usr/local/bin/etcdctl --ca-file=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem --key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem --endpoint=https://127.0.0.1:2379 member remove $REMOVE_NODE
       echo end script
 
 - name: configure-etcd-leave | copy leave script to destination
@@ -26,10 +27,9 @@
   set_fact:
     cluster_etcd_leave_systemd: |
       [Unit]
-      Description=Remove node "%H" from cluster
+      Description=Remove etcd node "%H" from cluster
       Before=halt.target shutdown.target
       After=etcd.service
-      RequiredBy=etcd.service
 
       [Service]
       ExecStart=/bin/true
