@@ -45,7 +45,7 @@
   tags:
     - others
   blockinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ lookup('env','cluster_name') }}/group_vars/etcd.yml
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/etcd.yml
     block: |
       etcd_member_in_cluster:
         rc: 1
