@@ -19,11 +19,11 @@ if true configure the instance as a kubernetes worker node
 
 if true configure the instance as a etcd node
 
-### RANCHER_URL
+### RANCHER_URL _optional_
 
 rancher http url
 
-### RANCHER_CLUSTER_TOKEN
+### RANCHER_CLUSTER_TOKEN _optional_
 
 rancher token
 

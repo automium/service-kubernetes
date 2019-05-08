@@ -3,8 +3,8 @@
 - name: run script to add kubernetes to rancher
   shell: |
     #!/bin/sh
-    RANCHER_URL="{{rancher_url}}"
-    RANCHER_CLUSTER_TOKEN="{{rancher_cluster_token}}"
+    RANCHER_URL="{{ rancher_url }}"
+    RANCHER_CLUSTER_TOKEN="{{ rancher_cluster_token }}"
     CLUSTER_NAME="{{ cluster_name }}"
     CLUSTER_ID=$(curl -sS -k -H "Content-Type: application/json" -H "Authorization: Bearer ${RANCHER_CLUSTER_TOKEN}" "https://${RANCHER_URL}/v3/cluster" --data-binary '{"dockerRootDir":"/var/lib/docker","enableNetworkPolicy":false,"type":"cluster","name":"$CLUSTER_NAME"}' | jq '.id' | tr -d "\"")
     if [ "${CLUSTER_ID}" != "null" ]; then
@@ -20,3 +20,6 @@
   until: rancher_add.rc == 0
   delay: 1
   retries: 6000
+  when:
+    - rancher_url != ""
+    - rancher_token != ""
