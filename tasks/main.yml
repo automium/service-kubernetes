@@ -24,6 +24,9 @@
   when:
     - etcd == "true"
 
+- import_tasks: post-configure-bootstrap.yml
+  tags: bootstrap
+
 - import_tasks: post-conf-master-etcd.yml
   when:
     - etcd == "true" or master == "true"

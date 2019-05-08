@@ -23,14 +23,25 @@
     mode: 0555
     backup: yes
 
+- name: consul | create etcd_consul_check.py
+  copy:
+    src: etcd_consul_check.py
+    dest: /usr/local/bin/etcd_consul_check.py
+    mode: 0555
+    backup: yes
+
 - name: consul | render consul service
   set_fact:
     consul_template_render: |
       - name: "{{ identity }}"
       {% if etcd == 'true' %}
-      - name: "{{ cluster_name }}-etcd"
+      - name: "{{ cluster_name }}-etcd-cluster"
         checks:
           - args: ["/usr/local/bin/etcdctl", "--ca-file=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem", "--endpoint=https://127.0.0.1:2379", "cluster-health", "|", "grep", "{{ ansible_default_ipv4['address']  }}", "|", "grep", "healthy"]
+            interval: "10s"
+      - name: "{{ cluster_name }}-etcd"
+        checks:
+          - args: ["/usr/local/bin/etcd_consul_check.py", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
             interval: "10s"
       {% endif %}
       {% if master == 'true' %}
@@ -38,19 +49,42 @@
         checks:
           - args: ["/usr/local/bin/kubernetes_check_node"]
             interval: "30s"
+      - name: "{{ cluster_name }}-kube-apiserver"
+        check:
+          - tcp: localhost:6443
+            interval: 10s
+            timeout: 3s
+      - name: "{{ cluster_name }}-kube-scheduler"
+        check:
+          - tcp: localhost:10251
+            interval: 10s
+            timeout: 3s
+      - name: "{{ cluster_name }}-kube-controller-manager"
+        check:
+          - tcp: localhost:10252
+            interval: 10s
+            timeout: 3s
       {% endif %}
-      {% if node == 'true' %}
-      - name: "{{ cluster_name }}-kube-node"
+      {% if node == 'true' or master == 'true' %}
       - name: "{{ cluster_name }}-kubelet"
         check:
           - tcp: localhost:10250
             interval: 10s
             timeout: 1s
+      - name: "{{ cluster_name }}-kubelet-health"
+        check:
+          - http: http://localhost:10248/healthz
+            method: "GET"
+            interval: 30s
+            timeout: 5s
       - name: "{{ cluster_name }}-kube-proxy"
         check:
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
+      {% endif %}
+      {% if node == 'true' %}
+      - name: "{{ cluster_name }}-kube-node"
       {% endif %}
 
 - name: consul | convert from string to object

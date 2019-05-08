@@ -24,6 +24,12 @@
     dest: /usr/src/cloud/kubespray/roles/etcd/tasks/gen_certs_script.yml
     state: present
 
+- name: apply patch for kubeadm
+  patch:
+    src: kubeadm-config.v1alpha3.yaml.patch
+    dest: /usr/src/cloud/kubespray/roles/kubernetes/master/templates/kubeadm-config.v1alpha3.yaml.j2
+    state: present
+
 - name: deploy | install python requirements
   pip:
     requirements: "/usr/src/cloud/kubespray/requirements.txt"
@@ -38,3 +44,10 @@
   args:
     chdir: /usr/src/cloud/kubespray
     executable: /bin/bash
+  environment:
+    OS_AUTH_URL: "{{ os_auth_url }}"
+    OS_TENANT_NAME: "{{ os_tenant_name }}"
+    OS_TENANT_ID: "{{ os_tenant_id }}"
+    OS_USERNAME: "{{ os_user_name }}"
+    OS_PASSWORD: "{{ os_password }}"
+    OS_REGION_NAME: "{{ os_region }}"

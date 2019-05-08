@@ -16,7 +16,31 @@
     regexp: '^#ignore_assert_errors: false'
     line: 'ignore_assert_errors: true'
 
-- name: copy-cert | set ignore_assert_errors to true
+- name: copy-cert | comment loadbalancer_apiserver_localhost
+  lineinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    regexp: '^loadbalancer_apiserver_localhost'
+    line: '#loadbalancer_apiserver_localhost'
+
+- name: copy-cert | comment loadbalancer_apiserver_type
+  lineinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    regexp: '^loadbalancer_apiserver_type'
+    line: '#loadbalancer_apiserver_type'
+
+- name: copy-cert | comment loadbalancer_apiserver_healthcheck_port
+  lineinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    regexp: '^loadbalancer_apiserver_healthcheck_port'
+    line: '#loadbalancer_apiserver_healthcheck_port'
+
+- name: copy-cert | comment defaut openstack_blockstorage_ignore_volume_az
+  lineinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    regexp: '^openstack_blockstorage_ignore_volume_az'
+    line: '#loadbalancer_apiserver_healthcheck_port'
+
+- name: copy-cert | set all etcd member as alive
   tags:
     - others
   blockinfile:
@@ -24,3 +48,48 @@
     block: |
       etcd_member_in_cluster:
         rc: 1
+
+- name: copy-cert | show the frist master alive
+  debug:
+    var: host_list_kube_master_up[0]
+
+- name: copy-cert | show master flag ( true of false )
+  debug:
+    var: master
+
+- name: copy-cert | configure host IP
+  set_fact:
+    loadbalancer_apiserver_address: >-
+      {% if master == "true" %}
+      {{ ip | default(ansible_default_ipv4.address) }}
+      {%- else -%}
+      {{ host_list_kube_master_up[0] }}
+      {%- endif -%}
+
+- name: set apiserver_loadbalancer_domain_name
+  set_fact:
+    apiserver_loadbalancer_domain_name: "{{ cluster_name }}-kube-apiserver.service.automium.consul"
+
+- name: copy-cert | Debug loadbalancer_apiserver_address
+  debug:
+    var: loadbalancer_apiserver_address
+
+- name: copy-cert | configure vars all certificates
+  blockinfile:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
+    block: |
+      cloud_provider: "openstack"
+      openstack_blockstorage_ignore_volume_az: true
+      apiserver_loadbalancer_domain_name: "{{ apiserver_loadbalancer_domain_name }}"
+      loadbalancer_apiserver_localhost: false
+      loadbalancer_apiserver:
+        address: "{{ loadbalancer_apiserver_address }}"
+        port: 6443
+      etcd_access_addresses: https://{{ cluster_name }}-etcd.service.automium.consul:2379
+      etcd_client_url: https://{{ cluster_name }}-etcd.service.automium.consul:2379
+      etcd_cert_alt_names:
+        - "etcd.kube-system.svc.{{'{{ ' }} dns_domain {{ ' }}'}}"
+        - "etcd.kube-system.svc"
+        - "etcd.kube-system"
+        - "etcd"
+        - "{{ cluster_name }}-etcd.service.automium.consul"
