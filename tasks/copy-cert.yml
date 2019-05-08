@@ -96,3 +96,7 @@
         - "etcd.kube-system"
         - "etcd"
         - "{{ cluster_name }}-etcd.service.automium.consul"
+      {% if node == "true" %}
+      node_labels:
+        nodepool: "{{ name }}"
+      {% endif %}
