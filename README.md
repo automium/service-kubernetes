@@ -19,6 +19,14 @@ if true configure the instance as a kubernetes worker node
 
 if true configure the instance as a etcd node
 
+### RANCHER_URL
+
+rancher http url
+
+### RANCHER_CLUSTER_TOKEN
+
+rancher token
+
 ## usage
 
 setup service var:
@@ -27,6 +35,8 @@ export SERVICE=automium/service-kubernetes
 export MASTER=true
 export NODE=true
 export ETCD=true
+export RANCHER_URL=http://rancher.local
+export RANCHER_CLUSTER_TOKEN=237dh928gd2
 ```
 
 and follow the guide [here](https://github.com/automium/provisioner/blob/master/README.md#guide)

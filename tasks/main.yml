@@ -20,7 +20,9 @@
 
 - import_tasks: deploy.yml
 
-- import_tasks: configure-cluster-leave.yaml
+- import_tasks: configure-etcd-leave.yml
+  when:
+    - etcd == "true"
 
 - import_tasks: post-configure-bootstrap.yml
   tags: bootstrap
