@@ -1,0 +1,26 @@
+---
+
+- name: post-conf-master-bootstrap-autoscaler | save kubeconfig in base64
+  set_fact:
+    kubeconfig64: "{{ lookup('file', '/etc/kubernetes/admin.conf') | b64encode }}"
+
+- name: post-conf-master-bootstrap-autoscaler | render automium-cluster-autoscaler.cm.yml
+  template:
+    src: autoscaler/automium-cluster-autoscaler.cm.yml.j2
+    dest: /usr/src/cloud/automium-cluster-autoscaler.cm.yml
+  when:
+    - automium_autoscaler_kubeconfig != ""
+
+- name: post-conf-master-bootstrap-autoscaler | copy automium-cluster-autoscaler.yml
+  copy:
+    src: autoscaler/automium-cluster-autoscaler.yml
+    dest: /usr/src/cloud/automium-cluster-autoscaler.yml
+  when:
+    - automium_autoscaler_kubeconfig != ""
+
+- name: post-conf-master-bootstrap-autoscaler | apply autoscaler config map and deployment
+  shell: |
+    kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.cm.yml
+    kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.yml
+  when:
+    - automium_autoscaler_kubeconfig != ""

@@ -1,6 +1,6 @@
 ---
 
-- name: run script to add kubernetes to rancher
+- name: post-conf-master-bootstrap | run script to add kubernetes to rancher
   shell: |
     #!/bin/sh
     RANCHER_URL="{{ rancher_url }}"
