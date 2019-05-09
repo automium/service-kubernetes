@@ -27,6 +27,10 @@ rancher http url
 
 rancher token
 
+### AUTOMIUM_AUTOSCALER_KUBECONFIG _optional_
+
+base64 automium kubeconfig
+
 ## usage
 
 setup service var:
@@ -37,6 +41,7 @@ export NODE=true
 export ETCD=true
 export RANCHER_URL=http://rancher.local
 export RANCHER_CLUSTER_TOKEN=237dh928gd2
+export AUTOMIUM_AUTOSCALER_KUBECONFIG=YPBpVmVyq2lvbjogdjEKY2x1c3...RlWTFVMjU2Vkc1Q2RYTjZVMGhpYm1wUfo=
 ```
 
 and follow the guide [here](https://github.com/automium/provisioner/blob/master/README.md#guide)

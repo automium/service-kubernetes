@@ -1,0 +1,20 @@
+apiVersion: v1
+metadata:
+  name: automium-cluster-autoscaler-config
+  namespace: kube-system
+kind: ConfigMap
+data:
+  config.yaml: |-
+     automiumKubeconfig: /etc/automium/autoscaler/kubeconfigs/agent-kubeconfig
+     clusterName: {{ cluster_name }}
+     dryRun: false
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: automium-cluster-autoscaler-kubeconfigs
+  namespace: kube-system
+type: Opaque
+data:
+  agent-kubeconfig: {{ automium_autoscaler_kubeconfig }}
+  cluster-kubeconfig: {{ kubeconfig64 }}

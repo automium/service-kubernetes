@@ -18,6 +18,9 @@
 
 - import_tasks: copy-cert.yml
 
+- import_tasks: disable-autoscaler.yml
+  tags: others
+
 - import_tasks: deploy.yml
 
 - import_tasks: configure-etcd-leave.yml
@@ -28,6 +31,13 @@
   tags: bootstrap
   when:
     - master == "true"
+
+- import_tasks: post-conf-master-bootstrap-autoscaler.yml
+  tags: bootstrap
+  when:
+    - master == "true"
+
+- import_tasks: enable-autoscaler.yml
 
 - import_tasks: post-conf-master-etcd.yml
   when:

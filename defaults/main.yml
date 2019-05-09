@@ -10,3 +10,6 @@ consul_encrypt: "K8n07GA/ZoANSmJ5zkvgOg=="
 etcd: true
 master: true
 node: true
+# rancher_url:
+# rancher_cluster_token:
+# automium_autoscaler_kubeconfig:
