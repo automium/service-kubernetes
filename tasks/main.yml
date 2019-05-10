@@ -37,11 +37,12 @@
   when:
     - master == "true"
 
-- import_tasks: enable-autoscaler.yml
-
 - import_tasks: post-conf-master-etcd.yml
   when:
     - etcd == "true" or master == "true"
+
+- import_tasks: enable-autoscaler.yml
+  tags: others
 
 - import_tasks: post-conf-node.yml
   when:
