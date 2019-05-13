@@ -25,7 +25,10 @@ fi
 
 # Create images
 
-IMAGE_NAME=kubernetes-$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER
+KUBESPRAY_VERSION=$(grep kubespray_version defaults/main.yml | cut -d ' ' -f 2)
+KUBERNETES_VERSION=$(curl -sS https://raw.githubusercontent.com/kubernetes-sigs/kubespray/$KUBESPRAY_VERSION/inventory/sample/group_vars/k8s-cluster/k8s-cluster.yml | grep kube_version | cut -d ' ' -f 2)
+IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$TRAVIS_BUILD_NUMBER
+export IMAGE_NAME
 ./packer build packer.json
 openstack image save $IMAGE_NAME --file $IMAGE_NAME.qcow2
 qemu-img convert -f qcow2 -O vmdk $IMAGE_NAME.qcow2 automium-dummy.vmdk
