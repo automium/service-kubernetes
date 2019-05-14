@@ -40,7 +40,7 @@
   shell: |
     export HOME=/root
     source venv/bin/activate
-    ansible-playbook --connection=local --limit {{ ansible_hostname }} -i /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/hosts.ini cluster.yml >> /var/log/cloud-scripts.log 2>&1
+    ansible-playbook --connection=local --limit {{ ansible_hostname }} -i /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/hosts.ini cluster.yml | tee -a /var/log/cloud-script.log | logger -s -n automium-agent.node.automium.consul -P 30514
   args:
     chdir: /usr/src/cloud/kubespray
     executable: /bin/bash
