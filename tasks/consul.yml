@@ -134,6 +134,8 @@
         enable_script_checks: true
         services: "{{ consul_template }}"
         rejoin_after_leave: true
+        node_meta:
+          - image: "{{ image }}"
         retry_join:
           - "{{ consul }}"
 
