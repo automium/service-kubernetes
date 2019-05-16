@@ -8,19 +8,13 @@
   template:
     src: autoscaler/automium-cluster-autoscaler.cm.yml.j2
     dest: /usr/src/cloud/automium-cluster-autoscaler.cm.yml
-  when:
-    - automium_autoscaler_kubeconfig != ""
 
 - name: post-conf-master-bootstrap-autoscaler | copy automium-cluster-autoscaler.yml
   copy:
     src: autoscaler/automium-cluster-autoscaler.yml
     dest: /usr/src/cloud/automium-cluster-autoscaler.yml
-  when:
-    - automium_autoscaler_kubeconfig != ""
 
 - name: post-conf-master-bootstrap-autoscaler | apply autoscaler config map and deployment
   shell: |
     kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.cm.yml
     kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.yml
-  when:
-    - automium_autoscaler_kubeconfig != ""
