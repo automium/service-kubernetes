@@ -24,10 +24,16 @@
     dest: /usr/src/cloud/kubespray/roles/etcd/tasks/gen_certs_script.yml
     state: present
 
-- name: apply patch for kubeadm
+- name: deploy | apply patch for kubeadm
   patch:
     src: kubeadm-config.v1alpha3.yaml.patch
     dest: /usr/src/cloud/kubespray/roles/kubernetes/master/templates/kubeadm-config.v1alpha3.yaml.j2
+    state: present
+
+- name: deploy | apply patch avoid not needed checks
+  patch:
+    src: 0001-Add-ignore_assert_errors-to-kube-master.patch
+    dest: /usr/src/cloud/kubespray/roles/kubernetes/preinstall/tasks/0020-verify-settings.yml
     state: present
 
 - name: deploy | install python requirements
