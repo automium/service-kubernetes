@@ -7,6 +7,7 @@
   post_tasks:
     - name: install local kubernetes requirements
       shell: |
+        export ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED=False
         source venv/bin/activate
         ansible-playbook --connection=local -i inventory/local/hosts.ini cluster.yml -e download_localhost=true
       args:
@@ -15,6 +16,7 @@
       tags: image
     - name: reset state of all kubernetes components
       shell: |
+        export ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED=False
         source venv/bin/activate
         ansible-playbook --connection=local -i inventory/local/hosts.ini reset.yml -e reset_confirmation=yes
       args:
