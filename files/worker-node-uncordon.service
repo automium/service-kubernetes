@@ -1,0 +1,19 @@
+# /etc/systemd/system/worker-node-uncordon.service
+
+[Unit]
+Description=Uncordon worker %H from cluster
+After=docker.service kubelet.service
+Requires=kubelet.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/kubernetes-scripts/worker-node-maintenance kubectl_uncordon_node
+Restart=on-failure
+RestartSec=5
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kubernetes-service
+
+[Install]
+WantedBy=multi-user.target

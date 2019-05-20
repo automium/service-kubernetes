@@ -1,0 +1,22 @@
+# /etc/systemd/system/worker-node-drain.service
+
+[Unit]
+Description=Drain worker %H in cluster
+Before=docker.service shutdown.target poweroff.target reboot.target
+Requires=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecStop=-/usr/local/bin/kubernetes-scripts/worker-node-maintenance kubectl_drain_node
+ExecStopPost=/usr/local/bin/kubernetes-scripts/worker-node-maintenance kubectl_delete_node
+TimeoutStopSec=120
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kubernetes-service
+
+[Install]
+WantedBy=multi-user.target
