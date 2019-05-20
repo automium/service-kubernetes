@@ -1,0 +1,39 @@
+---
+
+- name: configure-node-leave | copy worker-node-drain service
+  copy:
+    src: worker-node-drain.service
+    dest: /etc/systemd/system/worker-node-drain.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure-node-leave | copy worker-node-uncordon service
+  copy:
+    src: worker-node-uncordon.service
+    dest: /etc/systemd/system/worker-node-uncordon.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure-node-leave | copy worker-node-maintenance script
+  template:
+    src: worker-node-maintenance.tmpl
+    dest: /usr/local/bin/kubernetes-scripts/worker-node-maintenance
+    owner: root
+    group: root
+    mode: 0755
+
+- name: configure-node-leave | enable worker-node-drain service
+  systemd:
+    name: worker-node-drain.service
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: configure-node-leave | enable worker-node-uncordon service
+  systemd:
+    name: worker-node-uncordon.service
+    enabled: yes
+    state: started
+    daemon_reload: yes

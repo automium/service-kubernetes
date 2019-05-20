@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# worker_drain_node is called before worker node deletion.
+# worker_delete_node is called before shutting down worker node.
+# worker_uncordon_node is called whether a reboot of this worker node happens.
+
+# Ref:
+# - https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
+# - https://kubernetes.io/docs/tasks/administer-cluster/cluster-management/
+
+export CLUSTER_NAME={{ cluster_name }}
+
+kubectl_drain_node () {
+    ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+    "kubectl drain ${HOSTNAME} --ignore-daemonsets &"
+    sleep 30
+}
+
+kubectl_delete_node () {
+    ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+    "kubectl delete node ${HOSTNAME}"
+}
+
+kubectl_uncordon_node () {
+    ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+    "kubectl uncordon ${HOSTNAME}"
+}
+
+case "$1" in
+  (kubectl_drain_node)
+    kubectl_drain_node
+    ;;
+  (kubectl_delete_node)
+    kubectl_delete_node
+    ;;
+  (kubectl_uncordon_node)
+    kubectl_uncordon_node
+    ;;
+  (*)
+    echo "Usage: $0 {kubectl_drain_node|kubectl_delete_node|kubectl_uncordon_node}"
+    exit 2
+    ;;
+esac
