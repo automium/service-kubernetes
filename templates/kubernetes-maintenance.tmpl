@@ -11,7 +11,7 @@ export CLUSTER_NAME={{ cluster_name }}
 
 kubectl_drain () {
   CLEANUP_NEEDED=$(curl -sS http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/{{ identity }}/cleanup/{{ ansible_hostname }})
-  if [ -z "${CLEANUP_NEEDED}" ]; then
+  if [ "${CLEANUP_NEEDED}" ]; then
     DELETE_LOCAL_DATA="--delete-local-data"
   fi
 
@@ -23,9 +23,11 @@ kubectl_drain () {
 kubectl_delete () {
   CLEANUP_NEEDED=$(curl -sS http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/{{ identity }}/cleanup/{{ ansible_hostname }})
   if [ -z "${CLEANUP_NEEDED}" ]; then
-      ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
-      "kubectl delete node ${HOSTNAME}"
+    echo Delete is not needed
+    exit 0
   fi
+  ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
+    "kubectl delete node ${HOSTNAME}"
 }
 
 kubectl_uncordon () {
