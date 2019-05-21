@@ -1,4 +1,4 @@
-# /etc/systemd/system/worker-node-uncordon.service
+# /etc/systemd/system/kubernetes-uncordon.service
 
 [Unit]
 Description=Uncordon worker %H from cluster
@@ -7,7 +7,7 @@ Requires=kubelet.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/kubernetes-scripts/worker-node-maintenance kubectl_uncordon_node
+ExecStart=/usr/local/bin/kubernetes-scripts/kubernetes-maintenance kubectl_uncordon
 Restart=on-failure
 RestartSec=5
 

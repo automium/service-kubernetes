@@ -1,4 +1,4 @@
-# /etc/systemd/system/worker-node-drain.service
+# /etc/systemd/system/kubernetes-drain.service
 
 [Unit]
 Description=Drain worker %H in cluster
@@ -10,8 +10,8 @@ After=network.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/bin/true
-ExecStop=-/usr/local/bin/kubernetes-scripts/worker-node-maintenance kubectl_drain_node
-ExecStopPost=/usr/local/bin/kubernetes-scripts/worker-node-maintenance kubectl_delete_node
+ExecStop=-/usr/local/bin/kubernetes-scripts/kubernetes-maintenance kubectl_drain
+ExecStopPost=/usr/local/bin/kubernetes-scripts/kubernetes-maintenance kubectl_delete
 TimeoutStopSec=120
 
 StandardOutput=syslog

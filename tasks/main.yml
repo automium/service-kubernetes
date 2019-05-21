@@ -49,10 +49,10 @@
   when:
     - automium_autoscaler_kubeconfig != ""
 
-- import_tasks: configure-node-leave.yml
+- import_tasks: configure-master-node-leave.yml
   tags: others
   when:
-    - node == "true"
+    - master == "true" or node == "true"
 
 - import_tasks: post-conf-node.yml
   when:
