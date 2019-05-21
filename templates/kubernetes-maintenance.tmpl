@@ -12,11 +12,11 @@ export CLUSTER_NAME={{ cluster_name }}
 kubectl_drain () {
   CLEANUP_NEEDED=$(curl -sS http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/{{ identity }}/cleanup/{{ ansible_hostname }})
   if [ -z "${CLEANUP_NEEDED}" ]; then
-    $DELETE_LOCAL_DATA="--delete-local-data"
+    DELETE_LOCAL_DATA="--delete-local-data"
   fi
 
   ssh -o StrictHostKeyChecking=no ${CLUSTER_NAME}-kube-master.service.automium.consul \
-  "kubectl drain ${HOSTNAME} --ignore-daemonsets $DELETE_LOCAL_DATA &"
+  "kubectl drain ${HOSTNAME} --ignore-daemonsets ${DELETE_LOCAL_DATA} &"
   sleep 30
 }
 
