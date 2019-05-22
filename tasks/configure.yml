@@ -33,6 +33,11 @@
   debug:
     msg: "{{ name }}"
 
+- name: configure | ssh config
+  template:
+    src: ssh_config
+    dest: /root/.ssh/config
+
 - name: configure | render consul_io.ini
   set_fact:
     consul_io_ini: |
