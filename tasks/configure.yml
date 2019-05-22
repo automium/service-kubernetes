@@ -13,7 +13,7 @@
     dest: /usr/local/bin/remove_etcd.py
     mode: 0544
 
-- name: install pip
+- name: configure | install pip
   package: name=python-pip
   tags: image
 
