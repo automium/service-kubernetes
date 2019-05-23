@@ -133,7 +133,7 @@
     state: directory
     mode: 0755
 
-- name: copy-cert | copy sample inventory to inventory/{{ cluster_name }}
+- name: configure-others | copy ca certificate and ca key on etcd node
   shell: rsync -e "ssh -o StrictHostKeyChecking=no" -avP root@{{ cluster_name }}-etcd.service.automium.consul:/etc/ssl/etcd/ssl/{{ item }} /etc/ssl/etcd/ssl/
   with_items:
     - ca-key.pem
