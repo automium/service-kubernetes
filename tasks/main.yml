@@ -23,6 +23,11 @@
   when:
     - automium_autoscaler_kubeconfig != ""
 
+- import_tasks: disable-kubernetes-dashboard.yml
+  tags: others
+  when:
+    - master == "true" or node == "true"
+
 - import_tasks: deploy.yml
 
 - import_tasks: configure-etcd-leave.yml
