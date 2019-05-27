@@ -18,6 +18,10 @@
 
 - import_tasks: copy-cert.yml
 
+- import_tasks: configure-etcd.yml
+  when:
+    - etcd == "true"
+
 - import_tasks: disable-autoscaler.yml
   tags: others
   when:
