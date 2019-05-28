@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: cluster-autoscaler
-          image: automium/cluster-autoscaler:master
+          image: automium/cluster-autoscaler:v1.14
           imagePullPolicy: Always
           args:
             - --logtostderr
@@ -62,3 +62,8 @@ spec:
         - name: kubeconfigs
           secret:
             secretName: automium-cluster-autoscaler-kubeconfigs
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
