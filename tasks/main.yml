@@ -21,6 +21,7 @@
 - import_tasks: configure-etcd.yml
   when:
     - etcd == "true"
+  tags: others
 
 - import_tasks: disable-autoscaler.yml
   tags: others
