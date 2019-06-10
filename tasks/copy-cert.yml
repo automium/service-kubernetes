@@ -75,6 +75,39 @@
   debug:
     var: loadbalancer_apiserver_address
 
+- name: copy-cert | configure Automium kubernetes var in custom_confguration_yaml
+  set_fact:
+    custom_confguration_node_yaml: |
+      kube_profiling: false
+      kube_api_anonymous_auth: false
+      kubernetes_audit: true
+      audit_log_maxbackups: 10
+      kube_apiserver_enable_admission_plugins:
+        - "ServiceAccount"
+      kube_feature_gates:
+        - "RotateKubeletServerCertificate=true"
+      kubelet_custom_flags:
+        - "--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
+        - "--event-qps=0"
+      scheduler_custom_flags:
+        - "--terminated-pod-gc-threshold=10"
+        - "--profiling false"
+      apiserver_custom_flags:
+        - "--anonymous-auth=false"
+        - "--repair-malformed-updates=false"
+        - "--profiling=false"
+        - "--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
+      kube_kubeadm_apiserver_extra_args:
+        profiling: false
+        repair-malformed-updates: false
+        tls-cipher-suites: "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
+      kube_controller_manager_bind_address: 127.0.0.1
+      kube_kubeadm_controller_extra_args:
+        profiling: false
+      kube_scheduler_bind_address: 127.0.0.1
+      kube_kubeadm_scheduler_extra_args:
+        profiling: false
+
 - name: copy-cert | configure vars all certificates
   blockinfile:
     path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
@@ -100,3 +133,13 @@
       node_labels:
         nodepool: "{{ name }}"
       {% endif %}
+
+- name: create host_vars in inventory
+  file:
+    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/host_vars/
+    state: directory
+
+- name: set custom node variable in high priority
+  copy:
+    content: "{{ custom_confguration_node_yaml }}"
+    dest: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/host_vars/{{ ansible_hostname }}.yml
