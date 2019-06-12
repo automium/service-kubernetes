@@ -117,6 +117,13 @@
             timeout: 1s
       {% endif %}
       {% if node == 'true' %}
+      - watches:
+        - type: "keyprefix"
+          prefix: "{{ cluster_name }}/cleanup"
+          args:
+            - "/usr/local/bin/kubernetes-scripts/kubernetes-maint"
+      {% endif %}
+      {% if node == 'true' %}
       - name: "{{ cluster_name }}-kube-node"
       {% endif %}
 

@@ -1,39 +1,9 @@
 ---
 
-- name: configure-node-leave | copy kubernetes-drain service
+- name: configure-master-node-leave | copy kubernetes-maintenance script
   copy:
-    src: kubernetes-drain.service
-    dest: /etc/systemd/system/kubernetes-drain.service
-    owner: root
-    group: root
-    mode: 0644
-
-- name: configure-node-leave | copy kubernetes-uncordon service
-  copy:
-    src: kubernetes-uncordon.service
-    dest: /etc/systemd/system/kubernetes-uncordon.service
-    owner: root
-    group: root
-    mode: 0644
-
-- name: configure-node-leave | copy kubernetes-maintenance script
-  template:
-    src: kubernetes-maintenance.tmpl
+    src: kubernetes-maintenance.sh
     dest: /usr/local/bin/kubernetes-scripts/kubernetes-maintenance
     owner: root
     group: root
     mode: 0755
-
-- name: configure-node-leave | enable kubernetes-drain service
-  systemd:
-    name: kubernetes-drain.service
-    enabled: yes
-    state: started
-    daemon_reload: yes
-
-- name: configure-node-leave | enable kubernetes-uncordon service
-  systemd:
-    name: kubernetes-uncordon.service
-    enabled: yes
-    state: started
-    daemon_reload: yes
