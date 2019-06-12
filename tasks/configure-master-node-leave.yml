@@ -1,9 +1,0 @@
----
-
-- name: configure-master-node-leave | copy kubernetes-maintenance script
-  copy:
-    src: kubernetes-maintenance.sh
-    dest: /usr/local/bin/kubernetes-scripts/kubernetes-maintenance
-    owner: root
-    group: root
-    mode: 0755

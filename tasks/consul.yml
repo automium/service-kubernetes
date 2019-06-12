@@ -32,7 +32,7 @@
 
 - name: consul | render consul service
   set_fact:
-    consul_template_render: |
+    consul_service_render: |
       - name: "{{ identity }}"
       - name: "{{ identity }}-all"
         checks:
@@ -117,19 +117,28 @@
             timeout: 1s
       {% endif %}
       {% if node == 'true' %}
-      - watches:
-        - type: "keyprefix"
-          prefix: "{{ cluster_name }}/cleanup"
-          args:
-            - "/usr/local/bin/kubernetes-scripts/kubernetes-maint"
-      {% endif %}
-      {% if node == 'true' %}
       - name: "{{ cluster_name }}-kube-node"
       {% endif %}
 
-- name: consul | convert from string to object
+- name: consul | render consul watches
   set_fact:
-    consul_template: "{{ consul_template_render | from_yaml }}"
+    consul_watches_render: |
+      - type: "keyprefix"
+        prefix: "{{ cluster_name }}/cleanup"
+        args:
+      {% if etcd == 'true' or master == 'true' %}
+          - "/usr/local/bin/kubernetes-scripts/cleanup"
+      {% else %}
+          - "/bin/true"
+      {% endif %}
+
+- name: consul | convert from string to service object
+  set_fact:
+    consul_service: "{{ consul_service_render | from_yaml }}"
+
+- name: consul | convert from string to watches object
+  set_fact:
+    consul_watches: "{{ consul_watches_render | from_yaml }}"
 
 - name: consul | create requirement file for consul ansible role
   copy:
@@ -172,7 +181,8 @@
         server: false
         ui: true
         enable_script_checks: true
-        services: "{{ consul_template }}"
+        services: "{{ consul_service }}"
+        watches: "{{ consul_watches }}"
         rejoin_after_leave: true
         node_meta:
           - image: "{{ image }}"

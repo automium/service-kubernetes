@@ -5,3 +5,4 @@ RUN cat /tmp/config.tf.tmpl >> config.tf.tmpl
 
 ENV PROVISIONER_ROLE https://github.com/automium/service-kubernetes
 ENV PROVISIONER_ROLE_VERSION master
+ENV PROVISIONER_CONFIG_WAIT_CLEANUP true

@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# Ref:
+# - https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
+# - https://kubernetes.io/docs/tasks/administer-cluster/cluster-management/
+# - https://godoc.org/go.etcd.io/etcd/client
+
+kubectl_drain () {
+  echo [START] Drain $1 from kubernetes cluster {{ cluster_name }}
+  timeout 30 \
+  kubectl --kubeconfig /root/.kube/config drain ${1} --ignore-daemonsets --delete-local-data
+  echo [END] Drain $1 from kubernetes cluster {{ cluster_name }}
+}
+
+kubectl_delete () {
+  echo [START] Delete $1 from kubernetes cluster {{ cluster_name }}
+  kubectl --kubeconfig /root/.kube/config delete node ${1}
+  echo [END] Delete $1 from kubernetes cluster {{ cluster_name }}
+}
+
+kubectl_uncordon () {
+  echo [START] Uncordon $1 from kubernetes cluster {{ cluster_name }}
+  kubectl --kubeconfig /root/.kube/config uncordon ${1}
+  echo [END] Uncordon $1 from kubernetes cluster {{ cluster_name }}
+}
+
+etcd_member_remove () {
+  echo [START] Remove $1 from etcd cluster
+  /usr/local/bin/remove_etcd.py --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1}
+  echo [END] Remove $1 from etcd cluster
+}
+
+(
+
+# Save stdin to DATA
+DATA=$(cat -)
+
+if [ "${DATA}" == "null" ]; then
+  echo "Nothing to cleanup"
+  exit 0
+fi
+
+while read i; do
+  NODES=$(echo $i | base64 -d | jq -r .name)
+done < <( echo ${DATA} | jq -r '.[].Value // empty' )
+
+for n in ${NODES}; do
+  echo "[START] Cleanup node ${n}"
+  kubectl_drain ${n}
+  kubectl_delete ${n}
+  {% if etcd == 'true' %}
+  etcd_member_remove ${n}
+  {% endif %}
+  echo "Report that the cleanup is completed on node ${n}"
+  curl -f -sS -X DELETE http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n} > /dev/null
+  echo "[END] Cleanup node ${n}"
+done
+
+) > >(logger -t kubernetes-cleanup) 2>&1

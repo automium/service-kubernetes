@@ -11,7 +11,7 @@
   copy:
     src: remove_etcd.py
     dest: /usr/local/bin/remove_etcd.py
-    mode: 0544
+    mode: 0755
 
 - name: configure | install pip
   package: name=python-pip
