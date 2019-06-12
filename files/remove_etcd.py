@@ -109,7 +109,7 @@ def parse_args():
                       dest='cluster_etcd_host', metavar='my-etcd')
 
     parser.add_option('-p', '--cluster-ip-check', help='etcd host and ports',
-                      default="", type=str,
+                      default="999.999.999.999", type=str,
                       dest='cluster_ip_check', metavar='10.2.0.10')
 
     parser.add_option_group(group)
