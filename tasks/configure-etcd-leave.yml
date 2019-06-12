@@ -5,7 +5,7 @@
   set_fact:
     cluster_etcd_leave: |
       #!/bin/bash
-      CLEANUP_NEEDED=$(curl -sS http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/{{ identity }}/cleanup/{{ ansible_hostname }})
+      CLEANUP_NEEDED=$(curl -sS http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/{{ ansible_hostname }})
       if [ -z "$CLEANUP_NEEDED" ]; then
         echo Cleanup is not needed
         exit 0
