@@ -26,7 +26,7 @@ kubectl_uncordon () {
 
 etcd_member_remove () {
   echo [START] Remove $1 from etcd cluster
-  /usr/local/bin/remove_etcd.py --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1}
+  /usr/local/bin/etcd-scripts/remove-etcd --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1}
   echo [END] Remove $1 from etcd cluster
 }
 
@@ -45,6 +45,19 @@ while read i; do
 done < <( echo ${DATA} | jq -r '.[].Value // empty' )
 
 for n in ${NODES}; do
+  echo "[START] Node election for instance cleanup ${n}"
+  bootstrap_session=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/session/create" | jq .ID | sed 's/"//g')
+  bootstrap=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}_lock/?acquire=${bootstrap_session}")
+
+  if [ "$bootstrap" == "true" ]; then
+    echo "I'm the controller for instance ${n} cleanup"
+  else
+    echo "Controller for instance ${n} cleanup is aready elected"
+    echo "[END] Node election for instance cleanup ${n}"
+    continue
+  fi
+  echo "[END] Node election for instance cleanup ${n}"
+
   echo "[START] Cleanup node ${n}"
   kubectl_drain ${n}
   kubectl_delete ${n}

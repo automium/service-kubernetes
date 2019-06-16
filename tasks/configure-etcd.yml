@@ -1,7 +1,10 @@
 ---
 
 - name: configure-etcd | check ETCD cluster for remove useless member
-  command: /usr/local/bin/remove_etcd.py --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-ip-check={{ ansible_default_ipv4.address }} --cluster-host-check {{ ansible_hostname }}
+  shell: |
+    [ -f /usr/local/bin/etcd-scripts/remove-etcd ] && REMOVE_ETCD=/usr/local/bin/etcd-scripts/remove-etcd
+    [ -f /usr/local/bin/remove_etcd.py ] && REMOVE_ETCD=/usr/local/bin/remove_etcd.py
+    $REMOVE_ETCD --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-ip-check={{ ansible_default_ipv4.address }} --cluster-host-check {{ ansible_hostname }}
   delegate_to: "{{ cluster_name }}-etcd.service.automium.consul"
 
 - name: configure-etcd | cleanup ETCD lib folder

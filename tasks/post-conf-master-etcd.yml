@@ -1,5 +1,11 @@
 ---
 
+- name: post-conf-master-etcd | create etcd-scripts dir
+  file:
+    path: /usr/local/bin/etcd-scripts
+    state: directory
+    mode: 0755
+
 - name: post-conf-master-etcd | grant access to folder /etc/ssl/etcd consul user
   acl:
     path: /etc/ssl/etcd
@@ -20,17 +26,27 @@
   set_fact:
     cluster_name: "{{ cluster_name }}"
 
-- name: post-conf-master-etcd | grant access multiple file
+- name: post-conf-master-etcd | set clustername
+  set_fact:
+    consul_allowed_cert_lists: |
+      {% if master == 'true' %}
+      - /etc/ssl/etcd/ssl/node-{{ ansible_hostname }}.pem
+      - /etc/ssl/etcd/ssl/node-{{ ansible_hostname }}-key.pem
+      {% endif %}
+      {% if etcd == 'true' %}
+      - /etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem
+      - /etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem
+      {% endif %}
+      - /etc/ssl/etcd/ssl/ca.pem
+
+- name: post-conf-master-etcd | grant access multiple file to consul
   acl:
     path: "{{item}}"
     entity: consul
     etype: user
     permissions: rx
     state: present
-  with_items:
-    - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}.pem
-    - /etc/ssl/etcd/ssl/member-{{ansible_hostname}}-key.pem
-    - /etc/ssl/etcd/ssl/ca.pem
+  with_items: "{{ consul_allowed_cert_lists | from_yaml }}"
 
 - name: post-conf-master-etcd | grant access to folder /root/
   acl:
@@ -47,6 +63,8 @@
     etype: user
     permissions: rx
     state: present
+  when:
+    - master == "true"
 
 - name: post-conf-master-etcd | grant access to folder /root/.kube/config
   acl:
@@ -56,6 +74,8 @@
     permissions: r
     recursive: yes
     state: present
+  when:
+    - master == "true"
 
 - name: post-conf-master-etcd | allow access to kubeconfig
   acl:
@@ -65,6 +85,8 @@
     permissions: r
     recursive: yes
     state: present
+  when:
+    - master == "true"
 
 - name: post-conf-master-etcd | wait etcd service is up
   uri:

@@ -7,10 +7,16 @@
     mode: 0755
   tags: image
 
-- name: configure | create remove_etcd.py script
-  copy:
-    src: remove_etcd.py
-    dest: /usr/local/bin/remove_etcd.py
+- name: configure | create etcd-scripts dir
+  file:
+    path: /usr/local/bin/etcd-scripts
+    state: directory
+    mode: 0755
+
+- name: configure | create remove-etcd script
+  template:
+    src: remove-etcd.py.j2
+    dest: /usr/local/bin/etcd-scripts/remove-etcd
     mode: 0755
 
 - name: configure | install pip

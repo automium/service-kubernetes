@@ -16,17 +16,18 @@
         echo not found
         exit 3
       fi
+
 - name: consul | create consul_check.sh
   copy:
     content: "{{ consul_check_sh }}"
-    dest: /usr/local/bin/kubernetes_check_node
+    dest: /usr/local/bin/kubernetes-check-node
     mode: 0555
     backup: yes
 
-- name: consul | create etcd_consul_check.py
+- name: consul | create etcd-consul-check
   copy:
-    src: etcd_consul_check.py
-    dest: /usr/local/bin/etcd_consul_check.py
+    src: etcd-consul-check.py
+    dest: /usr/local/bin/etcd-consul-check
     mode: 0555
     backup: yes
 
@@ -39,11 +40,11 @@
       {% if etcd == 'true' %}
           - args: ["/usr/local/bin/etcdctl", "--ca-file=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem", "--endpoint=https://127.0.0.1:2379", "cluster-health", "|", "grep", "{{ ansible_default_ipv4['address']  }}", "|", "grep", "healthy"]
             interval: "10s"
-          - args: ["/usr/local/bin/etcd_consul_check.py", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
+          - args: ["/usr/local/bin/etcd-consul-check", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
             interval: "10s"
       {% endif %}
       {% if master == 'true' %}
-          - args: ["/usr/local/bin/kubernetes_check_node"]
+          - args: ["/usr/local/bin/kubernetes-check-node"]
             interval: "30s"
           - tcp: localhost:6443
             interval: 10s
@@ -74,13 +75,13 @@
             interval: "10s"
       - name: "{{ cluster_name }}-etcd"
         checks:
-          - args: ["/usr/local/bin/etcd_consul_check.py", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
+          - args: ["/usr/local/bin/etcd-consul-check", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
             interval: "10s"
       {% endif %}
       {% if master == 'true' %}
       - name: "{{ cluster_name }}-kube-master"
         checks:
-          - args: ["/usr/local/bin/kubernetes_check_node"]
+          - args: ["/usr/local/bin/kubernetes-check-node"]
             interval: "30s"
       - name: "{{ cluster_name }}-kube-apiserver"
         check:
