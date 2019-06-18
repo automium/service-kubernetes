@@ -29,7 +29,7 @@
     }
   ],
   "variables": {
-    "source_image": "c216c7a6-7a0c-4d98-9e32-a8b66e1af071",
+    "source_image": "9cd1ffb4-6713-474c-b4dc-e2380032b855",
     "image_name": "{{env `IMAGE_NAME`}}",
     "instance_name": "kubernetes",
     "flavor":  "e3standard.x4",
