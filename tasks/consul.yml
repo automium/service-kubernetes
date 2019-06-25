@@ -186,7 +186,8 @@
         watches: "{{ consul_watches }}"
         rejoin_after_leave: true
         node_meta:
-          - image: "{{ image }}"
+          image: "{{ image }}"
+          flavor: "{{ flavor }}"
         retry_join:
           - "{{ consul }}"
 
