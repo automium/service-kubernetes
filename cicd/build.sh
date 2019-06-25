@@ -50,3 +50,7 @@ wait
 
 # Upload image for vcd to swift (link to vsphere)
 touch temp && swift upload automium-catalog-images --object-name vcd/$IMAGE_NAME.ova -H "X-Object-Manifest: automium-catalog-images/vsphere/$IMAGE_NAME.ova" temp
+
+# Make the release
+curl https://api.github.com/repos/automium/service-kubernetes/releases?access_token=$GITHUB_TOKEN \
+  -X POST -d "{ \"tag_name\": \"$IMAGE_NAME\", \"target_commitish\": \"$TRAVIS_COMMIT\", \"name\": \"$IMAGE_NAME\", \"body\": \"\", \"draft\": false, \"prerelease\": false }"
