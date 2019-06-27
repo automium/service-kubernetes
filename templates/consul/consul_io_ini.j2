@@ -1,0 +1,12 @@
+[consul]
+bulk_load = false
+datacenter = {{ consul_datacenter }}
+url = http://{{ consul }}:{{ consul_port }}
+servers_suffix = ""
+suffixes = true
+tags = false
+kv_groups=ansible/groups
+kv_metadata=ansible/metadata
+availability = false
+available_suffix = _up
+unavailable_suffix = _down

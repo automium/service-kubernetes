@@ -26,7 +26,7 @@
 
 - name: consul | create etcd-consul-check
   copy:
-    src: etcd-consul-check.py
+    src: scripts/etcd-consul-check.py
     dest: /usr/local/bin/etcd-consul-check
     mode: 0555
     backup: yes
@@ -200,4 +200,6 @@
           - "{{ consul }}"
 
 - name: consul | restart consul service
-  service: name=consul state=restarted
+  service: 
+    name: consul
+    state: restarted

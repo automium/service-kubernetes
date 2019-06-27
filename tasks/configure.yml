@@ -48,30 +48,14 @@
     src: ssh_config
     dest: /root/.ssh/config
 
-- name: configure | render consul_io.ini
-  set_fact:
-    consul_io_ini: |
-      [consul]
-      bulk_load = false
-      datacenter = {{ consul_datacenter }}
-      url = http://{{ consul }}:{{ consul_port }}
-      servers_suffix = ""
-      suffixes = true
-      tags = false
-      kv_groups=ansible/groups
-      kv_metadata=ansible/metadata
-      availability = false
-      available_suffix = _up
-      unavailable_suffix = _down
-
 - name: configure | create consul_io.ini
-  copy:
-    content: "{{ consul_io_ini }}"
+  template:
+    src: consul/consul_io_ini.j2
     dest: /usr/src/cloud/consul_io.ini
 
 - name: configure | install consul_io.py
-  get_url:
-    url: https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/consul_io.py
+  copy:
+    src: scripts/consul_io.py
     mode: 600
     dest: /usr/src/cloud/consul_io.py
   tags: image
