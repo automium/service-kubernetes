@@ -59,8 +59,10 @@ for n in ${NODES}; do
   echo "[END] Node election for instance cleanup ${n}"
 
   echo "[START] Cleanup node ${n}"
+  {% if master == 'true' %}
   kubectl_drain ${n}
   kubectl_delete ${n}
+  {% endif %}
   {% if etcd == 'true' %}
   etcd_member_remove ${n}
   {% endif %}
