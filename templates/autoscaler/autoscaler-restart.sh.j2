@@ -1,0 +1,29 @@
+#!/bin/bash
+
+(
+
+# Save stdin to DATA
+DATA=$(cat -)
+
+if [ "${DATA}" == "null" ]; then
+  echo "Nothing to cleanup"
+  exit 0
+fi
+
+bootstrap_session=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/session/create" | jq .ID | sed 's/"//g')
+bootstrap=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/deploy/start_lock/?acquire=${bootstrap_session}")
+
+if [ "$bootstrap" == "true" ]; then
+  echo "I'm the controller for autoscaler-restart"
+else
+  echo "Controller for autoscaler-restart is aready elected"
+  exit 0
+fi
+
+kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=0 statefulset automium-cluster-autoscaler
+kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=1 statefulset automium-cluster-autoscaler
+
+# Cleanup lock
+curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/testz/deploy/start_lock?recurse=yes"
+
+) > >(logger -t autoscaler-restart) 2>&1

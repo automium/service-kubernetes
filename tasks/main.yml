@@ -23,11 +23,6 @@
     - etcd == "true"
   tags: others
 
-- import_tasks: disable-autoscaler.yml
-  tags: others
-  when:
-    - automium_autoscaler_kubeconfig != ""
-
 - import_tasks: deploy.yml
 
 - import_tasks: post-conf-master-bootstrap.yml
@@ -35,8 +30,7 @@
   when:
     - master == "true"
 
-- import_tasks: post-conf-master-bootstrap-autoscaler.yml
-  tags: bootstrap
+- import_tasks: post-conf-master-autoscaler.yml
   when:
     - master == "true"
     - automium_autoscaler_kubeconfig != ""
@@ -44,11 +38,6 @@
 - import_tasks: post-conf-master-etcd.yml
   when:
     - etcd == "true" or master == "true"
-
-- import_tasks: enable-autoscaler.yml
-  tags: others
-  when:
-    - automium_autoscaler_kubeconfig != ""
 
 - import_tasks: configure-master-etcd-node-cleanup.yml
   when:

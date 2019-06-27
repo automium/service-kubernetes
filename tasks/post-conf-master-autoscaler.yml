@@ -1,5 +1,11 @@
 ---
 
+- name: post-conf-master-autoscaler | copy autoscaler-restart script
+  template:
+    src: autoscaler/autoscaler-restart.sh.j2
+    dest: /usr/local/bin/kubernetes-scripts/autoscaler-restart
+    mode: 0775
+
 - name: post-conf-master-autoscaler | save kubeconfig in base64
   set_fact:
     kubeconfig64: "{{ lookup('file', '/etc/kubernetes/admin.conf') | b64encode }}"

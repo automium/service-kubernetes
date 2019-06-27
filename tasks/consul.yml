@@ -132,6 +132,14 @@
       {% else %}
           - "/bin/true"
       {% endif %}
+      - type: "key"
+        key: "{{ cluster_name }}/deploy/start"
+        args:
+      {% if master == 'true' %}
+          - "/usr/local/bin/kubernetes-scripts/autoscaler-restart"
+      {% else %}
+          - "/bin/true"
+      {% endif %}
 
 - name: consul | convert from string to service object
   set_fact:

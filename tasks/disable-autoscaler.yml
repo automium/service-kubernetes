@@ -1,5 +1,0 @@
----
-
-- name: disable-autoscaler | stop autoscaling during the deployment
-  shell: |
-    ssh -o StrictHostKeyChecking=no root@{{ cluster_name }}-kube-master.service.automium.consul kubectl -n kube-system scale --replicas=0 statefulset automium-cluster-autoscaler
