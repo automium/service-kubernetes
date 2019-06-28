@@ -68,6 +68,7 @@ for n in ${NODES}; do
   {% endif %}
   echo "Report that the cleanup is completed on node ${n}"
   curl -f -sS -X DELETE http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n} > /dev/null
+  curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}_lock/?recurse=yes"
   echo "[END] Cleanup node ${n}"
 done
 
