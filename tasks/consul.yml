@@ -200,6 +200,6 @@
           - "{{ consul }}"
 
 - name: consul | restart consul service
-  service: 
+  service:
     name: consul
     state: restarted
