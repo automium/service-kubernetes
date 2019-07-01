@@ -19,12 +19,35 @@
     dest: /usr/local/bin/etcd-scripts/remove-etcd
     mode: 0755
 
-- name: configure | install image pakage
+- name: configure | install glusterfs-client
   package:
+    name: glusterfs-client
+  tags: image
+
+- name: configure | set list kenel moldules to load
+  set_fact:
+    kernel_modules:
+      - "dm_snapshot"
+      - "dm_mirror"
+      - "dm_thin_pool"
+
+- name: configure | Add module dm_thin_pool for thin volumes provisioning
+  modprobe:
     name: "{{ item }}"
-  with_items:
-    - python-pip
-    - glusterfs-client
+    state: "present"
+  with_items: "{{ kernel_modules }}"
+
+- name: configure | Add module dm_thin_pool for thin volumes provisioning
+  lineinfile:
+    path: /etc/modules
+    state: present
+    create: yes
+    line: '{{ item }}'
+  with_items: "{{ kernel_modules }}"
+
+- name: configure | install pip
+  package:
+    name: python-pip
   tags: image
 
 - name: configure | install consul.py
@@ -56,6 +79,6 @@
 - name: configure | install consul_io.py
   copy:
     src: scripts/consul_io.py
-    mode: 600
+    mode: 0600
     dest: /usr/src/cloud/consul_io.py
   tags: image
