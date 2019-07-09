@@ -19,8 +19,12 @@
     dest: /usr/local/bin/etcd-scripts/remove-etcd
     mode: 0755
 
-- name: configure | install pip
-  package: name=python-pip
+- name: configure | install image pakage
+  package:
+    name: "{{ item }}"
+  with_items:
+    - python-pip
+    - glusterfs-client
   tags: image
 
 - name: configure | install consul.py
