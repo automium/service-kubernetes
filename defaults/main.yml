@@ -1,6 +1,6 @@
 ---
 
-kubespray_version: v2.9.0
+# kubespray_version: v2.9.0
 name: name
 cluster_name: cluster_name
 consul: 127.0.0.1

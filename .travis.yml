@@ -19,7 +19,11 @@ jobs:
     - stage: unittest
       script: 'if [ ! "$TRAVIS_TAG" ]; then bash cicd/unittest.sh; fi'
     - stage: build
-      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh; fi'
+      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 1; fi'
+    - stage: build
+      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 2; fi'
+    - stage: build
+      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 3; fi'
     - stage: build
       script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/container.sh; fi'
 #    - stage: deploy
