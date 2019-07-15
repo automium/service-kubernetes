@@ -1,143 +1,52 @@
 ---
 
-- name: copy-cert | copy sample inventory to inventory/{{ cluster_name }}
-  synchronize:
-    src: /usr/src/cloud/kubespray/inventory/sample/
-    dest: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}
-
-- name: copy-cert | copy dynamic inventory to file
-  copy:
-    content: "{{ dynamic_invertory }}"
-    dest: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/hosts.ini
-
-- name: copy-cert | set ignore_assert_errors to true
-  lineinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
-    regexp: '^#ignore_assert_errors: false'
-    line: 'ignore_assert_errors: true'
-
-- name: copy-cert | comment loadbalancer_apiserver_localhost
-  lineinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
-    regexp: '^loadbalancer_apiserver_localhost'
-    line: '#loadbalancer_apiserver_localhost'
-
-- name: copy-cert | comment loadbalancer_apiserver_type
-  lineinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
-    regexp: '^loadbalancer_apiserver_type'
-    line: '#loadbalancer_apiserver_type'
-
-- name: copy-cert | comment loadbalancer_apiserver_healthcheck_port
-  lineinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
-    regexp: '^loadbalancer_apiserver_healthcheck_port'
-    line: '#loadbalancer_apiserver_healthcheck_port'
-
-- name: copy-cert | comment defaut openstack_blockstorage_ignore_volume_az
-  lineinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
-    regexp: '^openstack_blockstorage_ignore_volume_az'
-    line: '#loadbalancer_apiserver_healthcheck_port'
-  when: provider == "openstack"
-
-- name: copy-cert | set all etcd member as alive
-  tags:
-    - others
-  blockinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/etcd.yml
-    block: |
-      etcd_member_in_cluster:
-        rc: 1
-
-- name: copy-cert | show the frist master alive
-  debug:
-    var: host_list_kube_master_up[0]
-
-- name: copy-cert | show master flag ( true of false )
-  debug:
-    var: master
-
-- name: copy-cert | configure host IP
-  set_fact:
-    loadbalancer_apiserver_address: >-
-      {% if master == "true" %}
-      {{ ip | default(ansible_default_ipv4.address) }}
-      {%- else -%}
-      {{ host_list_kube_master_up[0] }}
-      {%- endif -%}
-
-- name: set apiserver_loadbalancer_domain_name
-  set_fact:
-    apiserver_loadbalancer_domain_name: "{{ cluster_name }}-kube-apiserver.service.automium.consul"
-
-- name: copy-cert | Debug loadbalancer_apiserver_address
-  debug:
-    var: loadbalancer_apiserver_address
-
-- name: copy-cert | configure Automium kubernetes var in custom_confguration_yaml
-  set_fact:
-    custom_confguration_node_yaml: |
-      kube_profiling: false
-      kube_api_anonymous_auth: false
-      kubernetes_audit: true
-      audit_log_maxbackups: 10
-      kube_apiserver_enable_admission_plugins:
-        - "ServiceAccount"
-      kube_feature_gates:
-        - "RotateKubeletServerCertificate=true"
-      kubelet_custom_flags:
-        - "--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
-        - "--event-qps=0"
-      scheduler_custom_flags:
-        - "--terminated-pod-gc-threshold=10"
-        - "--profiling false"
-      apiserver_custom_flags:
-        - "--anonymous-auth=false"
-        - "--profiling=false"
-        - "--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
-      kube_kubeadm_apiserver_extra_args:
-        profiling: false
-        tls-cipher-suites: "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
-      kube_controller_manager_bind_address: 127.0.0.1
-      kube_kubeadm_controller_extra_args:
-        profiling: false
-      kube_scheduler_bind_address: 127.0.0.1
-      kube_kubeadm_scheduler_extra_args:
-        profiling: false
-
-- name: copy-cert | configure vars all certificates
-  blockinfile:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/group_vars/all/all.yml
-    block: |
-      {% if provider == "openstack" %}
-      cloud_provider: "openstack"
-      openstack_blockstorage_ignore_volume_az: true
-      {% endif %}
-      apiserver_loadbalancer_domain_name: "{{ apiserver_loadbalancer_domain_name }}"
-      loadbalancer_apiserver_localhost: false
-      loadbalancer_apiserver:
-        address: "{{ loadbalancer_apiserver_address }}"
-        port: 6443
-      etcd_access_addresses: https://{{ cluster_name }}-etcd.service.automium.consul:2379
-      etcd_client_url: https://{{ cluster_name }}-etcd.service.automium.consul:2379
-      etcd_cert_alt_names:
-        - "etcd.kube-system.svc.{{'{{ ' }} dns_domain {{ ' }}'}}"
-        - "etcd.kube-system.svc"
-        - "etcd.kube-system"
-        - "etcd"
-        - "{{ cluster_name }}-etcd.service.automium.consul"
-      {% if node == "true" %}
-      node_labels:
-        nodepool: "{{ name }}"
-      {% endif %}
-
-- name: create host_vars in inventory
+- name: copy-cert | create ssl/etcd folder
   file:
-    path: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/host_vars/
+    path: /etc/ssl/etcd
     state: directory
+    mode: 0755
 
-- name: set custom node variable in high priority
-  copy:
-    content: "{{ custom_confguration_node_yaml }}"
-    dest: /usr/src/cloud/kubespray/inventory/{{ cluster_name }}/host_vars/{{ ansible_hostname }}.yml
+- name: copy-cert | create ssl/etcd/ssl folder
+  file:
+    path: /etc/ssl/etcd/ssl
+    state: directory
+    mode: 0755
+
+- name: copy-cert | copy ca certificate and ca key on etcd node
+  shell: rsync -e "ssh -o StrictHostKeyChecking=no" -avP root@{{ cluster_name }}-etcd.service.automium.consul:/etc/ssl/etcd/ssl/{{ item }} /etc/ssl/etcd/ssl/
+  with_items:
+    - ca-key.pem
+    - ca.pem
+  when:
+    - etcd == "true"
+  tags: others
+
+- name: copy-cert | create kubernetes folder
+  file:
+    path: /etc/kubernetes/
+    state: directory
+    mode: 0755
+
+- name: copy-cert | create kubernetes/ssl folder
+  file:
+    path: /etc/kubernetes/ssl
+    state: directory
+    mode: 0755
+
+- name: copy-cert | copy kubernetes node certs
+  shell: rsync -e "ssh -o StrictHostKeyChecking=no" -avP root@{{ cluster_name }}-kube-master.service.automium.consul:/etc/kubernetes/ssl/{{ item }} /etc/kubernetes/ssl/
+  with_items:
+    - front-proxy-ca.crt
+  when:
+    - node == "true"
+
+- name: copy-cert | copy kubernetes master certs
+  shell: rsync -e "ssh -o StrictHostKeyChecking=no" -avP root@{{ cluster_name }}-kube-master.service.automium.consul:/etc/kubernetes/ssl/{{ item }} /etc/kubernetes/ssl/
+  with_items:
+    - ca.crt
+    - ca.key
+    - sa.key
+    - sa.pub
+  when:
+    - master == "true"
+  tags: others

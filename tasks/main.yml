@@ -16,12 +16,9 @@
     - master == "false"
     - node == "true"
 
-- import_tasks: copy-cert.yml
+- import_tasks: conf-kubespray.yml
 
-- import_tasks: configure-etcd.yml
-  when:
-    - etcd == "true"
-  tags: others
+- import_tasks: copy-cert.yml
 
 - import_tasks: deploy.yml
 
