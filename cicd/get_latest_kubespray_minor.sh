@@ -2,9 +2,12 @@
 
 get_latest_kubespray_minor() {
 
+  set -o pipefail
+
   LATEST_MINOR=$1
 
-  export TAGS=$(curl -s https://api.github.com/repos/kubernetes-sigs/kubespray/releases | jq -r .[].tag_name | sort -Vr) 
+  until TAGS=$(curl -s https://api.github.com/repos/kubernetes-sigs/kubespray/releases | jq -r .[].tag_name | sort -Vr); do sleep 10; done
+  export TAGS
 
   # Get latest of each minor
   LATEST=""
