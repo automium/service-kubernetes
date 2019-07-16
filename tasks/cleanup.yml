@@ -1,0 +1,11 @@
+---
+
+- name: remove useless data
+  file: name="{{ item }}" state=absent
+  with_items:
+    - /root/releases
+    - /root/.cache
+    - /tmp/releases
+
+- name: apt clean cache
+  command: apt-get clean

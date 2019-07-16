@@ -43,3 +43,5 @@
 - import_tasks: post-conf-node.yml
   when:
     - node == "true"
+
+- import_tasks: cleanup.yml
