@@ -75,13 +75,13 @@
   debug:
     var: loadbalancer_apiserver_address
 
-- name: conf-kubespray | debug show vars kubespray_user_conf
+- name: conf-kubespray | debug show vars kube_conf
   debug:
-    var: kubespray_user_conf
+    var: kube_conf
 
-- name: conf-kubespray | filter kubespray_user_conf
+- name: conf-kubespray | filter kube_conf
   set_fact:
-    kubespray_user_conf_nomalized: "{{ kubespray_user_conf | from_yaml }}"
+    kube_conf_nomalized: "{{ kube_conf | from_yaml }}"
 
 - name: conf-kubespray | configure Automium kubernetes var in custom_confguration_yaml
   set_fact:
@@ -113,7 +113,7 @@
       kube_scheduler_bind_address: 127.0.0.1
       kube_kubeadm_scheduler_extra_args:
         profiling: false
-      {{ kubespray_user_conf_nomalized | to_nice_yaml }}
+      {{ kube_conf_nomalized | to_nice_yaml }}
 
 - name: conf-kubespray | configure vars all certificates
   blockinfile:

@@ -19,6 +19,19 @@ if true configure the instance as a kubernetes worker node
 
 if true configure the instance as a etcd node
 
+### KUBE_CONF _optional_
+
+[kubespray variables](https://github.com/kubernetes-sigs/kubespray/blob/master/docs/vars.md)
+
+es. in docker compose:
+```
+environment:
+  KUBE_CONF: |-
+    podsecuritypolicy_enabled: true
+    kubelet_custom_flags:
+      - "--event-qps=0"
+```
+
 ### RANCHER_URL _optional_
 
 rancher http url
