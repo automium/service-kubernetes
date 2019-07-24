@@ -79,6 +79,6 @@
 - name: configure | install consul_io.py
   copy:
     src: scripts/consul_io.py
-    mode: 0600
+    mode: 0755
     dest: /usr/src/cloud/consul_io.py
   tags: image
