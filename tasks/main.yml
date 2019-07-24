@@ -20,6 +20,11 @@
 
 - import_tasks: copy-cert.yml
 
+- import_tasks: configure-etcd.yml
+  when:
+    - etcd == "true"
+  tags: others
+
 - import_tasks: deploy.yml
 
 - import_tasks: post-conf-master-bootstrap.yml
