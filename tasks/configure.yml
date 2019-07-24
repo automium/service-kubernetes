@@ -75,6 +75,7 @@
   template:
     src: consul/consul_io_ini.j2
     dest: /usr/src/cloud/consul_io.ini
+    mode: 0655
 
 - name: configure | install consul_io.py
   copy:
