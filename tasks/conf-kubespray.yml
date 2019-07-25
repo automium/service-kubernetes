@@ -140,6 +140,7 @@
       node_labels:
         nodepool: "{{ name }}"
       {% endif %}
+      calico_felix_prometheusmetricsenabled: true
 
 - name: conf-kubespray | create host_vars in inventory
   file:
