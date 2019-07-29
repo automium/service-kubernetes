@@ -66,7 +66,7 @@ for n in ${NODES}; do
   etcd_member_remove ${n}
   echo "Report that the cleanup is completed on node ${n}"
   curl -f -sS -X DELETE http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n} > /dev/null
-  curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}_lock/?recurse=yes"
+  curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}_lock/?recurse=yes > /dev/null"
   echo "[END] Cleanup node ${n}"
 done
 
