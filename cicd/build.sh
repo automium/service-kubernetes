@@ -3,6 +3,14 @@
 set -e
 set -x
 
+function keep_alive() {
+  while true; do
+    echo -en "\a"
+    sleep 5
+  done
+}
+keep_alive &
+
 # Prerequisuite
 
 sudo apt-get update
@@ -47,11 +55,13 @@ mkdir openstack
 mv $IMAGE_NAME.qcow2 openstack/$IMAGE_NAME.qcow2
 openstack object create automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
 
-# TODO travis will kill this in 10m
-wait
-
+# Wait vsphere image upload
+wait %2
 # Upload image for vcd to swift (link to vsphere)
 touch temp && swift upload automium-catalog-images --object-name vcd/$IMAGE_NAME.ova -H "X-Object-Manifest: automium-catalog-images/vsphere/$IMAGE_NAME.ova" temp
+
+# Wait openstack image upload
+wait %3
 
 # Make the release
 until curl -f https://api.github.com/repos/automium/service-kubernetes/releases?access_token=$GITHUB_TOKEN \
