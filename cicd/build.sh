@@ -6,7 +6,7 @@ set -x
 function keep_alive() {
   while true; do
     echo -en "\a"
-    sleep 5
+    sleep 300
   done
 }
 keep_alive &
