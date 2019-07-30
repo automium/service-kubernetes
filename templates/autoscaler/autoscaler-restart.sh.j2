@@ -24,6 +24,6 @@ kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=0 statef
 kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=1 statefulset automium-cluster-autoscaler
 
 # Cleanup lock
-curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/deploy/start_lock?recurse=yes"
+curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/deploy/start_lock?recurse=yes" > /dev/null
 
 ) > >(logger -t autoscaler-restart) 2>&1
