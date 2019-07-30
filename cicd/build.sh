@@ -31,7 +31,7 @@ if [ "$OVFTOOL_MD5" != "e521b64686d65de9e91288225b38d5da" ]; then
   exit 1
 fi
 
-# Create images
+# Create image on glance and save on disk
 source cicd/get_latest_kubespray_minor.sh
 KUBESPRAY_VERSION=$(get_latest_kubespray_minor $1)
 export KUBESPRAY_VERSION
@@ -41,22 +41,29 @@ IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$TRAVIS_BUILD_NUMBER
 export IMAGE_NAME
 ./packer build packer.json
 openstack image save $IMAGE_NAME --file $IMAGE_NAME.qcow2
+
+# Create container
+openstack container create automium-catalog-images
+swift post automium-catalog-images --read-acl ".r:*,.rlistings"
+
+# Upload image for openstack to swift
+mkdir openstack
+ln $IMAGE_NAME.qcow2 openstack/$IMAGE_NAME.qcow2
+swift upload automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
+
+# Create ova
 qemu-img convert -f qcow2 -O vmdk $IMAGE_NAME.qcow2 automium-dummy.vmdk
 docker run --rm -it -v $(pwd):/root moander/ovftool ovftool /root/dummy.vmx /root/$IMAGE_NAME.ova
 sudo chmod o+r $IMAGE_NAME.ova
+
+# Upload image for vsphere to swift
 mkdir vsphere
 mv $IMAGE_NAME.ova vsphere/$IMAGE_NAME.ova
-openstack container create automium-catalog-images
-swift post automium-catalog-images --read-acl ".r:*,.rlistings"
-# Upload image for vsphere to swift
-openstack object create automium-catalog-images vsphere/$IMAGE_NAME.ova &
-# Upload image for openstack to swift
-mkdir openstack
-mv $IMAGE_NAME.qcow2 openstack/$IMAGE_NAME.qcow2
-openstack object create automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
+swift upload automium-catalog-images vsphere/$IMAGE_NAME.ova &
 
 # Wait vsphere image upload
 wait %2
+
 # Upload image for vcd to swift (link to vsphere)
 touch temp && swift upload automium-catalog-images --object-name vcd/$IMAGE_NAME.ova -H "X-Object-Manifest: automium-catalog-images/vsphere/$IMAGE_NAME.ova" temp
 
