@@ -47,6 +47,8 @@
     - ca.key
     - sa.key
     - sa.pub
+    - front-proxy-ca.crt
+    - front-proxy-ca.key
   when:
     - master == "true"
   tags: others
