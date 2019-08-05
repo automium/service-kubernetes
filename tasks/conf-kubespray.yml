@@ -113,6 +113,7 @@
       kube_scheduler_bind_address: 127.0.0.1
       kube_kubeadm_scheduler_extra_args:
         profiling: false
+      kube_proxy_conntrack_max_per_core: 512000
       {{ kube_conf_nomalized | to_nice_yaml }}
 
 - name: conf-kubespray | configure vars all certificates
