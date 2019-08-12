@@ -46,8 +46,8 @@ done < <( echo ${DATA} | jq -r '.[].Value // empty' )
 
 for n in ${NODES}; do
   echo "[START] Node election for instance cleanup ${n}"
-  bootstrap_session=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/session/create" | jq .ID | sed 's/"//g')
-  bootstrap=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}_lock/?acquire=${bootstrap_session}")
+  bootstrap_session=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/session/create" | jq -r .ID)
+  bootstrap=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}/start_lock/?acquire=${bootstrap_session}" -d "{ \"from\": \"$(hostname)\", \"time\": \"$(date +%s)\" }")
 
   if [ "$bootstrap" == "true" ]; then
     echo "I'm the controller for instance ${n} cleanup"
@@ -65,8 +65,8 @@ for n in ${NODES}; do
   {% endif %}
   etcd_member_remove ${n}
   echo "Report that the cleanup is completed on node ${n}"
-  curl -f -sS -X DELETE http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n} > /dev/null
-  curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}_lock/?recurse=yes > /dev/null"
+  curl -f -sS -X DELETE http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}/ongoing > /dev/null
+  curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/cleanup/${n}/start_lock/?recurse=yes > /dev/null"
   echo "[END] Cleanup node ${n}"
 done
 
