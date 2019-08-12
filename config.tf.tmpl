@@ -1,12 +1,12 @@
 
 # service config
 
-variable "master" { default = "${MASTER}" }
-variable "node" { default = "${NODE}" }
-variable "etcd" { default = "${ETCD}" }
-variable "rancher_url" { default = "${RANCHER_URL}" }
-variable "rancher_cluster_token" { default = "${RANCHER_CLUSTER_TOKEN}" }
-variable "automium_autoscaler_kubeconfig" { default = "${AUTOMIUM_AUTOSCALER_KUBECONFIG}" }
+variable "master" { default = "{{ MASTER }}" }
+variable "node" { default = "{{ NODE }}" }
+variable "etcd" { default = "{{ ETCD }}" }
+variable "rancher_url" { default = "{{ RANCHER_URL }}" }
+variable "rancher_cluster_token" { default = "{{ RANCHER_CLUSTER_TOKEN }}" }
+variable "automium_autoscaler_kubeconfig" { default = "{{ AUTOMIUM_AUTOSCALER_KUBECONFIG }}" }
 variable "kube_conf" { default = <<EOF
-${KUBE_CONF}EOF
+{{ KUBE_CONF }}EOF
 }
