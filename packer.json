@@ -13,7 +13,8 @@
       "ssh_username": "ubuntu",
       "flavor": "{{user `flavor`}}",
       "networks": [ "{{user `network`}}" ],
-      "floating_ip_pool": "PublicNetwork"
+      "floating_ip_pool": "PublicNetwork",
+      "security_groups": [ "ssh" ]
     }
   ],
   "provisioners": [
