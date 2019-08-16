@@ -35,7 +35,7 @@
     "source_image": "682d8da2-9e15-4dbf-8269-d5b17ed400b4",
     "image_name": "{{env `IMAGE_NAME`}}",
     "instance_name": "kubernetes",
-    "flavor":  "e3standard.x4",
+    "flavor":  "{{ env `FLAVOR` }}",
     "region":  "{{env `OS_REGION_NAME`}}",
     "tenant":  "{{env `OS_TENANT`}}",
     "username":  "{{env `OS_USERNAME`}}",
