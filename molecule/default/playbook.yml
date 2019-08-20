@@ -9,7 +9,7 @@
       shell: |
         export ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED=False
         source venv/bin/activate
-        ansible-playbook --connection=local -i inventory/local/hosts.ini cluster.yml -e download_localhost=true
+        ansible-playbook --connection=local -i inventory/local/hosts.ini cluster.yml
       args:
         chdir: /usr/src/cloud/kubespray
         executable: /bin/bash
