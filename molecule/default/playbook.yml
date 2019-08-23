@@ -36,6 +36,8 @@
       shell: |
         cloud-init clean -l -s
         rm /var/log/cloud-scripts.log
+        echo -n > /etc/machine-id
+        echo -n > /var/lib/dbus/machine-id
         rm -rf /var/lib/cloud
         rm -rf /run/cloud-init
         rm -rf /home/ubuntu/.ssh/authorized_keys
