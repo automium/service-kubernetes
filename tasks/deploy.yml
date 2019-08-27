@@ -30,6 +30,12 @@
     dest: /usr/src/cloud/kubespray/roles/kubernetes/preinstall/tasks/0020-verify-settings.yml
     state: present
 
+- name: deploy | apply patch to cluster.yaml
+  patch:
+    src: patch/cluster_yaml.patch
+    dest: /usr/src/cloud/kubespray/cluster.yml
+    state: present
+
 - name: deploy | install python requirements
   pip:
     requirements: "/usr/src/cloud/kubespray/requirements.txt"

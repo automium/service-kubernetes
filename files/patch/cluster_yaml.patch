@@ -1,0 +1,24 @@
+diff --git a/cluster.yml b/cluster.yml
+index 3e8b7811..8c6ca7f2 100644
+--- a/cluster.yml
++++ b/cluster.yml
+@@ -26,6 +26,19 @@
+     - { role: kubespray-defaults}
+     - { role: bootstrap-os, tags: bootstrap-os}
+ 
++- hosts: k8s-cluster:etcd
++  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
++  vars:
++    ansible_ssh_pipelining: true
++  gather_facts: false
++  pre_tasks:
++    - name: gather facts from all instances
++      setup:
++      delegate_to: "{{item}}"
++      delegate_facts: true
++      with_items: "{{ groups['k8s-cluster'] + groups['etcd'] + groups['calico-rr']|default([]) }}"
++      run_once: true
++
+ - hosts: k8s-cluster:etcd
+   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+   roles:
