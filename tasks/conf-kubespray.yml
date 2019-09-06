@@ -83,6 +83,19 @@
   set_fact:
     kube_conf_nomalized: "{{ kube_conf | from_yaml }}"
 
+
+- name: conf-kubespray | configure kubespay logging
+  lineinfile:
+    path: /usr/src/cloud/kubespray/ansible.cfg
+    regexp: '^callback_whitelist = profile_tasks'
+    line: 'callback_whitelist = logstash'
+
+- name: conf-kubespray | configure kubespay logging
+  lineinfile:
+    path: /usr/src/cloud/kubespray/ansible.cfg
+    regexp: '^stdout_callback = skippy'
+    line: 'stdout_callback = logstash'
+
 - name: conf-kubespray | configure Automium kubernetes var in custom_confguration_yaml
   set_fact:
     custom_confguration_node_yaml: |

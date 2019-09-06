@@ -36,6 +36,11 @@
     dest: /usr/src/cloud/kubespray/cluster.yml
     state: present
 
+- name: deploy | Add python-logstash to kubespray dependecy
+  lineinfile:
+    path: "/usr/src/cloud/kubespray/requirements.txt"
+    line: 'python-logstash==0.4.6'
+
 - name: deploy | install python requirements
   pip:
     requirements: "/usr/src/cloud/kubespray/requirements.txt"
@@ -54,6 +59,7 @@
     chdir: /usr/src/cloud/kubespray
     executable: /bin/bash
   environment:
+    LOGSTASH_SERVER: "10.2.0.12"
     OS_AUTH_URL: "{{ os_auth_url }}"
     OS_TENANT_NAME: "{{ os_tenant_name }}"
     OS_TENANT_ID: "{{ os_tenant_id }}"
