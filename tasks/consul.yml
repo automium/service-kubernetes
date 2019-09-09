@@ -135,6 +135,17 @@
           - "/bin/true"
       {% endif %}
 
+- name: consul | render consul metas
+  set_fact:
+    consul_node_meta_render: |
+      image: "{{ image }}"
+      {% if provider == "openstack" %}
+      flavor: "{{ flavor }}"
+      {% elif provider == "vsphere" %}
+      cpus: "{{ cpus }}"
+      memory: "{{ memory }}"
+      {% endif %}
+
 - name: consul | convert from string to service object
   set_fact:
     consul_service: "{{ consul_service_render | from_yaml }}"
@@ -142,6 +153,10 @@
 - name: consul | convert from string to watches object
   set_fact:
     consul_watches: "{{ consul_watches_render | from_yaml }}"
+
+- name: consul | convert from string to watches object
+  set_fact:
+    consul_node_meta: "{{ consul_node_meta_render | from_yaml }}"
 
 - name: consul | create requirement file for consul ansible role
   copy:
@@ -187,9 +202,7 @@
         services: "{{ consul_service }}"
         watches: "{{ consul_watches }}"
         rejoin_after_leave: true
-        node_meta:
-          image: "{{ image }}"
-          flavor: "{{ flavor }}"
+        node_meta: "{{ consul_node_meta }}"
         retry_join:
           - "{{ consul }}"
 
