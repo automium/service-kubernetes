@@ -123,6 +123,18 @@
       {% if provider == "openstack" %}
       cloud_provider: "openstack"
       openstack_blockstorage_ignore_volume_az: true
+      {% elif provider == "vsphere" %}
+      cloud_provider: "vsphere"
+      vsphere_user: "{{ vsphere_user }}"
+      vsphere_password: "{{ vsphere_password }}"
+      vsphere_insecure: "{{ vsphere_insecure }}"
+      vsphere_vcenter_ip: "{{ vsphere_server }}"
+      vsphere_vcenter_port: "{{ vsphere_server_port }}"
+      vsphere_datacenter: "{{ datacenter }}"
+      vsphere_datastore: "{{ datastore }}"
+      vsphere_working_dir: "{{ folder }}"
+      vsphere_scsi_controller_type: "pvscsi"
+      vsphere_resource_pool: "{{ cluster }}/Resources/{{ name }}"
       {% endif %}
       apiserver_loadbalancer_domain_name: "{{ apiserver_loadbalancer_domain_name }}"
       loadbalancer_apiserver_localhost: false
