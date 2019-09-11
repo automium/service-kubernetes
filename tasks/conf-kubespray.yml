@@ -87,7 +87,7 @@
   set_fact:
     custom_confguration_node_yaml: |
       kube_profiling: false
-      kube_api_anonymous_auth: false
+      kube_api_anonymous_auth: True
       kubernetes_audit: true
       audit_log_maxbackups: 10
       kube_apiserver_enable_admission_plugins:
@@ -101,9 +101,8 @@
         - "--terminated-pod-gc-threshold=10"
         - "--profiling false"
       apiserver_custom_flags:
-        - "--anonymous-auth=false"
-        - "--profiling=false"
         - "--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
+        - "--profiling=false"
       kube_kubeadm_apiserver_extra_args:
         profiling: false
         tls-cipher-suites: "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
