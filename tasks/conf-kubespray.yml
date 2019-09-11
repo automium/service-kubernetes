@@ -88,13 +88,13 @@
   lineinfile:
     path: /usr/src/cloud/kubespray/ansible.cfg
     regexp: '^callback_whitelist = profile_tasks'
-    line: 'callback_whitelist = logstash'
+    line: 'callback_whitelist = debug'
 
 - name: conf-kubespray | configure kubespay logging
   lineinfile:
     path: /usr/src/cloud/kubespray/ansible.cfg
     regexp: '^stdout_callback = skippy'
-    line: 'stdout_callback = logstash'
+    line: 'stdout_callback = debug'
 
 - name: conf-kubespray | configure Automium kubernetes var in custom_confguration_yaml
   set_fact:
