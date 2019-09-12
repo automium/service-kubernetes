@@ -127,7 +127,7 @@
           - "/bin/true"
       {% endif %}
       - type: "key"
-        key: "{{ cluster_name }}/deploy/start"
+        key: "{{ cluster_name }}/.deploy/start"
         args:
       {% if master == 'true' %}
           - "/usr/local/bin/kubernetes-scripts/autoscaler-restart"
