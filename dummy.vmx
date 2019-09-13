@@ -66,3 +66,4 @@ numa.autosize.cookie = "120001"
 numa.autosize.vcpu.maxPerVirtualNode = "12"
 checkpoint.vmState.readOnly = "FALSE"
 scsi0:0.redo = ""
+disk.enableUUID = TRUE
