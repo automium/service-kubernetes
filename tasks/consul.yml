@@ -119,7 +119,7 @@
   set_fact:
     consul_watches_render: |
       - type: "keyprefix"
-        prefix: "{{ cluster_name }}/cleanup"
+        prefix: "{{ cluster_name }}/.cleanup"
         args:
       {% if etcd == 'true' or master == 'true' %}
           - "/usr/local/bin/kubernetes-scripts/cleanup"
