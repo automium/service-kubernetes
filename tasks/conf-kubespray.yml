@@ -131,7 +131,7 @@
       vsphere_vcenter_ip: "{{ vsphere_server }}"
       vsphere_vcenter_port: "{{ vsphere_server_port }}"
       vsphere_datacenter: "{{ datacenter }}"
-      vsphere_datastore: "{{ datastore }}"
+      vsphere_datastore: "use_storage_class"
       vsphere_working_dir: "{{ root_folder }}/{{ folder }}"
       vsphere_scsi_controller_type: "pvscsi"
       vsphere_resource_pool: "{{ cluster }}/Resources/{{ cluster_name }}-{{ name }}"
