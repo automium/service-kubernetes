@@ -20,7 +20,7 @@ if [ "$bootstrap" == "true" ]; then
   echo "I'm the controller for autoscaler-restart"
 else
   echo "Controller for autoscaler-restart is aready elected"
-  if [ "$bootstrap_last" > 60 ]; then
+  if [ $bootstrap_last -gt 60 ]; then
     echo "Deleting {{ cluster_name }}/.deploy/start_lock becouse is older than 60 seconds, job was started from ${bootstrap_owner} at ${bootstrap_last}"
     curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock"
   fi
