@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -Eeu
+
+TELEGRAM_BOT_TOKEN="{{ telegram_bot_token }}"
+TELEGRAM_CHAT_ID="{{ telegram_chat_id }}"
+
+CONTEXT="{{ context }}"
+
+HN="$(hostname)"
+FULLMESSAGE="$(cat /dev/stdin)"
+
+SEVERITY="$(echo $FULLMESSAGE | awk '{ print $2 }')"
+MESSAGE="$(echo $FULLMESSAGE | awk '{ print substr($0,index($0,$3)) }' | tr '<' '(' | tr '>' ')')"
+DECTDATE="$(date)"
+
+
+template=$(cat <<TEMPLATE
+<strong>Falco security notification:</strong>
+<strong>Context:</strong> $CONTEXT
+<strong>Host:</strong> $HN
+<strong>Severity:</strong> $SEVERITY
+<strong>Dectected on:</strong> $DECTDATE
+<pre>$MESSAGE</pre>
+TEMPLATE
+)
+
+(
+	/usr/bin/curl --silent --output /dev/null \
+	    --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+	    --data-urlencode "text=${template}" \
+	    --data-urlencode "parse_mode=HTML" \
+	    --data-urlencode "disable_web_page_preview=true" \
+	"https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+) &

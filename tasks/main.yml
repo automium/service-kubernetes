@@ -51,4 +51,6 @@
 
 - import_tasks: post-conf-deploy-phase.yml
 
+- import_tasks: post-conf-falco.yml
+
 - import_tasks: cleanup.yml

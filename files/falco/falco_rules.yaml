@@ -1,0 +1,48 @@
+- required_engine_version: 2
+
+- macro: is_an_host_event
+  condition: container.id = host
+
+- macro: is_a_valid_event
+  condition: evt.args > 0
+
+- macro: file_has_been_written
+  condition: > 
+    (evt.type=open or evt.type=openat) and 
+    evt.is_open_write=true and
+    fd.typechar='f' and fd.num>=0
+
+- macro: is_an_action_which_modifies_the_system
+  condition: evt.type in (mkdir, mkdirat, rmdir, rename, renameat, unlink, unlinkat) or file_has_been_written
+
+- macro: not_in_ignored_paths
+  condition: >
+    not evt.args contains "/opt/consul/.kube" and
+    not evt.args contains "/var/lib/docker" and
+    not evt.args contains "/var/lib/kubelet/pods" and
+    not evt.args contains "/var/log" and
+    not evt.args contains "/var/run" and
+    not evt.args contains "/var/crash" and
+    not evt.args contains "/run" and
+    not evt.args contains "/tmp" and
+    not evt.args contains "/proc" and
+    not evt.args contains "/sys" and
+    not evt.args contains "/dev" 
+
+- macro: is_not_an_ignored_proc
+  condition: >
+    not proc.name in (systemd, systemd-logind, systemd-journal, systemd-tmpfile, containerd, kubelet, cloud-init, gpgconf) and
+    not proc.exe in (/lib/systemd/systemd-logind, docker-untar)
+
+- rule: detected_system_modification
+  desc: "Detected a system modification"
+  condition: >
+    is_a_valid_event and
+    is_an_host_event and
+    is_an_action_which_modifies_the_system and
+    is_not_an_ignored_proc and
+    not_in_ignored_paths
+  output: |-
+    Filesystem modification detected (process=%proc.name [%proc.exe]) command=%proc.exeline parent=%proc.pcmdline workingDir=%proc.cwd user=%user.name event=%evt.type syscallParams=[ %evt.args ])
+  priority: ERROR
+  tags: [filesystem]
