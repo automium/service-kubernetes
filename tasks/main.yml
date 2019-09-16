@@ -49,4 +49,6 @@
   when:
     - node == "true"
 
+- import_tasks: post-conf-deploy-phase.yml
+
 - import_tasks: cleanup.yml

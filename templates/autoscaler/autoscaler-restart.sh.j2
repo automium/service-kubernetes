@@ -1,36 +1,8 @@
 #!/bin/bash
 
-(
-
-# Save stdin to DATA
-DATA=$(cat -)
-
-if [ "${DATA}" == "null" ]; then
-  echo "Nothing to cleanup"
-  exit 0
-fi
-
-bootstrap_session=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/session/create" | jq -r .ID)
-bootstrap=$(curl -s -X PUT "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock/?acquire=${bootstrap_session}" -d "{ \"owner\": \"$(hostname)\", \"time\": \"$(date +%s)\" }")
-bootstrap_epoch=$(curl -s "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock" | jq -r '.[].Value // empty' | base64 -d | jq -r .time )
-bootstrap_last=$(echo $(date +%s) - $bootstrap_epoch | bc)
-bootstrap_owner=$(curl -s "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock" | jq -r '.[].Value // empty' | base64 -d | jq -r .owner )
-
-if [ "$bootstrap" == "true" ]; then
-  echo "I'm the controller for autoscaler-restart"
-else
-  echo "Controller for autoscaler-restart is aready elected"
-  if [ $bootstrap_last -gt 60 ]; then
-    echo "Deleting {{ cluster_name }}/.deploy/start_lock becouse is older than 60 seconds, job was started from ${bootstrap_owner} at ${bootstrap_last}"
-    curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock"
-  fi
-  exit 0
-fi
+echo "[START] autoscaler-restart"
 
 kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=0 statefulset automium-cluster-autoscaler
 kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=1 statefulset automium-cluster-autoscaler
 
-# Cleanup lock
-curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock?recurse=yes" > /dev/null
-
-) > >(logger -t autoscaler-restart) 2>&1
+echo "[END] autoscaler-restart"
