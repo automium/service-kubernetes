@@ -42,7 +42,7 @@ fi
 
 while read i; do
   NODES=$(echo $i | base64 -d | jq -r .name)
-done < <( echo ${DATA} | jq -r '.[].Value // empty' )
+done < <( echo ${DATA} | jq -r '.[] | select(.Key|test("/start_lock/$")|not) | .Value // empty' )
 
 for n in ${NODES}; do
   echo "[START] Node election for instance cleanup ${n}"
