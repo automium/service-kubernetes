@@ -21,14 +21,6 @@ if true configure the instance as a etcd node
 
 ### KUBE_CONF _optional_
 
-### TELEGRAM_BOT_TOKEN _optional_
-require TELEGRAM_CHAT_ID
-used for send notification to telegram
-
-### TELEGRAM_CHAT_ID _optional_
-require TELEGRAM_BOT_TOKEN
-used for send notification to telegram
-
 [kubespray variables](https://github.com/kubernetes-sigs/kubespray/blob/master/docs/vars.md)
 
 es. in docker compose:
