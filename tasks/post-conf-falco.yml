@@ -19,6 +19,12 @@
     - /etc/update-motd.d
     - /var/run/motd.dynamic
 
+- name: post-conf-falco | install kernel headers
+  apt:
+    name: "linux-headers-{{ ansible_kernel }}"
+    state: present
+  tags: image
+
 - name: post-conf-falco | add draios key
   apt_key:
     url: https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public
