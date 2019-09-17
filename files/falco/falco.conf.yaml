@@ -1,3 +1,4 @@
+---
 #
 # Copyright (C) 2016-2018 Draios Inc dba Sysdig.
 #
@@ -29,8 +30,8 @@
 # The files will be read in the order presented here, so make sure if
 # you have overrides they appear in later files.
 rules_file:
- - /etc/falco/falco_rules.yaml
- - /etc/falco/rules.d
+  - /etc/falco/falco_rules.yaml
+  - /etc/falco/rules.d
 
 # If true, the times displayed in log messages and output messages
 # will be in ISO 8601. By default, times are displayed in the local

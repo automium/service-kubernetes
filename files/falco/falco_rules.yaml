@@ -1,3 +1,5 @@
+---
+
 - required_engine_version: 2
 
 - macro: is_an_host_event
@@ -7,8 +9,8 @@
   condition: evt.args > 0
 
 - macro: file_has_been_written
-  condition: > 
-    (evt.type=open or evt.type=openat) and 
+  condition: >
+    (evt.type=open or evt.type=openat) and
     evt.is_open_write=true and
     fd.typechar='f' and fd.num>=0
 
@@ -27,7 +29,7 @@
     not evt.args contains "/tmp" and
     not evt.args contains "/proc" and
     not evt.args contains "/sys" and
-    not evt.args contains "/dev" 
+    not evt.args contains "/dev"
 
 - macro: is_not_an_ignored_proc
   condition: >
