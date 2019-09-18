@@ -1,0 +1,12 @@
+---
+
+- name: configure-master-node | check KUBERNETES cluster for remove useless member
+  shell: |
+    for n in $(kubectl get nodes -o json | jq -r '.items[].metadata.name'); do
+      if [ "$n" == "{{ ansible_hostname }}" ]; then
+        kubectl --kubeconfig /root/.kube/config delete node "{{ ansible_hostname }}"
+      fi
+    done
+  args:
+    executable: /bin/bash
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"

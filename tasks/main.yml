@@ -25,6 +25,11 @@
     - etcd == "true"
   tags: others
 
+- import_tasks: configure-master-node.yml
+  when:
+    - master == "true"
+    - node == "true"
+
 - import_tasks: deploy.yml
 
 - import_tasks: post-conf-master-bootstrap.yml
