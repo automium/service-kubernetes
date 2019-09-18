@@ -5,12 +5,15 @@
   with_items:
     - apt-daily.timer
     - apt-daily-upgrade.timer
+    - motd-news.timer
+  tags: image
 
 - name: post-conf-falco | reduce noise in falco audit removing packages
   package: name={{ item }}
   with_items:
     - ubuntu-release-upgrader-core
     - update-notifier-common
+  tags: image
 
 - name: post-conf-falco | reduce noise in falco audit
   file: path={{ item }} state=absent
@@ -24,6 +27,7 @@
     - /etc/cron.weekly/man-db
     - /etc/update-motd.d
     - /var/run/motd.dynamic
+  tags: image
 
 - name: post-conf-falco | install kernel headers
   apt:

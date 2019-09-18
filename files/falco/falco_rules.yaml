@@ -42,6 +42,20 @@
     not proc.cmdline contains "/root/.ansible" and
     not proc.pcmdline contains "/root/.ansible"
 
+- macro: is_a_shell_execution_via_ssh
+  condition: evt.type = execve and proc.pname = sshd and proc.name in (sh, bash, dash, csh, zsh)
+
+- rule: detected_ssh_interactive_shell
+  desc: "Detected an interactive shell spawned by SSHD"
+  condition: >
+    is_a_valid_event and
+    is_an_host_event and
+    is_a_shell_execution_via_ssh
+  output: |-
+    Detected an interactive shell spawned via SSH (user=%user.name cmdline=%proc.cmdline pproc=%proc.pcmdline shellPID=%proc.loginshellid)
+  priority: ERROR
+  tags: [process]
+
 - rule: detected_system_modification
   desc: "Detected a system modification"
   condition: >

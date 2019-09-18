@@ -1,4 +1,4 @@
-FROM automium/service-provisioner:1.0.21
+FROM automium/service-provisioner:1.0.22
 
 COPY config.tf.tmpl /tmp/config.tf.tmpl
 RUN cat /tmp/config.tf.tmpl >> config.tf.tmpl
