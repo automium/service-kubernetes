@@ -1,6 +1,12 @@
 ---
 
-- name: post-conf-falco | reduce noise in falco audit
+- name: post-conf-falco | reduce noise in falco audit disabling services
+  service: name={{ item }} enabled=no
+  with_items:
+    - apt-daily.timer
+    - apt-daily-upgrade.timer
+
+- name: post-conf-falco | reduce noise in falco audit removing packages
   package: name={{ item }}
   with_items:
     - ubuntu-release-upgrader-core
