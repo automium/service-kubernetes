@@ -8,6 +8,3 @@
     state: absent
     backup: yes
     unsafe_writes: yes
-
-- name: post-conf-node | reboot
-  command: /sbin/shutdown -r +1

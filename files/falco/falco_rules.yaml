@@ -20,6 +20,7 @@
 - macro: not_in_ignored_paths
   condition: >
     not evt.args contains "/opt/consul/.kube" and
+    not evt.args contains "/opt/consul/data" and
     not evt.args contains "/var/lib/docker" and
     not evt.args contains "/var/lib/kubelet/pods" and
     not evt.args contains "/var/log" and
