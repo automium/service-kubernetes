@@ -33,7 +33,7 @@
 
 - macro: is_not_an_ignored_proc
   condition: >
-    not proc.name in (systemd, systemd-logind, systemd-journal, systemd-tmpfile, containerd, kubelet, cloud-init, gpgconf) and
+    not proc.name in (systemd, systemd-logind, systemd-journal, systemd-tmpfile, containerd, kubelet, cloud-init, gpgconf, logrotate) and
     not proc.exe in (/lib/systemd/systemd-logind, docker-untar)
 
 - rule: detected_system_modification
