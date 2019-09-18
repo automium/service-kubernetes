@@ -37,6 +37,11 @@
     not proc.name in (systemd, systemd-logind, systemd-journal, systemd-tmpfile, containerd, kubelet, cloud-init, gpgconf, logrotate) and
     not proc.exe in (/lib/systemd/systemd-logind, docker-untar)
 
+- macro: is_not_in_cmdline
+  condition: >
+    not proc.cmdline contains "/root/.ansible" and
+    not proc.pcmdline contains "/root/.ansible"
+
 - rule: detected_system_modification
   desc: "Detected a system modification"
   condition: >
@@ -44,7 +49,8 @@
     is_an_host_event and
     is_an_action_which_modifies_the_system and
     is_not_an_ignored_proc and
-    not_in_ignored_paths
+    not_in_ignored_paths and
+    is_not_in_cmdline
   output: |-
     Filesystem modification detected (process=%proc.name [%proc.exe]) command=%proc.exeline parent=%proc.pcmdline workingDir=%proc.cwd user=%user.name event=%evt.type syscallParams=[ %evt.args ])
   priority: ERROR
