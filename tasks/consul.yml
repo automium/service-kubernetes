@@ -163,7 +163,9 @@
     content: |
       - src: entercloudsuite.consul
         version: 1.0.2
-    dest: /usr/src/cloud/consul_requirement.yml
+      - src: entercloudsuite.filebeat
+        version: 1.3.0
+    dest: /usr/src/cloud/role_requirement.yml
   tags: image
 
 - name: consul | ensure roles directory exist
@@ -173,11 +175,10 @@
 - name: consul | install role entercloudsuite.consul
   shell: |
     source venv/bin/activate
-    ansible-galaxy install -r consul_requirement.yml -p roles
+    ansible-galaxy install -r role_requirement.yml -p roles
   args:
     chdir: /usr/src/cloud
     executable: /bin/bash
-    creates: roles/entercloudsuite.consul
   tags: image
 
 - name: consul | start consul role
