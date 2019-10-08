@@ -10,3 +10,6 @@ variable "automium_autoscaler_kubeconfig" { default = "{{ AUTOMIUM_AUTOSCALER_KU
 variable "kube_conf" { default = <<EOF
 {{ KUBE_CONF }}EOF
 }
+variable "filebeat_conf" { default = <<EOF
+{{ FILEBEAT_CONF }}EOF
+}

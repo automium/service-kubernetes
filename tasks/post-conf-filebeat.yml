@@ -1,0 +1,9 @@
+
+- name: postconf | show vars
+  debug:
+    var: filebeat_conf
+
+- name: postconf | Add filebeat
+  include_role:
+    name: entercloudsuite.filebeat
+    public: yes
