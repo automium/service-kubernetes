@@ -23,6 +23,7 @@
     not evt.args contains "/opt/consul/data" and
     not evt.args contains "/var/lib/docker" and
     not evt.args contains "/var/lib/kubelet/pods" and
+    not evt.args contains "/var/lib/logrotate" and
     not evt.args contains "/var/log" and
     not evt.args contains "/var/run" and
     not evt.args contains "/var/crash" and
@@ -34,7 +35,7 @@
 
 - macro: is_not_an_ignored_proc
   condition: >
-    not proc.name in (systemd, systemd-logind, systemd-journal, systemd-tmpfile, containerd, kubelet, cloud-init, gpgconf, logrotate) and
+    not proc.name in (systemd, systemd-logind, systemd-journal, systemd-tmpfile, containerd, kubelet, cloud-init, gpgconf, logrotate, filebeat) and
     not proc.exe in (/lib/systemd/systemd-logind, docker-untar)
 
 - macro: is_not_in_cmdline
