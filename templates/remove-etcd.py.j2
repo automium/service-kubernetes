@@ -13,6 +13,7 @@
 ###############################################################################
 
 from optparse import OptionParser, OptionGroup
+from urllib.parse import urlparse
 import logging as log
 import ssl
 import json
@@ -60,7 +61,8 @@ def main():
 
 
     for member in member_list['members']:
-        if (member['name'] == args.cluster_etcd_host and args.cluster_etcd_host != "") or args.cluster_ip_check in str(member['peerURLs']):
+        member_etcd_host = urlparse(str(member['peerURLs'][0])).hostname
+        if (member['name'] == args.cluster_etcd_host and args.cluster_etcd_host != "") or args.cluster_ip_check == member_etcd_host:
             log.debug(f"add {member['name']} to remove list ( Raft-ID: {member['id']} )")
             remove_list.append(member['id'])
         else:
