@@ -18,6 +18,13 @@
     update: no
   tags: image
 
+- name: deploy | get kubespray version
+  shell: |
+    git describe --tags
+  args:
+    chdir: /usr/src/cloud/kubespray
+  register: kubespray_version_current
+
 - name: deploy | apply patch
   patch:
     src: patch/kubespray.patch
@@ -35,6 +42,7 @@
     src: patch/cluster_yaml.patch
     dest: /usr/src/cloud/kubespray/cluster.yml
     state: present
+  when: kubespray_version_current.stdout | replace('v','') is version_compare('2.11.0','>=')
 
 - name: deploy | install python requirements
   pip:
