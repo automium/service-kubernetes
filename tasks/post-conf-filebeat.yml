@@ -2,11 +2,16 @@
 
 - name: postconf filebeat | show vars
   debug:
-    var: filebeat_conf_string
+    var: host_filebeat_conf
 
 - name: postconf filebeat | filter filebeat_conf
   set_fact:
-    filebeat_conf: "{{ filebeat_conf_string | from_yaml }}"
+    filebeat_conf_var: "{{ host_filebeat_conf | from_yaml }}"
+- name: postconf filebeat | set vars
+  set_fact:
+    filebeat_conf: "{{filebeat_conf_var.filebeat_conf | default('') }}"
+    filebeat_enabled: "{{filebeat_conf_var.filebeat_enabled | default(false) }}"
+    filebeat_state: "{{filebeat_conf_var.filebeat_state | default(stopped) }}"
 
 - name: postconf filebeat | show normalized
   debug:
