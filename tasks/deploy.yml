@@ -44,6 +44,14 @@
     state: present
   when: kubespray_version_current.stdout | replace('v','') is version_compare('2.11.0','>=')
 
+- name: deploy | apply patch fix calico name resolution
+  patch:
+    src: patch/0001-Fix-calico-name-resolution.patch
+    basedir: /usr/src/cloud/kubespray
+    strip: 1
+    state: present
+  when: kubespray_version_current.stdout | replace('v','') is version_compare('2.11.0','>=')
+
 - name: deploy | install python requirements
   pip:
     requirements: "/usr/src/cloud/kubespray/requirements.txt"
