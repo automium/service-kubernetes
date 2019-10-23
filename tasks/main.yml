@@ -1,5 +1,7 @@
 ---
 
+- import_tasks: post-conf-filebeat.yml
+
 - import_tasks: consul.yml
 
 - import_tasks: configure.yml
@@ -59,8 +61,6 @@
     - node == "true"
 
 - import_tasks: post-conf-falco.yml
-
-- import_tasks: post-conf-filebeat.yml
 
 - import_tasks: reboot.yml
   when:
