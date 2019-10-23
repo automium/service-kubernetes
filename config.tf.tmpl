@@ -10,3 +10,6 @@ variable "automium_autoscaler_kubeconfig" { default = "{{ AUTOMIUM_AUTOSCALER_KU
 variable "kube_conf" { default = <<EOF
 {{ KUBE_CONF }}EOF
 }
+variable "host_filebeat_conf" { default = <<EOF
+{{ FILEBEAT_CONF|default("host_filebeat_conf": "filebeat_conf:\n  output.elasticsearch:\n    hosts: [\"http://myelasticseach.mydomain.tld:9200\"]\nfilebeat_enable_modules:\n  - system\nfilebeat_enabled: true\nfilebeat_state: started") }}EOF
+}

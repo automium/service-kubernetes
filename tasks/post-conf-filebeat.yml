@@ -1,0 +1,26 @@
+---
+
+- name: postconf filebeat | show vars
+  debug:
+    var: host_filebeat_conf
+
+- name: postconf filebeat | filter filebeat_conf
+  set_fact:
+    filebeat_conf_var: "{{ host_filebeat_conf | from_yaml }}"
+  when: host_filebeat_conf != ""
+
+- name: postconf filebeat | set vars
+  set_fact:
+    filebeat_conf: "{{filebeat_conf_var.filebeat_conf | default('') }}"
+    filebeat_enabled: "{{filebeat_conf_var.filebeat_enabled | default(false) }}"
+    filebeat_state: "{{filebeat_conf_var.filebeat_state | default(stopped) }}"
+  when: host_filebeat_conf != ""
+
+- name: postconf filebeat | show normalized
+  debug:
+    var: filebeat_conf
+
+- name: postconf filebeat | Exec filebeat roles
+  include_role:
+    name: entercloudsuite.filebeat
+    public: yes

@@ -24,7 +24,7 @@ if true configure the instance as a etcd node
 [kubespray variables](https://github.com/kubernetes-sigs/kubespray/blob/master/docs/vars.md)
 
 es. in docker compose:
-```
+```yaml
 environment:
   KUBE_CONF: |-
     podsecuritypolicy_enabled: true
@@ -43,6 +43,19 @@ rancher token
 ### AUTOMIUM_AUTOSCALER_KUBECONFIG _optional_
 
 base64 automium kubeconfig
+
+### HOST_FILEBEAT_CONF
+```yaml
+HOST_FILEBEAT_CONF: |-
+  filebeat_conf:
+    output.elasticsearch:
+      hosts: ["http://myelasticseach.mydomain.tld:9200"]
+  filebeat_enable_modules:
+    - system
+  filebeat_enabled: true
+  filebeat_state: started
+```
+
 
 ## usage
 
