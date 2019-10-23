@@ -11,5 +11,5 @@ variable "kube_conf" { default = <<EOF
 {{ KUBE_CONF }}EOF
 }
 variable "host_filebeat_conf" { default = <<EOF
-{{ HOST_FILEBEAT_CONF }}EOF
+{{ FILEBEAT_CONF|default() }}EOF
 }
