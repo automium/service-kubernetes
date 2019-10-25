@@ -53,3 +53,10 @@
     create: yes
     line: '{{ item }}'
   with_items: "{{ kernel_modules }}"
+
+
+#DOTO Move to docker installation roles
+- name: Docker | move docker native cgroupdriver to systemd
+  lineinfile:
+    path: /etc/docker/daemon.json
+    line: '{"exec-opts": ["native.cgroupdriver=systemd"]}'
