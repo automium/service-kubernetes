@@ -60,3 +60,5 @@
     src: docker/daemon.json
     dest: /etc/docker/daemon.json
 
+- name: image | Download docker container
+  command: kubeadm config images pull
