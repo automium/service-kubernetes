@@ -14,7 +14,7 @@
     
 - name: configure-bootstrap | bootstrap first master
   command: >-
-    kubeadm init phase
-    --config /etc/kubernetes/kubeadm-config.yaml
+    kubeadm init
+    --config /etc/kubernetes/kubeadm-conf.yml
     --upload-certs
   register: kubeadm_upload_cert
