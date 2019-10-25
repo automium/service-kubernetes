@@ -1,9 +1,17 @@
-- name: configure-bootstrap | set kube version
+- name: vars | set kube version
   set_fact:
     k8s_version: 1.15.3
     calico_pool_cidr: 10.233.64.0/20
+    cloud_provider: "openstack"
+    kernel_modules:
+      - "dm_snapshot"
+      - "dm_mirror"
+      - "dm_thin_pool"
 
-- name: configure-bootstrap | set kube version
-  set_fact:
-    k8s_version: 1.15.3
-    calico_pool_cidr: 10.233.64.0/20
+- name: vars | print env variales cluster_name
+  debug:
+    msg: "{{ cluster_name }}"
+
+- name: vars | print env name
+  debug:
+    msg: "{{ name }}"
