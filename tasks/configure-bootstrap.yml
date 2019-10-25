@@ -18,3 +18,61 @@
     --config /etc/kubernetes/kubeadm-conf.yml
     --upload-certs
   register: kubeadm_upload_cert
+
+- name: deploy consul service account
+  copy:
+    src: kubernetes/consul_cluster_rolebinding.yaml
+    dest: /tmp/consul_cluster_rolebinding.yaml
+
+- name: configure-boostrap | create kubeconfig for consul
+  shell: |
+    #!/bin/bash
+    
+    # Exit on errors
+    set -e 
+    
+    # Export kubeconfig
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    
+    # Export hostname
+    export HOSTNAME="$(hostname)"
+    
+    # Export current version of Automium
+    export AUTOMIUM_VERSION="0.1.2"
+    
+    # Setup autoscaler serviceaccount
+    kubectl apply -f /usr/src/automium/controller/automium-autoscaler-sa.yaml
+    # Retrieve data
+    AUTOSCALER_SA_SECRET="$(kubectl -n automium-system get sa automium-clusterautoscaler-sa -o jsonpath='{.secrets[0].name}')"
+    export AUTOSCALER_TOKEN="$(kubectl -n automium-system get secret ${AUTOSCALER_SA_SECRET} -o jsonpath='{.data.token}' | base64 -d)"
+    export AUTOSCALER_CRT="$(kubectl -n automium-system get secret ${AUTOSCALER_SA_SECRET} -o jsonpath='{.data.ca\.crt}')"
+    
+    # Prepare the kubeconfig and base64 it for the configmap
+    export AUTOSCALER_KUBECONFIG="$(cat /usr/src/automium/controller/automium-autoscaler-kubeconfig.tmpl | envsubst | base64 -w 0)"
+    
+    # Install kustomize
+    wget -O /usr/local/bin/kustomize "https://github.com/kubernetes-sigs/kustomize/releases/download/v1.0.11/kustomize_1.0.11_linux_amd64" && chmod +x /usr/local/bin/kustomize
+    sha256sum /usr/local/bin/kustomize | grep "2b21b44f0245ac774f0b35e5181fd8ad7fc42a9426bc0bbfe82a75bea286b48b" >/dev/null 2>&1 || echo "kustomize checksum mismatch"
+    
+    # Download Automium
+    wget -O /tmp/controller.tgz "https://github.com/automium/automium/archive/${AUTOMIUM_VERSION}.tar.gz"
+    mkdir /tmp/controller && tar xzf /tmp/controller.tgz -C /tmp/controller && rm /tmp/controller.tgz
+    cd /tmp/controller/automium-${AUTOMIUM_VERSION}
+    kubectl apply -f config/crds
+    kustomize build config/default | kubectl apply -f -
+    
+    # Generate the controller configmap
+    cat /usr/src/automium/controller/provisioner-configmap.tmpl | envsubst > /usr/src/automium/controller/provisioner-configmap.yml
+    
+    # Deploy the remaining files
+    kubectl apply -f /usr/src/automium/controller
+    
+    unset KUBECONFIG
+    unset AUTOSCALER_TOKEN
+    unset AUTOSCALER_CRT
+    unset AUTOSCALER_KUBECONFIG
+    unset AUTOMIUM_VERSION
+    
+    # Cleanup
+    rm -rf /usr/local/bin/kustomize /tmp/controller
+    cd $OLDPWD
