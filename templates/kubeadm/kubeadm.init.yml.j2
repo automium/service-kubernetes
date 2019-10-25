@@ -11,6 +11,7 @@ nodeRegistration:
 apiVersion: kubeadm.k8s.io/v1beta2
 clusterName: {{ cluster_name }}
 kind: ClusterConfiguration
+controlPlaneEndpoint: {{ cluster_name }}-kube-apiserver.service.automium.consul:6443
 kubernetesVersion: v{{ k8s_version }}
 networking:
   serviceSubnet: {{ calico_pool_cidr }}
