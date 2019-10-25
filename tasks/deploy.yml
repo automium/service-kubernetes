@@ -60,3 +60,6 @@
     OS_USERNAME: "{{ os_user_name }}"
     OS_PASSWORD: "{{ os_password }}"
     OS_REGION_NAME: "{{ os_region }}"
+
+
+openstack_auth_url

@@ -2,13 +2,13 @@
 
 - import_tasks: consul.yml
 
-#- import_tasks: configure.yml
+- import_tasks: configure.yml
 #
 #- import_tasks: configure-others.yml
 #  tags: others
 #
-#- import_tasks: configure-bootstrap.yml
-#  tags: bootstrap
+- import_tasks: configure-bootstrap.yml
+  tags: bootstrap
 #
 #- import_tasks: configure-others.yml
 #  when:

@@ -1,30 +1,10 @@
 ---
-
-- name: configure | create kubespray dir
-  file:
-    path: /usr/src/cloud/kubespray
-    state: directory
-    mode: 0755
-  tags: image
-
-- name: configure | create etcd-scripts dir
-  file:
-    path: /usr/local/bin/etcd-scripts
-    state: directory
-    mode: 0755
-
-- name: configure | create remove-etcd script
-  template:
-    src: remove-etcd.py.j2
-    dest: /usr/local/bin/etcd-scripts/remove-etcd
-    mode: 0755
-
 - name: configure | install glusterfs-client
   package:
     name: glusterfs-client
   tags: image
 
-- name: configure | set list kenel moldules to load
+- name: configure | set list kernel modules to load
   set_fact:
     kernel_modules:
       - "dm_snapshot"
@@ -82,3 +62,15 @@
     mode: 0755
     dest: /usr/src/cloud/consul_io.py
   tags: image
+# TODO move in var sections
+- name: configure | set_fact
+  set_fact:
+    cloud_provider: "openstack"
+
+- name: configure | render cloud configurations
+  template:
+    src: "templates/provider/{{ cloud_provider }}/cloud.conf.j2"
+    dest: /etc/kubernetes/cloud.conf
+    owner: root
+    group: root
+    mode: 0600

@@ -1,5 +1,4 @@
 ---
-
 - name: configure-bootstrap | create inventory from consul
   command: "/usr/src/cloud/venv/bin/python /usr/src/cloud/consul_io.py"
   register: command_output
@@ -64,7 +63,7 @@
 - name: configure-bootstrap | show var etcd_master_this_node
   debug:
     var: etcd_master_this_node
-
+# TODO remove etcd
 - name: configure-bootstrap | render dinamic inventory
   set_fact:
     dynamic_invertory: |
@@ -93,15 +92,6 @@
       kube-master
       kube-node
 
-# record to remove in master-postconf
-- name: configure-bootstrap | create "{{ cluster_name }}-etcd.service.automium.consul" record in /etc/hosts for consul boostrap
-  lineinfile:
-    state: present
-    path: /etc/hosts
-    line: "{{ ansible_default_ipv4['address'] }} {{ cluster_name }}-etcd.service.automium.consul"
-  when:
-    - etcd == "true"
-
 - name: configure-bootstrap | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present
@@ -109,3 +99,35 @@
     line: "{{ ansible_default_ipv4['address'] }} {{ cluster_name }}-kube-apiserver.service.automium.consul"
   when:
     - master == "true"
+
+# TODO move it in Image Stage
+- name: configure-bootstrap | set kube version
+  set_fact:
+    k8s_version: 1.15.3
+    calico_pool_cidr: 10.233.64.0/20
+
+- name: configure-bootstrap | install kubernetes binary
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - kubeadm={{ k8s_version }}-00
+    - kubelet={{ k8s_version }}-00
+    - kubectl={{ k8s_version }}-00
+
+- name: configure-bootstrap | enable kubelet
+  service:
+    name: kubelet
+    state: enabled
+
+- name: configure-bootstrap | enable kubelet
+  template:
+    name: templates/kubeadm/kubeadm.init.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf.yml"
+    
+- name: configure-bootstrap | bootstrap first master
+  command: >-
+    kubeadm init phase
+    --config /etc/kubernetes/kubeadm-config.yaml
+    --upload-certs
+  register: kubeadm_upload_cert

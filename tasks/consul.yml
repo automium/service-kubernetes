@@ -37,10 +37,6 @@
       - name: "{{ identity }}"
       - name: "{{ identity }}-all"
         checks:
-      {% if etcd == 'true' %}
-          - args: ["/usr/local/bin/etcd-consul-check", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
-            interval: "10s"
-      {% endif %}
       {% if master == 'true' %}
           - args: ["/usr/local/bin/kubernetes-check-node"]
             interval: "30s"
@@ -65,12 +61,6 @@
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
-      {% endif %}
-      {% if etcd == 'true' %}
-      - name: "{{ cluster_name }}-etcd"
-        checks:
-          - args: ["/usr/local/bin/etcd-consul-check", "--ca=/etc/ssl/etcd/ssl/ca.pem", "--cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem", "--key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem"]
-            interval: "10s"
       {% endif %}
       {% if master == 'true' %}
       - name: "{{ cluster_name }}-kube-master"
