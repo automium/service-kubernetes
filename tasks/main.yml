@@ -1,4 +1,5 @@
 ---
+- import_tasks: image.yml
 
 - import_tasks: consul.yml
 
