@@ -1,97 +1,4 @@
 ---
-- name: configure-bootstrap | create inventory from consul
-  command: "/usr/src/cloud/venv/bin/python /usr/src/cloud/consul_io.py"
-  register: command_output
-
-- name: configure-bootstrap | preset variables for bootstrap node
-  set_fact:
-    cluster_name: "{{ cluster_name }}"
-    dynamic_inventory_from_consul: "{{ command_output.stdout |from_json }}"
-    etcd_name: "{{ cluster_name }}-etcd"
-    kube_master_name: "{{ cluster_name }}-kube-master"
-    kube_node_name: "{{ cluster_name }}-kube-node"
-
-- name: configure-bootstrap | show etcd-name kube_master_name kube_node_name
-  debug:
-    msg: "{{ etcd_name }} - {{ kube_master_name }} - {{ kube_node_name }}"
-
-- name: configure-bootstrap | create list of Host in Cluster ( select host witch name {{cluster_name}} )
-  set_fact:
-    render_host_list_all: |
-      {%- for host in dynamic_inventory_from_consul.all %}
-      {% if cluster_name in dynamic_inventory_from_consul._meta.hostvars[host].consul_nodename %}
-      - {{host}}
-      {% endif %}
-      {% endfor %}
-
-- name: configure-bootstrap | configure variables this_node cluster_host_list_all host_list_etcd host_list_kube_master host_list_kube_node
-  set_fact:
-    this_node: "{{ ansible_default_ipv4['address'] | string }}"
-    cluster_host_list_all: "{{render_host_list_all | from_yaml }}"
-    host_list_etcd: "{{ dynamic_inventory_from_consul[etcd_name] |default('') }}"
-    host_list_kube_master: "{{ dynamic_inventory_from_consul[kube_master_name] | default('') }}"
-    host_list_kube_node: "{{ dynamic_inventory_from_consul[kube_node_name] | default('') }}"
-
-- name: configure-bootstrap | configure variables etcd_master ( etcd + master host list deduplicated )
-  set_fact:
-    etcd_master: "{{ host_list_etcd | union( host_list_kube_master ) }}"
-
-- name: configure-bootstrap | set this node + etcd + master
-  set_fact:
-    etcd_master_this_node: "{{ [this_node] + etcd_master }}"
-
-- name: configure-bootstrap | show var cluster_host_list_all
-  debug:
-    var: cluster_host_list_all
-
-- name: configure-bootstrap | show var host_list_etcd
-  debug:
-    var: host_list_etcd
-
-- name: configure-bootstrap | show var host_list_kube_master
-  debug:
-    var: host_list_kube_master
-
-- name: configure-bootstrap | show var host_list_kube_node
-  debug:
-    var: host_list_kube_node
-
-- name: configure-bootstrap | show var etcd_master
-  debug:
-    var: etcd_master
-
-- name: configure-bootstrap | show var etcd_master_this_node
-  debug:
-    var: etcd_master_this_node
-# TODO remove etcd
-- name: configure-bootstrap | render dinamic inventory
-  set_fact:
-    dynamic_invertory: |
-      [all]
-      {% if ansible_default_ipv4['address'] in etcd_master_this_node %}
-      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}} etcd_member_name={{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }}
-      {% endif %}
-
-      [etcd]
-      {% if ansible_default_ipv4['address'] in host_list_etcd %}
-      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
-      {% endif %}
-
-      [kube-master]
-      {% if ansible_default_ipv4['address'] in host_list_kube_master %}
-      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
-      {% endif %}
-
-
-      [kube-node]
-      {% if ansible_default_ipv4['address'] in host_list_kube_node %}
-      {{ dynamic_inventory_from_consul._meta.hostvars[ansible_default_ipv4['address']].consul_nodename }} ansible_host={{ansible_default_ipv4['address']}}
-      {% endif %}
-
-      [k8s-cluster:children]
-      kube-master
-      kube-node
-
 - name: configure-bootstrap | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present
@@ -100,9 +7,9 @@
   when:
     - master == "true"
 
-- name: configure-bootstrap | enable kubelet
+- name: configure-bootstrap | create kubeadm configurations
   template:
-    name: templates/kubeadm/kubeadm.init.yml.j2
+    src: templates/kubeadm/kubeadm.init.yml.j2
     dest: "/etc/kubernetes/kubeadm-conf.yml"
     
 - name: configure-bootstrap | bootstrap first master
