@@ -89,15 +89,11 @@
     - master == "true"
 
 - name: post-conf-master-etcd | wait etcd service is up
-  uri:
-    url: http://{{consul}}:{{consul_port}}/v1/health/checks/{{ cluster_name }}-etcd
-    method: GET
-    status_code: 200
-    body_format: json
-  register: url
-  until:
-    - 'url.json[0].Status == "passing"'
-  retries: 6000
+  shell: etcd-consul-check --ca=/etc/ssl/etcd/ssl/ca.pem --cert-file=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}.pem --key=/etc/ssl/etcd/ssl/member-{{ ansible_hostname }}-key.pem --etcd-host=127.0.0.1:2379
+  register: check_etcd
+  until: check_etcd.rc == 0
+  retries: 120
+  ignore_errors: true
 
 - name: post-conf-master-etcd | clear etcd record in /etc/hosts for use consul
   lineinfile:
