@@ -4,6 +4,14 @@
     k8s_version: 1.15.3
     calico_pool_cidr: 10.233.64.0/20
 
+- name: Add an Apt signing key to a specific keyring file
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+
 - name: image | install kubernetes binary
   apt:
     name: "{{ item }}"
