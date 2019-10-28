@@ -1,4 +1,37 @@
 ---
-- name: configure others | create token from remote master node
-  fail:
-    msg: Qui deve fallire almeno poi posso fare a mano mange
+- name: configure others | kubead init fase
+  command: kubeadm init phase upload-certs --upload-certs
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_certficate_key
+
+- name: configure others | debug
+  debug:
+    var: kubeadm_certficate_key.stdout_lines[2]
+
+- name: configure others | kubead show me join command
+  command: kubeadm token create --print-join-command --ttl 5m
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_join_command
+
+- name: configure others | show join command
+  debug:
+    var: kubeadm_join_command
+
+- name: configure others | compose join command
+  set_fact:
+    join_command: "{{ kubeadm_join_command.stdout }}"
+  when:
+    - master == "false"
+
+- name: configure others | compose join command
+  set_fact:
+    join_command: "{{ kubeadm_join_command.stdout }} --control-plane --certificate-key {{ kubeadm_certficate_key.stdout_lines[2] }}"
+  when:
+    - master == "true"
+
+- name: configure others | show join command
+  debug:
+    var: join_command
+
+- name: configure other | join node
+  command: "{{ join_command }}"
