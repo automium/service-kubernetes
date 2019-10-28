@@ -72,4 +72,4 @@ wait %3
 
 # Make the release
 until curl -f https://api.github.com/repos/automium/service-kubernetes/releases?access_token=$GITHUB_TOKEN \
-  -X POST -d "{ \"tag_name\": \"$IMAGE_NAME\", \"target_commitish\": \"$TRAVIS_COMMIT\", \"name\": \"$IMAGE_NAME\", \"body\": \"\", \"draft\": false, \"prerelease\": false }"; do sleep 10; done
+  -X POST -d "{ \"tag_name\": \"$IMAGE_NAME\", \"target_commitish\": \"$TRAVIS_COMMIT\", \"name\": \"$IMAGE_NAME\", \"body\": \"\", \"draft\": false, \"prerelease\": true }"; do sleep 10; done
