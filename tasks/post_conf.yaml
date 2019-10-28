@@ -1,3 +1,9 @@
+---
+- name: deploy consul service account
+  copy:
+    src: kubernetes/consul_cluster_rolebinding.yaml
+    dest: /tmp/consul_cluster_rolebinding.yaml
+
 - name: post conf | deploy script for create consul kube_config
   copy:
     src: scripts/consul_kubectl.sh

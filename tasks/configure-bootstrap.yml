@@ -19,11 +19,6 @@
     --upload-certs
   register: kubeadm_upload_cert
 
-- name: deploy consul service account
-  copy:
-    src: kubernetes/consul_cluster_rolebinding.yaml
-    dest: /tmp/consul_cluster_rolebinding.yaml
-
 - name: post conf | deploy calico conf
   template:
     src: templates/calico/calico.yaml.j2
