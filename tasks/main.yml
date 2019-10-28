@@ -12,6 +12,8 @@
 #
 - import_tasks: configure-bootstrap.yml
   tags: bootstrap
+
+- import_tasks: post_conf.yaml
 #
 #- import_tasks: configure-others.yml
 #  when:
