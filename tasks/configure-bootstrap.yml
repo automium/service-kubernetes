@@ -23,3 +23,18 @@
   copy:
     src: kubernetes/consul_cluster_rolebinding.yaml
     dest: /tmp/consul_cluster_rolebinding.yaml
+
+- name: post conf | deploy calico conf
+  template:
+    src: templates/calico/calico.yaml.j2
+    dest: /etc/kubernetes/calico.yaml
+    owner: root
+    group: root
+    mode: 0700
+  when:
+    - master == "true"  
+
+- name: post conf | apply calico
+  command: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /etc/kubernetes/calico.yaml
+  when:
+    - master == "true"
