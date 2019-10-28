@@ -1,36 +1,4 @@
 ---
-
-- name: consul | render consul_check.sh
-  set_fact:
-    consul_check_sh: |
-      #!/bin/bash
-      status="$(kubectl --kubeconfig /root/.kube/config get nodes {{ ansible_hostname }} | awk 'NR > 1' | awk '{print $2}')"
-      echo $status
-      if [[ $status == "NotReady" ]]; then
-       echo "Node $HOSTNAME dead"
-       exit 1
-      elif [[ $status == "Ready" ]]; then
-       echo "Node is OK"
-       exit 0
-      else
-        echo not found
-        exit 3
-      fi
-
-- name: consul | create consul_check.sh
-  copy:
-    content: "{{ consul_check_sh }}"
-    dest: /usr/local/bin/kubernetes-check-node
-    mode: 0555
-    backup: yes
-
-- name: consul | create etcd-consul-check
-  copy:
-    src: scripts/etcd-consul-check.py
-    dest: /usr/local/bin/etcd-consul-check
-    mode: 0555
-    backup: yes
-
 - name: consul | render consul service
   set_fact:
     consul_service_render: |
@@ -38,7 +6,7 @@
       - name: "{{ identity }}-all"
         checks:
       {% if master == 'true' %}
-          - args: ["/usr/local/bin/kubernetes-check-node"]
+          - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
           - tcp: localhost:6443
             interval: 10s
@@ -65,7 +33,7 @@
       {% if master == 'true' %}
       - name: "{{ cluster_name }}-kube-master"
         checks:
-          - args: ["/usr/local/bin/kubernetes-check-node"]
+          - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
       - name: "{{ cluster_name }}-kube-apiserver"
         check:
@@ -112,7 +80,7 @@
         prefix: "{{ cluster_name }}/.cleanup"
         args:
       {% if etcd == 'true' or master == 'true' %}
-          - "/usr/local/bin/kubernetes-scripts/cleanup"
+          - "/opt/consul/bin/kubernetes-scripts/cleanup"
       {% else %}
           - "/bin/true"
       {% endif %}
@@ -120,7 +88,7 @@
         key: "{{ cluster_name }}/.deploy/start"
         args:
       {% if master == 'true' %}
-          - "/usr/local/bin/kubernetes-scripts/deploy"
+          - "/opt/consul/bin/kubernetes-scripts/deploy"
       {% else %}
           - "/bin/true"
       {% endif %}
