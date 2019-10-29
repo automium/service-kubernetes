@@ -1,22 +1,17 @@
 ---
-- name: Add an Apt signing key to a specific keyring file
+- name: image | add Kubernetes repository GPG key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
+- name: image | add Kubernetes repository in APT
 - apt_repository:
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
 
-- name: image | install kubernetes binary
+- name: image | install kubernetes binaries
   apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - kubeadm={{ k8s_version }}-00
-    - kubelet={{ k8s_version }}-00
-    - kubectl={{ k8s_version }}-00
-    - glusterfs-client
-    - python-pip
+    name: ["kubeadm={{ k8s_version }}-00", "kubelet={{ k8s_version }}-00", "kubectl={{ k8s_version }}-00", "glusterfs-client", "python-pip"]
+    state: present    
 
 - name: image | install consul.py
   pip:
@@ -26,13 +21,12 @@
     - netaddr
   tags: image
 
-
-- name: image | enable kubelet
+- name: image | enable kubelet service
   service:
     name: kubelet
     enabled: yes
     
-- name: image | install kubernetes binary
+- name: image | create Kubernetes configuration directory
   file:
     path: /etc/kubernetes
     state: directory
@@ -40,13 +34,13 @@
     owner: root
     group: root
 
-- name: image | Add module dm_thin_pool for thin volumes provisioning
+- name: image | add module dm_thin_pool for thin volumes provisioning
   modprobe:
     name: "{{ item }}"
     state: "present"
   with_items: "{{ kernel_modules }}"
 
-- name: image | Add module dm_thin_pool for thin volumes provisioning
+- name: image | add module dm_thin_pool for thin volumes provisioning
   lineinfile:
     path: /etc/modules
     state: present
@@ -60,7 +54,7 @@
     src: docker/daemon.json
     dest: /etc/docker/daemon.json
 
-- name: image | Download docker container
+- name: image | download Kubernetes system containers
   command: kubeadm config images pull
 
 - name: image | deploy consul check kubernetes-check-node

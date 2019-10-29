@@ -4,7 +4,7 @@
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
   register: kubeadm_certficate_key
 
-- name: configure others | debug
+- name: configure others | show generated join command from kubeadm
   debug:
     var: kubeadm_certficate_key.stdout_lines[2]
 
@@ -13,25 +13,25 @@
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
   register: kubeadm_join_command
 
-- name: configure others | show join command
+- name: configure others | show generated join command from kubeadm
   debug:
     var: kubeadm_join_command
 
-- name: configure others | compose join command
+- name: configure others | compose join command for master nodes
   set_fact:
     join_command: "{{ kubeadm_join_command.stdout }}"
   when:
     - master == "false"
 
-- name: configure others | compose join command
+- name: configure others | compose join command for worker nodes
   set_fact:
     join_command: "{{ kubeadm_join_command.stdout }} --control-plane --certificate-key {{ kubeadm_certficate_key.stdout_lines[2] }}"
   when:
     - master == "true"
 
-- name: configure others | show join command
+- name: configure others | show final join command for debug
   debug:
     var: join_command
 
-- name: configure other | join node
+- name: configure other | join 
   command: "{{ join_command }}"
