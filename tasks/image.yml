@@ -63,7 +63,6 @@
       - src: entercloudsuite.consul
         version: 1.0.2
       - src: https://github.com/entercloudsuite/ansible-docker
-        version: kubernetes
         name: entercloudsuite.docker
     dest: /usr/src/cloud/requirement.yml
   tags: image
@@ -87,7 +86,7 @@
     name: entercloudsuite.docker
     public: yes
 
-- name: Docker | restart consul service
+- name: Docker | restart docker service
   service:
     name: docker
     state: restarted
