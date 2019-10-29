@@ -30,6 +30,14 @@
     --config /etc/kubernetes/kubeadm-conf.yml
     --upload-certs
   register: kubeadm_upload_cert
+  when:
+    - master == "true"
+
+- name: configure-bootstrap  | compose join command
+  set_fact:
+    join_command: "{{ kubeadm_join_command.stdout }}"
+  when:
+    - master == "false"
 
 - name: post conf | deploy calico conf
   template:
@@ -39,7 +47,7 @@
     group: root
     mode: 0700
   when:
-    - master == "true"  
+    - master == "true"
 
 - name: post conf | apply calico
   command: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /etc/kubernetes/calico.yaml

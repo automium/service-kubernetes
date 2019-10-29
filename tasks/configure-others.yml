@@ -29,7 +29,13 @@
   when:
     - master == "true"
 
-- name: configure others | show final join command for debug
+- name: configure others | compose join command
+  set_fact:
+    join_command: "{{ kubeadm_join_command.stdout }}"
+  when:
+    - master == "false"
+
+- name: configure others | show join command
   debug:
     var: join_command
 
