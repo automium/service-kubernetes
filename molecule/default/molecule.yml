@@ -3,10 +3,11 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
+#lint:
+#  name: yamllint
 platforms:
-  - name: instance-1
+  - name: testcluster-testcluster-0
+  - name: testcluster-testworker-0
 provisioner:
   name: ansible
   options:
@@ -15,14 +16,13 @@ provisioner:
     e: test_env=true
   playbooks:
     create: create.yml
-    prepare: prepare.yml
     destroy: destroy.yml
-  lint:
-    name: ansible-lint
+#  lint:
+#    name: ansible-lint
 scenario:
   name: default
   test_sequence:
-    - lint
+#    - lint
     - syntax
-verifier:
-  name: goss
+#verifier:
+#  name: goss

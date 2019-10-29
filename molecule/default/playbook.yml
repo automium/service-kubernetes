@@ -1,46 +1,12 @@
 ---
-
-- name: run the main role
-  hosts: 127.0.0.1
-  roles:
-    - role: service-kubernetes
-  post_tasks:
-    - name: install local kubernetes requirements
-      shell: |
-        export ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED=False
-        source venv/bin/activate
-        ansible-playbook --connection=local -i inventory/local/hosts.ini cluster.yml
-      args:
-        chdir: /usr/src/cloud/kubespray
-        executable: /bin/bash
-      tags: image
-    - name: reset state of all kubernetes components
-      shell: |
-        export ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED=False
-        source venv/bin/activate
-        ansible-playbook --connection=local -i inventory/local/hosts.ini reset.yml -e reset_confirmation=yes
-      args:
-        chdir: /usr/src/cloud/kubespray
-        executable: /bin/bash
-      tags: image
-
-- name: clean up image
-  hosts: 127.0.0.1
-  tags: image
+- name: test role wrapper
+  hosts: all
+  gather_facts: False
   tasks:
-    - name: stop consul
-      service: name=consul state=stopped enabled=no
-    - name: clean /opt/consul/data
-      file: path=/opt/consul/data state=absent
-    - name: cleanup image
-      shell: |
-        cloud-init clean -l -s
-        rm /var/log/cloud-scripts.log
-        echo -n > /etc/machine-id
-        echo -n > /var/lib/dbus/machine-id
-        rm -rf /var/lib/cloud
-        rm -rf /run/cloud-init
-        rm -rf /home/ubuntu/.ssh/authorized_keys
-        rm -rf /root/.ssh/authorized_keys
-      args:
-        removes: /var/lib/cloud
+  - name: launch the test playbook on the remote instance 
+    command: ansible-playbook -i 127.0.0.1 --extra-vars 'testmode="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+    args:
+       chdir: /usr/src/cloud
+    environment:
+      ANSIBLE_ROLES_PATH: ':/tmp/:/usr/src/cloud/roles'
+      CONSUL_ENCRYPT: 'A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM='

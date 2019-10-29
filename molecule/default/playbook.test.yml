@@ -1,0 +1,6 @@
+---
+- name: run the role inside test instances
+  hosts: 127.0.0.1
+  gather_facts: True
+  roles:
+  - role: service-kubernetes

@@ -13,28 +13,28 @@
         name: "consul"
         hostname: "automium-agent"
         image: consul
-        command: "agent -server -dev -bind 0.0.0.0 -client 0.0.0.0 -dns-port 53 -datacenter automium"
-        capabilities:
-          - SYS_ADMIN
+        command: command: "agent -server -dev -bind 0.0.0.0 -client 0.0.0.0 -dns-port 53 -datacenter automium -recursor 8.8.8.8 -encrypt A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
+        env:
+          CONSUL_ALLOW_PRIVILEGED_PORTS: ""
         state: started
         recreate: no
         log_driver: none
       register: consul_container_data
-    - name: debug
-      debug: var="{{ consul_container_data }}"
     - name: Create molecule instance(s)
       docker_container:
         name: "{{ item.name }}"
         hostname: "{{ item.name }}"
-        image: solita/ubuntu-systemd:latest
+        image: automium/ci-testenv:bionic
         command: /sbin/init
-        capabilities:
-          - SYS_ADMIN
+        privileged: True
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
+          - /lib/modules:/lib/modules:ro
         tmpfs:
           - /run
           - /run/lock
+        dns_servers:
+          - "{{ consul_container_data.ansible_facts.docker_container.NetworkSettings.IPAddress }}"
         state: started
         recreate: no
         log_driver: none
