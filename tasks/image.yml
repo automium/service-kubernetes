@@ -4,7 +4,7 @@
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
 - name: image | add Kubernetes repository in APT
-- apt_repository:
+  apt_repository:
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
 
