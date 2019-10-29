@@ -3,10 +3,12 @@ kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ ansible_default_ipv4.address }}
   bindPort: 6443
+{% if provider != "none" %}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "openstack"
     cloud-config: "/etc/kubernetes/cloud.conf"
+{% endif %}
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 clusterName: {{ cluster_name }}
@@ -15,6 +17,7 @@ controlPlaneEndpoint: {{ cluster_name }}-kube-apiserver.service.automium.consul:
 kubernetesVersion: v{{ k8s_version }}
 networking:
   serviceSubnet: {{ calico_pool_cidr }}
+{% if provider != "none" %}
 apiServer:
   extraArgs:
     cloud-provider: {{ cloud_provider }}
@@ -31,3 +34,4 @@ controllerManager:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+{% endif %}
