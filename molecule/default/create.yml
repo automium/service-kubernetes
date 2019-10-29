@@ -13,7 +13,7 @@
         name: "consul"
         hostname: "automium-agent"
         image: consul
-        command: command: "agent -server -dev -bind 0.0.0.0 -client 0.0.0.0 -dns-port 53 -datacenter automium -recursor 8.8.8.8 -encrypt A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
+        command: "agent -server -dev -bind 0.0.0.0 -client 0.0.0.0 -dns-port 53 -datacenter automium -recursor 8.8.8.8 -encrypt A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
         env:
           CONSUL_ALLOW_PRIVILEGED_PORTS: ""
         state: started
