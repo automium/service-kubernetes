@@ -8,6 +8,20 @@
     molecule_scenario_directory: "{{ lookup('env','MOLECULE_SCENARIO_DIRECTORY') }}"
     molecule_yml: "{{ lookup('file', molecule_file) | from_yaml }}"
   tasks:
+    - name: Create Consul instance
+      docker_container:
+        name: "consul"
+        hostname: "automium-agent"
+        image: consul
+        command: "agent -server -dev -bind 0.0.0.0 -client 0.0.0.0 -dns-port 53 -datacenter automium"
+        capabilities:
+          - SYS_ADMIN
+        state: started
+        recreate: no
+        log_driver: none
+      register: consul_container_data
+    - name: debug
+      debug: var="{{ consul_container_data }}"
     - name: Create molecule instance(s)
       docker_container:
         name: "{{ item.name }}"
