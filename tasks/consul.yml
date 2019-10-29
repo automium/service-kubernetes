@@ -164,6 +164,23 @@
         retry_join:
           - "{{ consul }}"
 
+# TODO: remove this and include the checks in the base image
+- name: image | deploy consul check kubernetes-check-node
+  copy:
+    src: scripts/kubernetes-check-node.sh
+    dest: /opt/consul/bin/kubernetes-check-node
+    owner: consul
+    group: consul
+    mode: 0700
+
+- name: consul | deploy consul check etcd-consul-check
+  copy:
+    src: scripts/etcd-consul-check.py
+    dest: /opt/consul/bin/etcd-consul-check
+    owner: consul
+    group: consul
+    mode: 0700
+
 - name: consul | restart consul service
   service:
     name: consul
