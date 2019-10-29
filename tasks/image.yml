@@ -45,6 +45,7 @@
     name: "{{ item }}"
     state: "present"
   with_items: "{{ kernel_modules }}"
+  when: testmode != "true"
 
 - name: image | add module dm_thin_pool for thin volumes provisioning
   lineinfile:
@@ -53,6 +54,7 @@
     create: yes
     line: '{{ item }}'
   with_items: "{{ kernel_modules }}"
+  when: testmode != "true"
 
 #DOTO Move to docker installation roles
 - name: Docker | move docker native cgroupdriver to systemd
