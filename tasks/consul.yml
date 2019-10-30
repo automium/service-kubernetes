@@ -138,6 +138,12 @@
     creates: roles/entercloudsuite.consul
   tags: image
 
+- name: consul | set some facts from env
+  set_fact:
+     consul_encrypt: "{{ lookup('env', 'CONSUL_ENCRYPT') }}"
+     consul_datacenter: "{{ lookup('env', 'CONSUL_DATACENTER') }}"
+     consul: "{{ lookup('env', 'CONSUL') }}"
+
 - name: consul | start consul role
   include_role:
     name: entercloudsuite.consul
