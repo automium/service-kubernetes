@@ -1,12 +1,34 @@
 ---
 - name: test role wrapper
   hosts: all
-  gather_facts: False
   tasks:
-  - name: launch the test playbook on the remote instance 
-    command: ansible-playbook -i 127.0.0.1 --extra-vars 'testmode="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+  - name: launch the test playbook on the remote master instance 
+    command: ansible-playbook -i 127.0.0.1 --skip-tags others --extra-vars 'testmode="true" master="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
     args:
-       chdir: /usr/src/cloud
+      chdir: /usr/src/cloud
     environment:
-      ANSIBLE_ROLES_PATH: ':/tmp/:/usr/src/cloud/roles'
-      CONSUL_ENCRYPT: 'A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM='
+      ANSIBLE_ROLES_PATH: ":/tmp/:/usr/src/cloud/roles"
+      CONSUL: "consul.service.automium.consul"
+      CONSUL_DATACENTER: "automium"
+      CONSUL_PORT: "8500"
+      CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
+      SERVICE: "automium/service-kubernetes"
+      MASTER: "true"
+      NODE: "false"
+      ETCD: "true"
+    when: ansible_hostname == "testcluster-testcluster-0"
+  - name: launch the test playbook on the remote worker instance
+    command: ansible-playbook -i 127.0.0.1 --skip-tags bootstrap --extra-vars 'testmode="true" node="true" scluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+    args:
+      chdir: /usr/src/cloud
+    environment:
+      ANSIBLE_ROLES_PATH: ":/tmp/:/usr/src/cloud/roles"
+      CONSUL: "consul.service.automium.consul"
+      CONSUL_DATACENTER: "automium"
+      CONSUL_PORT: "8500"
+      CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
+      SERVICE: "automium/service-kubernetes"
+      MASTER: "false"
+      NODE: "true"
+      ETCD: "false"
+    when: ansible_hostname == "testcluster-testworker-0"
