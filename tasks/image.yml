@@ -90,3 +90,8 @@
 
 - name: image | download Kubernetes system containers
   command: kubeadm config images pull
+
+- name: image | remove useless dependecy
+  apt:
+    name: ["unattended-upgrades"]
+    state: absent
