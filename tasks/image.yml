@@ -46,8 +46,8 @@
     state: "present"
   with_items: "{{ kernel_modules }}"
   when: testmode != "true"
-
-- name: image | add module dm_thin_pool for thin volumes provisioning
+ consul_configs: ""
+ consul_configs: ""
   lineinfile:
     path: /etc/modules
     state: present
@@ -89,6 +89,21 @@
     public: yes
   vars:
     consul_version: 1.4.4
+    consul_configs:
+      main:
+        bind_addr: "{{ ansible_default_ipv4['address'] }}"
+        client_addr: 0.0.0.0
+        node_name: "{{ ansible_hostname }}"
+        data_dir: "{{ consul_data_dir }}"
+        encrypt: "{{ consul_encrypt }}"
+        datacenter: "{{ consul_datacenter }}"
+        enable_syslog: true
+        server: false
+        ui: true
+        enable_script_checks: true
+        rejoin_after_leave: true
+        retry_join:
+          - "{{ consul }}"
 
 - name: image | deploy consul check kubernetes-check-node
   copy:

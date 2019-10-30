@@ -3,10 +3,13 @@
     k8s_version: 1.15.3
     calico_pool_cidr: 10.233.64.0/20
     cloud_provider: "openstack"
+    testmode: false
     kernel_modules:
       - "dm_snapshot"
       - "dm_mirror"
       - "dm_thin_pool"
+
+
 
 - name: vars | print env variales cluster_name
   debug:

@@ -12,3 +12,8 @@
     group: root
     mode: 0600
   when: provider != "none"
+
+- name: configure | ensure Docker service is started
+  service:
+    name: docker
+    state: started
