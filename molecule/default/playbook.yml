@@ -1,9 +1,38 @@
 ---
+- name: prepare SSH service
+  hosts: all
+  gather_facts: False
+  tasks:
+  - name: regenerate host keys
+    command: dpkg-reconfigure openssh-server
+  - name: prepare ssh directory
+    file:
+       path: /root/.ssh
+       owner: root
+       group: root
+       mode: 0700
+       state: directory
+  - name: move test ssh key on right places in test instances
+    copy:
+       src: "{{ item.src }}"
+       dest: "{{ item.dst }}"
+       remote_src: yes
+       owner: root
+       group: root
+       mode: 0600
+    with_items:
+    - { src: /usr/src/cloud/roles/service-kubernetes/testkey.pem, dst: /root/.ssh/id_rsa }
+    - { src: /usr/src/cloud/roles/service-kubernetes/testkey.pem.pub, dst: /root/.ssh/authorized_keys }
+  - name: restart ssh service
+    service:
+      name: ssh
+      state: restarted
+
 - name: test role wrapper
   hosts: all
   tasks:
   - name: launch the test playbook on the remote master instance 
-    command: ansible-playbook -i 127.0.0.1 --skip-tags others --extra-vars 'testmode="true" master="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+    command: ansible-playbook -i 127.0.0.1 --skip-tags others --extra-vars 'testmode="true" master="true" node="false" etcd="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
     args:
       chdir: /usr/src/cloud
     environment:
@@ -18,7 +47,7 @@
       ETCD: "true"
     when: ansible_hostname == "testcluster-testcluster-0"
   - name: launch the test playbook on the remote worker instance
-    command: ansible-playbook -i 127.0.0.1 --skip-tags bootstrap --extra-vars 'testmode="true" node="true" scluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+    command: ansible-playbook -i 127.0.0.1 --skip-tags bootstrap --extra-vars 'testmode="true" master="false" node="true" etcd="false" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
     args:
       chdir: /usr/src/cloud
     environment:

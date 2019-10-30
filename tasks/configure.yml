@@ -3,7 +3,6 @@
   template:
     src: ssh_config
     dest: /root/.ssh/config
-  when: testmode != "true"
 
 - name: configure | render cloud configurations
   template:
