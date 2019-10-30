@@ -13,6 +13,12 @@
         name: "{{ item.name }}"
         state: absent
       with_items: "{{ molecule_yml.platforms }}"
+    - name: Destroy instances data local volumes
+      docker_volume:
+        name: "{{ item.dataVolume }}"
+        driver: local
+        state: absent
+      with_items: "{{ molecule_yml.platforms }}"
     - name: Destroy Consul instance
       docker_container:
         name: "consul"

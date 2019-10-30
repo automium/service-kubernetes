@@ -20,6 +20,12 @@
         recreate: no
         log_driver: none
       register: consul_container_data
+    - name: Create local volumes for instances data
+      docker_volume:
+        name: "{{ item.dataVolume }}"
+        driver: local
+        state: present
+      with_items: "{{ molecule_yml.platforms }}"
     - name: Create molecule instance(s)
       docker_container:
         name: "{{ item.name }}"
@@ -30,6 +36,8 @@
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
           - /lib/modules:/lib/modules:ro
+          - /boot:/boot:ro
+          - "{{ item.dataVolume }}:/var/lib/docker"
         tmpfs:
           - /run
           - /run/lock

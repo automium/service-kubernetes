@@ -7,7 +7,9 @@ driver:
 #  name: yamllint
 platforms:
   - name: testcluster-testcluster-0
+    dataVolume: testcluster-master-data
   - name: testcluster-testworker-0
+    dataVolume: testcluster-worker-data
 provisioner:
   name: ansible
   options:
