@@ -61,8 +61,8 @@
     content: |
       - src: entercloudsuite.consul
         version: 1.0.2
-      - src: https://github.com/entercloudsuite/ansible-docker
-        name: entercloudsuite.docker
+      - src: entercloudsuite.docker
+        version: 2.0.3
     dest: /usr/src/cloud/requirement.yml
 
 - name: image | ensure roles directory exist
@@ -77,6 +77,11 @@
   args:
     chdir: /usr/src/cloud
     executable: /bin/bash
+
+- name: image | set docker cgroup driver for test mode
+  set_fact:
+    docker_cgroup_driver: cgroupfs
+  when: testmode == "true"
 
 - name: image | import docker role
   include_role:
