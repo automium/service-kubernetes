@@ -30,6 +30,7 @@
 
 - name: test role wrapper
   hosts: all
+  strategy: free
   tasks:
   - name: launch the test playbook on the remote master instance 
     command: ansible-playbook -i 127.0.0.1 --skip-tags others --extra-vars 'testmode="true" master="true" node="false" etcd="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
