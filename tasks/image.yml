@@ -3,6 +3,7 @@
   apt:
     name: apt-transport-https
     state: present
+    update_cache: yes
 
 - name: image | add Kubernetes repository GPG key
   apt_key:
