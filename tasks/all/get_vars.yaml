@@ -8,9 +8,6 @@
       - "dm_snapshot"
       - "dm_mirror"
       - "dm_thin_pool"
-
-
-
 - name: vars | print env variales cluster_name
   debug:
     msg: "{{ cluster_name }}"

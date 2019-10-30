@@ -1,70 +1,16 @@
 ---
-- import_tasks: get_vars.yaml
+- import_tasks: all/get_vars.yaml
 
 - import_tasks: image.yml
 
-- import_tasks: consul.yml
+- import_tasks: all/consul.yml
 
-- import_tasks: configure.yml
+- import_tasks: all/configure.yml
 
-- import_tasks: configure-others.yml
+- import_tasks: others/configure-others.yml
   tags: others
 
-- import_tasks: configure-bootstrap.yml
+- import_tasks: bootstrap/configure-bootstrap.yml
   tags: bootstrap
 
-- import_tasks: post_conf.yaml
-#
-#- import_tasks: configure-others.yml
-#  when:
-#    - etcd == "false"
-#    - master == "false"
-#    - node == "true"
-#
-#- import_tasks: conf-kubespray.yml
-#
-#- import_tasks: copy-cert.yml
-#
-#- import_tasks: configure-etcd.yml
-#  when:
-#    - etcd == "true"
-#  tags: others
-#
-#- import_tasks: configure-master-node.yml
-#  when:
-#    - master == "true"
-#    - node == "true"
-#
-#- import_tasks: deploy.yml
-#
-#- import_tasks: post-conf-master-bootstrap.yml
-#  tags: bootstrap
-#  when:
-#    - master == "true"
-#
-#- import_tasks: post-conf-master-autoscaler.yml
-#  when:
-#    - master == "true"
-#    - automium_autoscaler_kubeconfig != ""
-#
-#- import_tasks: post-conf-master-etcd.yml
-#  when:
-#    - etcd == "true" or master == "true"
-#
-#- import_tasks: configure-master-etcd-node-cleanup.yml
-#  when:
-#    - master == "true"
-#
-#- import_tasks: post-conf-deploy-phase.yml
-#
-#- import_tasks: cleanup.yml
-#
-#- import_tasks: post-conf-node.yml
-#  when:
-#    - node == "true"
-#
-#- import_tasks: post-conf-falco.yml
-#
-#- import_tasks: reboot.yml
-#  when:
-#    - node == "true"
+- import_tasks: all/post_conf.yaml
