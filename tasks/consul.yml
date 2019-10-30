@@ -128,7 +128,7 @@
   file: path=/usr/src/cloud/roles state=directory
   tags: image
 
-- name: consul | install role entercloudsuite.consul
+- name: consul | download role
   shell: |
     source venv/bin/activate
     ansible-galaxy install -r consul_requirement.yml -p roles
