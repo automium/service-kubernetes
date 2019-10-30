@@ -3,6 +3,8 @@
   copy:
     src: kubernetes/consul_cluster_rolebinding.yaml
     dest: /tmp/consul_cluster_rolebinding.yaml
+  when:
+  - master == "true"
 
 - name: post conf | deploy script for create consul kube_config
   copy:
@@ -11,11 +13,17 @@
     owner: root
     group: root
     mode: 0700
-
+  when:
+  - master == "true"
+  
 - name: post conf | create kubeconfig for consul
   command: /tmp/consul_kubectl.sh
+  when:
+  - master == "true"
 
 - name: post conf | restart consul for reload check
   service:
     name: consul
     state: restarted
+  when:
+  - master == "true"
