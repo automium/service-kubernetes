@@ -59,9 +59,11 @@
 - name: image | create roles requirement
   copy:
     content: |
-      - src: entercloudsuite.consul
-        version: 1.0.2
+      - src: https://github.com/entercloudsuite/ansible-consul.git
+        version: 2.0.1
+        name: entercloudsuite.consul
       - src: https://github.com/entercloudsuite/ansible-docker
+        version: 2.0.4
         name: entercloudsuite.docker
     dest: /usr/src/cloud/requirement.yml
 
@@ -82,6 +84,15 @@
   set_fact:
     docker_cgroup_driver: cgroupfs
   when: testmode == "true"
+
+- name: image | install consul service
+  include_role:
+    name: entercloudsuite.consul
+    public: yes
+  vars:
+    consul_version: 1.4.4
+    no_configure: "no_configure"
+    consul_service_status: "stopped"
 
 - name: image | import docker role
   include_role:
