@@ -7,6 +7,7 @@
     molecule_file: "{{ lookup('env','MOLECULE_FILE') }}"
     molecule_scenario_directory: "{{ lookup('env','MOLECULE_SCENARIO_DIRECTORY') }}"
     molecule_yml: "{{ lookup('file', molecule_file) | from_yaml }}"
+    testrole_path: "{{ lookup('env', 'TESTROLE_PATH') }}"
   tasks:
     - name: Create Consul instance
       docker_container:
@@ -36,6 +37,7 @@
           - /lib/modules:/lib/modules:ro
           - /boot:/boot:ro
           - "{{ item.dataVolume }}:/var/lib/docker"
+          - "{{ testrole_path }}:/usr/src/cloud/roles/service-kubernetes"
         tmpfs:
           - /run
           - /run/lock

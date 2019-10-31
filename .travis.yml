@@ -8,26 +8,25 @@ services:
   - docker
 
 stages:
-  - unittest
-  - build
-  - deploy
   - test
-  - release
+#  - unittest
+#  - build
+#  - deploy
+#  - test
+#  - release
 
 jobs:
   include:
-    - stage: unittest
-      script: 'if [ ! "$TRAVIS_TAG" ]; then bash cicd/unittest.sh; fi'
-    - stage: build
-      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 1; fi'
-    - stage: build
-      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 2; fi'
-    - stage: build
-      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 3; fi'
-    - stage: build
-      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/container.sh; fi'
-#    - stage: deploy
-#      script: bash cicd/provisioner.sh openstack
-#    - stage: release
-#      script: bash cicd/release.sh
-#      if: branch = master
+    - stage: test
+      script: bash cicd/test.sh
+#    - stage: unittest
+#      script: 'if [ ! "$TRAVIS_TAG" ]; then bash cicd/unittest.sh; fi'
+#    - stage: build
+#      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 1; fi'
+#    - stage: build
+#      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 2; fi'
+#    - stage: build
+#      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ ! "$TRAVIS_TAG" ]; then bash cicd/build.sh 3; fi'
+#    - stage: build
+#      script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash cicd/container.sh; fi'
+
