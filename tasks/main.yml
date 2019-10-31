@@ -1,7 +1,9 @@
 ---
 - import_tasks: all/get_vars.yaml
+  tags: image
 
 - import_tasks: image.yml
+  tags: image
 
 - import_tasks: all/consul.yml
 

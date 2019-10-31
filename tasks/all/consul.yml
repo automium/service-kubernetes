@@ -116,28 +116,6 @@
   set_fact:
     consul_node_meta: "{{ consul_node_meta_render | from_yaml }}"
 
-- name: consul | create requirement file for consul ansible role
-  copy:
-    content: |
-      - src: entercloudsuite.consul
-        version: 1.0.2
-    dest: /usr/src/cloud/consul_requirement.yml
-  tags: image
-
-- name: consul | ensure roles directory exist
-  file: path=/usr/src/cloud/roles state=directory
-  tags: image
-
-- name: consul | download role
-  shell: |
-    source venv/bin/activate
-    ansible-galaxy install -r consul_requirement.yml -p roles
-  args:
-    chdir: /usr/src/cloud
-    executable: /bin/bash
-    creates: roles/entercloudsuite.consul
-  tags: image
-
 - name: consul | set some facts from env
   set_fact:
      consul_encrypt: "{{ lookup('env', 'CONSUL_ENCRYPT') }}"

@@ -25,7 +25,6 @@
   with_items:
     - python-consul==1.0.0
     - netaddr
-  tags: image
 
 - name: image | enable kubelet service
   service:
