@@ -29,7 +29,7 @@
       docker_container:
         name: "{{ item.name }}"
         hostname: "{{ item.name }}"
-        image: automium/ci-testenv:bionic
+        image: automium/testenv:bionic
         privileged: True
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
