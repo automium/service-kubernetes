@@ -149,6 +149,9 @@
     name: entercloudsuite.consul
     public: yes
   vars:
+    configure: true
+    install: false
+    consul_service_status: "started"
     consul_version: 1.4.4
     consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
     consul_configs:
