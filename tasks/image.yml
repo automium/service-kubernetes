@@ -60,7 +60,7 @@
   copy:
     content: |
       - src: https://github.com/entercloudsuite/ansible-consul.git
-        version: 42a14a29353417777be19993757ff4f52d849567
+        version: 2.0.2
         name: entercloudsuite.consul
       - src: https://github.com/entercloudsuite/ansible-docker
         version: 2.0.4
