@@ -35,7 +35,6 @@
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
           - "{{ item.dataVolume }}:/var/lib/docker"
-          - "{{ testrole_path }}:/usr/src/cloud/roles/service-kubernetes"
         tmpfs:
           - /run
           - /run/lock
@@ -44,4 +43,10 @@
         state: started
         recreate: no
         log_driver: none
+      with_items: "{{ molecule_yml.platforms }}"
+    - name: Prepare role directory in instances
+      command: "docker exec {{ item.name }} mkdir -p /usr/src/cloud/roles/"
+      with_items: "{{ molecule_yml.platforms }}"
+    - name: Copy role to instances
+      command: "docker cp -a {{ testrole_path }} {{ item.name }}:/usr/src/cloud/roles/service-kubernetes"
       with_items: "{{ molecule_yml.platforms }}"

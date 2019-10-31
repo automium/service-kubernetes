@@ -1,0 +1,13 @@
+---
+stages:
+- test-infra
+
+run-molecule:
+  image: automium/molecule:2.22-bionic
+  stage: test-infra
+  script:
+  - bash cicd/test.sh
+  only:
+  - refactoring
+  tags:
+  - automium-infra-test
