@@ -32,11 +32,12 @@ if [ "$OVFTOOL_MD5" != "e521b64686d65de9e91288225b38d5da" ]; then
 fi
 
 # Create image on glance and save on disk
-source cicd/get_latest_kubespray_minor.sh
-KUBESPRAY_VERSION=$(get_latest_kubespray_minor $1)
-export KUBESPRAY_VERSION
-echo The kubespray version used will be ${KUBESPRAY_VERSION}
-KUBERNETES_VERSION=$(curl -sS https://raw.githubusercontent.com/kubernetes-sigs/kubespray/$KUBESPRAY_VERSION/inventory/sample/group_vars/k8s-cluster/k8s-cluster.yml | grep kube_version | cut -d ' ' -f 2)
+# source cicd/get_latest_kubespray_minor.sh
+# KUBESPRAY_VERSION=$(get_latest_kubespray_minor $1)
+# export KUBESPRAY_VERSION
+# echo The kubespray version used will be ${KUBESPRAY_VERSION}
+# KUBERNETES_VERSION=$(curl -sS https://raw.githubusercontent.com/kubernetes-sigs/kubespray/$KUBESPRAY_VERSION/inventory/sample/group_vars/k8s-cluster/k8s-cluster.yml | grep kube_version | cut -d ' ' -f 2)
+KUBERNETES_VERSION="1.15.3"
 IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$TRAVIS_BUILD_NUMBER
 export IMAGE_NAME
 ./packer build packer.json
