@@ -18,17 +18,26 @@
     - master == "true"
     - testmode == "true"
 
-
 - name: configure-bootstrap | create kubeadm configurations
   template:
     src: templates/kubeadm/kubeadm.init.yml.j2
     dest: "/etc/kubernetes/kubeadm-conf.yml"
+
+- name: configure-bootstrap | compose kubeadm bootstrap command
+  set_fact:
+    kubeadm_bootstrap_command: "kubeadm init --config /etc/kubernetes/kubeadm-conf.yml --upload-certs"
+  when:
+    - master == "true"
+
+- name: configure-bootstrap | add preflight ignore in test
+  set_fact:
+    kubeadm_bootstrap_command: "{{ kubeadm_bootstrap_command }} --ignore-preflight-errors=all"
+  when:
+    - master == "true"
+    - testmode == "true"
     
 - name: configure-bootstrap | bootstrap first master
-  command: >-
-    kubeadm init
-    --config /etc/kubernetes/kubeadm-conf.yml
-    --upload-certs
+  command: "{{ kubeadm_bootstrap_command }}"
   register: kubeadm_upload_cert
   when:
     - master == "true"

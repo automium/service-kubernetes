@@ -34,8 +34,6 @@
         privileged: True
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
-          - /lib/modules:/lib/modules:ro
-          - /boot:/boot:ro
           - "{{ item.dataVolume }}:/var/lib/docker"
           - "{{ testrole_path }}:/usr/src/cloud/roles/service-kubernetes"
         tmpfs:
