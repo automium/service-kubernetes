@@ -1,7 +1,0 @@
----
-
-- name: post-conf-deploy-phase | copy deploy
-  template:
-    src: deploy.sh.j2
-    dest: /usr/local/bin/kubernetes-scripts/deploy
-    mode: 0775

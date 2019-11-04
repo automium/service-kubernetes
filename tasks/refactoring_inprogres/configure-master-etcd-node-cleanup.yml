@@ -1,9 +1,0 @@
----
-
-- name: configure-master-etcd-node-cleanup | copy kubernetes-maintenance script
-  template:
-    src: cleanup.sh.j2
-    dest: /usr/local/bin/kubernetes-scripts/cleanup
-    owner: root
-    group: root
-    mode: 0755

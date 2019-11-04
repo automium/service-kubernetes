@@ -1,4 +1,0 @@
----
-
-- name: reboot | reboot this node "{{ ansible_hostname }}"
-  command: /sbin/shutdown -r +1
