@@ -9,10 +9,6 @@
 
 - import_tasks: all/configure.yml
 
-- import_tasks: others/configure-others.yml
-  tags: others
-
-- import_tasks: bootstrap/configure-bootstrap.yml
-  tags: bootstrap
+- import_tasks: "{{ init_role }}/configure-{{ init_role }}.yml"
 
 - import_tasks: all/post_conf.yaml

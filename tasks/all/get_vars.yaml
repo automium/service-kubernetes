@@ -15,3 +15,13 @@
 - name: vars | print env name
   debug:
     msg: "{{ name }}"
+  
+- name: set_vars init_role to others
+  set_fact:
+    init_role: others
+  tags: others
+
+- name: set_vars init_role to bootstrap
+  set_fact:
+    init_role: bootstrap
+  tags: bootstrap
