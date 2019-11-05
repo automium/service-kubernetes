@@ -1,5 +1,5 @@
 ---
-- name: configure-bootstrap | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
+- name: bootstrap | configure master | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present
     path: /etc/hosts
@@ -7,7 +7,7 @@
   when:
     - testmode != "true"
 
-- name: configure-bootstrap | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap in test mode
+- name: bootstrap | configure master | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap in test mode
   lineinfile:
     state: present
     path: /etc/hosts
@@ -16,14 +16,14 @@
   when:
     - testmode == "true"
 
-- name: configure-bootstrap | bootstrap first master
+- name: bootstrap | configure master | bootstrap first master
   command: >-
     kubeadm init
     --config /etc/kubernetes/kubeadm-conf.yml
     --upload-certs
   register: kubeadm_upload_cert
 
-- name: post conf | deploy calico conf
+- name: bootstrap | configure master | deploy calico deployment
   template:
     src: templates/calico/calico.yaml.j2
     dest: /etc/kubernetes/calico.yaml
@@ -31,5 +31,5 @@
     group: root
     mode: 0700
 
-- name: post conf | apply calico
+- name: bootstrap | configure master | apply calico deployment
   command: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /etc/kubernetes/calico.yaml
