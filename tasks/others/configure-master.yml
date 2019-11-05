@@ -1,0 +1,12 @@
+- name: others | master | upload certificates to the cluster with kubeadm
+  command: kubeadm init phase upload-certs --upload-certs
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_certficate_key
+
+- name: others | master | DEBUG generated certificate key for debug
+  debug:
+    var: kubeadm_certficate_key.stdout_lines[2]
+
+- name: others | master | compose join command for master nodes
+  set_fact:
+    join_command: "{{ kubeadm_join_command.stdout }} --control-plane --certificate-key {{ kubeadm_certficate_key.stdout_lines[2] }}"

@@ -1,5 +1,5 @@
 ---
-- name: configure others | make sure the master service is resolvable
+- name: others | all | make sure the master service is resolvable
   command: "dig +short {{ cluster_name }}-kube-master.service.automium.consul" 
   register: resolve_command
   retries: 100
@@ -7,49 +7,16 @@
   until: resolve_command.stdout != ""
   failed_when: resolve_command.stdout == ""
 
-- name: configure others | upload certificates to the cluster with kubeadm
-  command: kubeadm init phase upload-certs --upload-certs
-  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
-  register: kubeadm_certficate_key
-
-- name: configure others | show generated certificate key for debug
-  debug:
-    var: kubeadm_certficate_key.stdout_lines[2]
-
-- name: configure others | generate a generic join command for the node
+- name: others | all | generate generic join command for node
   command: kubeadm token create --print-join-command --ttl 5m
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
   register: kubeadm_join_command
 
-- name: configure others | show generated join command from kubeadm
-  debug:
-    var: kubeadm_join_command
+- name: others | all | include configure role for "{{ cluster_role }}"
+  include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
+  static: no
 
-- name: configure others | compose join command for worker nodes
-  set_fact:
-    join_command: "{{ kubeadm_join_command.stdout }}"
-  when:
-    - master == "false"
-
-- name: configure others | compose join command for master nodes
-  set_fact:
-    join_command: "{{ kubeadm_join_command.stdout }} --control-plane --certificate-key {{ kubeadm_certficate_key.stdout_lines[2] }}"
-  when:
-    - master == "true"
-
-- name: configure others | compose join command
-  set_fact:
-    join_command: "{{ kubeadm_join_command.stdout }}"
-  when:
-    - master == "false"
-
-- name: configure others | add preflight ignore in test
-  set_fact:
-    join_command: "{{ join_command }} --ignore-preflight-errors=all"
-  when:
-    - testmode == "true"
-
-- name: configure others | show join command
+- name: others | all | show join command
   debug:
     var: join_command
 

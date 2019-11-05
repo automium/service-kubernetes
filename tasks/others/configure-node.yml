@@ -1,0 +1,3 @@
+- name: others | node | compose join command for worker nodes
+  set_fact:
+    join_command: "{{ kubeadm_join_command.stdout }}"
