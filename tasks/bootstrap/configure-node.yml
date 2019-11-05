@@ -1,4 +1,12 @@
 ---
+- name: bootstrap | configure node | make sure the master service is resolvable
+  command: "dig +short {{ cluster_name }}-kube-master.service.automium.consul" 
+  register: resolve_command
+  retries: 100
+  delay: 3
+  until: resolve_command.stdout != ""
+  failed_when: resolve_command.stdout == ""
+
 - name: bootstrap | configure node | kubead show me join command
   command: kubeadm token create --print-join-command --ttl 5m
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
@@ -7,3 +15,11 @@
 - name: bootstrap | configure node | compose join command
   set_fact:
     join_command: "{{ kubeadm_join_command.stdout }}"
+
+
+- name: bootstrap | configure node | DEBUG show join command
+  debug:
+    var: join_command
+
+- name: bootstrap | configure node | execute the generated join command
+  command: "{{ join_command }}"
