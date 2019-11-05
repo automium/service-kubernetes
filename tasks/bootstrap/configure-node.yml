@@ -16,6 +16,11 @@
   set_fact:
     join_command: "{{ kubeadm_join_command.stdout }}"
 
+- name: bootstrap | configure node | add ignore preflight errors in test mode 
+  set_fact:
+    join_command: "{{ join_command }} --ignore-preflight-errors=all"
+  when:
+    - testmode == "true"
 
 - name: bootstrap | configure node | DEBUG show join command
   debug:

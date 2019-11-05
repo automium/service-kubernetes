@@ -16,6 +16,12 @@
   include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
   static: no
 
+- name: others | all | add preflight ignore in test
+ set_fact:
+ join_command: "{{ join_command }} --ignore-preflight-errors=all"
+  when:
+    - testmode == "true"
+
 - name: others | all | show join command
   debug:
     var: join_command
