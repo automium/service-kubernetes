@@ -1,6 +1,7 @@
 ---
 stages:
 - test-infra
+- build-image
 
 run-molecule:
   image: automium/molecule:2.22-bionic
@@ -11,3 +12,12 @@ run-molecule:
   - refactoring
   tags:
   - automium-infra-test
+
+build-image:
+  image: automium/buildenv:bionic
+  stage: build-image
+  script:
+  - bash cicd/build.sh
+  only:
+  - refactoring
+  when: manual
