@@ -5,7 +5,6 @@
     path: /etc/hosts
     line: "{{ ansible_default_ipv4['address'] }} {{ cluster_name }}-kube-apiserver.service.automium.consul"
   when:
-    - master == "true"
     - testmode != "true"
 
 - name: configure-bootstrap | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap in test mode
@@ -15,49 +14,14 @@
     line: "{{ ansible_default_ipv4['address'] }} {{ cluster_name }}-kube-apiserver.service.automium.consul"
     unsafe_writes: yes
   when:
-    - master == "true"
     - testmode == "true"
 
-
-- name: configure-bootstrap | create kubeadm configurations
-  template:
-    src: templates/kubeadm/kubeadm.init.yml.j2
-    dest: "/etc/kubernetes/kubeadm-conf.yml"
-
-- name: configure-bootstrap | compose kubeadm bootstrap command
-  set_fact:
-    kubeadm_bootstrap_command: "kubeadm init --config /etc/kubernetes/kubeadm-conf.yml --upload-certs"
-  when:
-    - master == "true"
-
-- name: configure-bootstrap | add preflight ignore in test
-  set_fact:
-    kubeadm_bootstrap_command: "{{ kubeadm_bootstrap_command }} --ignore-preflight-errors=all"
-  when:
-    - master == "true"
-    - testmode == "true"
-    
 - name: configure-bootstrap | bootstrap first master
   command: >-
     kubeadm init
     --config /etc/kubernetes/kubeadm-conf.yml
     --upload-certs
   register: kubeadm_upload_cert
-  when:
-    - master == "true"
-
-- name: configure others | kubead show me join command
-  command: kubeadm token create --print-join-command --ttl 5m
-  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
-  register: kubeadm_join_command
-  when:
-    - master == "false"
-
-- name: configure-bootstrap  | compose join command
-  set_fact:
-    join_command: "{{ kubeadm_join_command.stdout }}"
-  when:
-    - master == "false"
 
 - name: post conf | deploy calico conf
   template:
@@ -66,10 +30,6 @@
     owner: root
     group: root
     mode: 0700
-  when:
-    - master == "true"
 
 - name: post conf | apply calico
   command: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /etc/kubernetes/calico.yaml
-  when:
-    - master == "true"
