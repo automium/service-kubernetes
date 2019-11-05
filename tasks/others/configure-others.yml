@@ -17,8 +17,8 @@
   static: no
 
 - name: others | all | add preflight ignore in test
- set_fact:
- join_command: "{{ join_command }} --ignore-preflight-errors=all"
+  set_fact:
+  join_command: "{{ join_command }} --ignore-preflight-errors=all"
   when:
     - testmode == "true"
 
