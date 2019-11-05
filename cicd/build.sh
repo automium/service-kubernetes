@@ -11,18 +11,6 @@ function keep_alive() {
 }
 keep_alive &
 
-# Prerequisuite
-
-sudo apt-get update
-sudo apt-get install unzip wget python-pip -y
-pip install --upgrade pip
-pip install ansible==2.7.10
-wget -O packer.zip https://releases.hashicorp.com/packer/1.3.1/packer_1.3.1_linux_amd64.zip
-unzip -o packer.zip
-sudo apt-get update
-sudo apt-get install qemu-utils -y
-pip install python-swiftclient==3.6.0 python-openstackclient==3.17.0
-
 # Check integrity of ovftool
 
 OVFTOOL_MD5=$(docker run -it moander/ovftool md5sum /usr/local/bin/ovftool | cut -d ' ' -f 1)
@@ -38,7 +26,7 @@ fi
 # echo The kubespray version used will be ${KUBESPRAY_VERSION}
 # KUBERNETES_VERSION=$(curl -sS https://raw.githubusercontent.com/kubernetes-sigs/kubespray/$KUBESPRAY_VERSION/inventory/sample/group_vars/k8s-cluster/k8s-cluster.yml | grep kube_version | cut -d ' ' -f 2)
 KUBERNETES_VERSION="1.15.3"
-IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$TRAVIS_BUILD_NUMBER
+IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$CI_JOB_ID
 export IMAGE_NAME
 ./packer build packer.json
 openstack image save $IMAGE_NAME --file $IMAGE_NAME.qcow2
@@ -55,7 +43,7 @@ swift upload automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
 # Create ova
 qemu-img convert -f qcow2 -O vmdk $IMAGE_NAME.qcow2 automium-dummy.vmdk
 docker run --rm -it -v $(pwd):/root moander/ovftool ovftool /root/dummy.vmx /root/$IMAGE_NAME.ova
-sudo chmod o+r $IMAGE_NAME.ova
+chmod o+r $IMAGE_NAME.ova
 
 # Upload image for vsphere to swift
 mkdir vsphere
@@ -72,5 +60,5 @@ touch temp && swift upload automium-catalog-images --object-name vcd/$IMAGE_NAME
 wait %3
 
 # Make the release
-until curl -f https://api.github.com/repos/automium/service-kubernetes/releases?access_token=$GITHUB_TOKEN \
-  -X POST -d "{ \"tag_name\": \"$IMAGE_NAME\", \"target_commitish\": \"$TRAVIS_COMMIT\", \"name\": \"$IMAGE_NAME\", \"body\": \"\", \"draft\": false, \"prerelease\": false }"; do sleep 10; done
+# until curl -f https://api.github.com/repos/automium/service-kubernetes/releases?access_token=$GITHUB_TOKEN \
+#   -X POST -d "{ \"tag_name\": \"$IMAGE_NAME\", \"target_commitish\": \"$TRAVIS_COMMIT\", \"name\": \"$IMAGE_NAME\", \"body\": \"\", \"draft\": false, \"prerelease\": false }"; do sleep 10; done
