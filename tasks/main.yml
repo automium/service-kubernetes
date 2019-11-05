@@ -9,6 +9,8 @@
 
 - import_tasks: all/configure.yml
 
-- import_tasks: "{{ init_role }}/configure-{{ init_role }}.yml"
+- name: include configure role for "{{ init_role }}"
+  include: "{{ init_role }}/configure-{{ init_role }}.yml"
+  static: no
 
 - import_tasks: all/post_conf.yaml
