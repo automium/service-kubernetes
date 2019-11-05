@@ -13,11 +13,11 @@ keep_alive &
 
 # Check integrity of ovftool
 
-OVFTOOL_MD5=$(docker run -it moander/ovftool md5sum /usr/local/bin/ovftool | cut -d ' ' -f 1)
-if [ "$OVFTOOL_MD5" != "e521b64686d65de9e91288225b38d5da" ]; then
-  echo ovftool md5 mismatch ... exiting
-  exit 1
-fi
+# OVFTOOL_MD5=$(docker run -it moander/ovftool md5sum /usr/local/bin/ovftool | cut -d ' ' -f 1)
+# if [ "$OVFTOOL_MD5" != "e521b64686d65de9e91288225b38d5da" ]; then
+#   echo ovftool md5 mismatch ... exiting
+#   exit 1
+# fi
 
 # Create image on glance and save on disk
 # source cicd/get_latest_kubespray_minor.sh
@@ -41,14 +41,14 @@ ln $IMAGE_NAME.qcow2 openstack/$IMAGE_NAME.qcow2
 swift upload automium-catalog-images openstack/$IMAGE_NAME.qcow2 &
 
 # Create ova
-qemu-img convert -f qcow2 -O vmdk $IMAGE_NAME.qcow2 automium-dummy.vmdk
-docker run --rm -it -v $(pwd):/root moander/ovftool ovftool /root/dummy.vmx /root/$IMAGE_NAME.ova
-chmod o+r $IMAGE_NAME.ova
+# qemu-img convert -f qcow2 -O vmdk $IMAGE_NAME.qcow2 automium-dummy.vmdk
+# docker run --rm -it -v $(pwd):/root moander/ovftool ovftool /root/dummy.vmx /root/$IMAGE_NAME.ova
+# chmod o+r $IMAGE_NAME.ova
 
 # Upload image for vsphere to swift
-mkdir vsphere
-mv $IMAGE_NAME.ova vsphere/$IMAGE_NAME.ova
-swift upload automium-catalog-images vsphere/$IMAGE_NAME.ova &
+# mkdir vsphere
+# mv $IMAGE_NAME.ova vsphere/$IMAGE_NAME.ova
+# swift upload automium-catalog-images vsphere/$IMAGE_NAME.ova &
 
 # Wait vsphere image upload
 wait %2
