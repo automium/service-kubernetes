@@ -25,3 +25,13 @@
   set_fact:
     init_role: bootstrap
   tags: bootstrap
+
+- name: set_vars cluster_role to master
+  set_fact:
+    cluster_role: "master"
+  when: master == "true"
+
+- name: set_vars cluster_role to node
+  set_fact:
+    cluster_role: "node"
+  when: node == "true"
