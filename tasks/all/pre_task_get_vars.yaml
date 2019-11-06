@@ -1,5 +1,4 @@
-- name: vars | set kube version
-- name: vars | print env variales cluster_name
+- name: vars | print env variable cluster_name
   debug:
     var: cluster_name
 
