@@ -13,5 +13,5 @@
   include: "{{ init_role }}/configure-{{ init_role }}.yml"
   static: no
 - name: include post_conf for role "{{ init_role }}"
-  include: all/{{ cluster_role }}/post_conf.yaml
+  include: "all/{{ cluster_role }}/post_conf.yaml"
   static: no
