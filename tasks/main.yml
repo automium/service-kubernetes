@@ -13,4 +13,4 @@
   include: "{{ init_role }}/configure-{{ init_role }}.yml"
   static: no
 
-- import_tasks: all/{{ cluster_role }}/post_conf.yaml
+- include_tasks: all/{{ cluster_role }}/post_conf.yaml
