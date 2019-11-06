@@ -1,20 +1,11 @@
 - name: vars | set kube version
-  set_fact:
-    k8s_version: 1.15.3
-    calico_pool_cidr: 10.233.64.0/20
-    cloud_provider: "openstack"
-    testmode: false
-    kernel_modules:
-      - "dm_snapshot"
-      - "dm_mirror"
-      - "dm_thin_pool"
 - name: vars | print env variales cluster_name
   debug:
-    msg: "{{ cluster_name }}"
+    var: cluster_name
 
 - name: vars | print env name
   debug:
-    msg: "{{ name }}"
+    var: name
   
 - name: set_vars init_role to others
   set_fact:
@@ -26,6 +17,10 @@
     init_role: bootstrap
   tags: bootstrap
 
+- name: vars | print env init_role
+  debug:
+    var: init_role
+
 - name: set_vars cluster_role to master
   set_fact:
     cluster_role: "master"
@@ -35,3 +30,7 @@
   set_fact:
     cluster_role: "node"
   when: node == "true"
+
+- name: vars | print env cluster_role
+  debug:
+    var: cluster_role
