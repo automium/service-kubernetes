@@ -1,10 +1,10 @@
 ---
-- name: deploy consul service account
+- name: all | master | post_task | consul service account
   copy:
     src: kubernetes/consul_cluster_rolebinding.yaml
     dest: /tmp/consul_cluster_rolebinding.yaml
 
-- name: post conf | deploy script for create consul kube_config
+- name: all | master | post_task | deploy script for create consul kube_config
   copy:
     src: scripts/consul_kubectl.sh
     dest: /tmp/consul_kubectl.sh
@@ -12,10 +12,10 @@
     group: root
     mode: 0700
   
-- name: post conf | create kubeconfig for consul
+- name: all | master | post_task | create kubeconfig for consul
   command: /tmp/consul_kubectl.sh
 
-- name: post conf | restart consul for reload check
+- name: all | master | post_task | restart consul for reload check
   service:
     name: consul
     state: restarted
