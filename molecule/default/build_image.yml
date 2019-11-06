@@ -1,12 +1,15 @@
 ---
-- name: prepare image
+- name: Clear image
   hosts: 127.0.0.1
-  pre_tasks:
+  tasks:
     - name: wait apt-daily-upgrade
       command: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
     - name: Update all packages to the latest version
       apt:
         upgrade: dist
+
+- name: install image
+  hosts: 127.0.0.1
   roles:
     - role: service-kubernetes
 
