@@ -1,6 +1,7 @@
 ---
 - name: Clear image
   hosts: 127.0.0.1
+  tags: image
   tasks:
     - name: wait apt-daily-upgrade
       command: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
