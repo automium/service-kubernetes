@@ -22,6 +22,8 @@ if [ $? -ne 0 ]; then
   docker exec testcluster-testworker-0 docker version
   docker exec testcluster-testworker-0 docker info
   docker exec testcluster-testworker-0 docker ps -a
+  sleep 10
+  molecule destroy
   exit 1
 else
   echo "*** CLUSTER BUILD COMPLETED ***"
