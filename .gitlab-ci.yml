@@ -20,4 +20,6 @@ build-image:
   - bash cicd/build.sh
   only:
   - refactoring
-  when: manual
+  when:
+  - manual
+  - always
