@@ -1,5 +1,40 @@
 ---
 - name: prepare image
   hosts: 127.0.0.1
+  pre_tasks:
+    - name: wait apt-daily-upgrade
+      command: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: dist
   roles:
     - role: service-kubernetes
+
+- name: clean up image
+  hosts: 127.0.0.1
+  tags: image
+  tasks:
+    - name: cleanup image
+      shell: |
+        cloud-init clean -l -s
+        rm /var/log/cloud-scripts.log
+        echo -n > /etc/machine-id
+        echo -n > /var/lib/dbus/machine-id
+        rm -rf /var/lib/cloud
+        rm -rf /run/cloud-init
+        rm -rf /home/ubuntu/.ssh/authorized_keys
+        rm -rf /root/.ssh/authorized_keys
+      args:
+        removes: /var/lib/cloud
+    - name: remove unattended-upgrades
+      apt:
+        name: unattended-upgrades
+        state: absent
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
+
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
