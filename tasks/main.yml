@@ -1,13 +1,13 @@
 ---
-- import_tasks: all/get_vars.yaml
+- import_tasks: all/pre_task_get_vars.yaml
   tags: image
 
 - import_tasks: image.yml
   tags: image
 
-- import_tasks: all/pre_task_consul.yml
+- import_tasks: all/pre_task_generic_consul.yml
 
-- import_tasks: all/pre_task_configure.yml
+- import_tasks: all/pre_task_generic_configure.yml
 
 - name: include configure role for "{{ init_role }}"
   include: "{{ init_role }}/configure-{{ init_role }}.yml"
