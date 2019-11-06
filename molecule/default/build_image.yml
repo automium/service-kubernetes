@@ -2,4 +2,4 @@
 - name: prepare image
   hosts: 127.0.0.1
   roles:
-    role: service-kubernetes
+    - role: service-kubernetes
