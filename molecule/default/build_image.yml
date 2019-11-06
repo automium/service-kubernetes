@@ -20,6 +20,7 @@
   tasks:
     - name: cleanup image
       shell: |
+        rm /etc/docker/key.json
         cloud-init clean -l -s
         rm /var/log/cloud-scripts.log
         echo -n > /etc/machine-id

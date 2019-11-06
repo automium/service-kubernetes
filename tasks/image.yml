@@ -98,8 +98,18 @@
     name: entercloudsuite.docker
     public: yes
 
+- name: image | restart Docker
+  service:
+    name: docker 
+    state: started
+
 - name: image | download Kubernetes system containers
   command: kubeadm config images pull
+
+- name: image | stop Docker
+  service:
+    name: docker 
+    state: stopped
 
 - name: image | remove useless dependecy
   apt:
