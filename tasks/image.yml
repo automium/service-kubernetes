@@ -94,6 +94,22 @@
     install: true
     consul_service_status: "stopped"
 
+- name: image | deploy consul check kubernetes-check-node
+  copy:
+    src: scripts/kubernetes-check-node.sh
+    dest: /opt/consul/bin/kubernetes-check-node
+    owner: consul
+    group: consul
+    mode: 0700
+
+- name: image | deploy consul check etcd-consul-check
+  copy:
+    src: scripts/etcd-consul-check.py
+    dest: /opt/consul/bin/etcd-consul-check
+    owner: consul
+    group: consul
+    mode: 0700
+
 - name: image | import docker role
   include_role:
     name: entercloudsuite.docker
