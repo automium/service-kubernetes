@@ -93,21 +93,19 @@
     configure: false
     install: true
     consul_service_status: "stopped"
+
 - name: image | import docker role
   include_role:
     name: entercloudsuite.docker
     public: yes
-
-- name: image | restart Docker
-  service:
-    name: docker 
-    state: started
+  vars:
+    docker_end_status: started
 
 - name: image | download Kubernetes system containers
   command: kubeadm config images pull
 
 - name: image | stop Docker
-  service:
+  systemd:
     name: docker 
     state: stopped
 
