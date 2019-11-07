@@ -110,6 +110,11 @@
     group: consul
     mode: 0700
 
+- name: image | make sure consul data is free
+  file:
+    path: /opt/consul/data
+    state: absent
+
 - name: image | import docker role
   include_role:
     name: entercloudsuite.docker
