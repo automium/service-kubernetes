@@ -32,6 +32,7 @@ KUBERNETES_VERSION="1.15.3"
 IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$CI_JOB_ID
 export IMAGE_NAME
 packer build packer.json
+sleep 10
 openstack image save $IMAGE_NAME --file $IMAGE_NAME.qcow2
 
 # Create container
