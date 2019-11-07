@@ -43,9 +43,6 @@
       CONSUL_PORT: "8500"
       CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
       SERVICE: "automium/service-kubernetes"
-      MASTER: "true"
-      NODE: "false"
-      ETCD: "true"
     when: ansible_hostname == "testcluster-testcluster-0"
   - name: launch the test playbook on the remote worker instance
     command: ansible-playbook -i 127.0.0.1 --skip-tags bootstrap --extra-vars 'testmode="true" master="false" node="true" etcd="false" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
@@ -58,7 +55,4 @@
       CONSUL_PORT: "8500"
       CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
       SERVICE: "automium/service-kubernetes"
-      MASTER: "false"
-      NODE: "true"
-      ETCD: "false"
     when: ansible_hostname == "testcluster-testworker-0"

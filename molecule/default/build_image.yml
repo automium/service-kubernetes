@@ -1,14 +1,4 @@
 ---
-- name: Clear image
-  hosts: 127.0.0.1
-  tags: image
-  tasks:
-    - name: wait apt-daily-upgrade
-      command: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
-    - name: Update all packages to the latest version
-      apt:
-        upgrade: dist
-
 - name: install image
   hosts: 127.0.0.1
   roles:
@@ -31,10 +21,6 @@
         rm -rf /root/.ssh/authorized_keys
       args:
         removes: /var/lib/cloud
-    - name: remove unattended-upgrades
-      apt:
-        name: unattended-upgrades
-        state: absent
 
     - name: Remove dependencies that are no longer required
       apt:
