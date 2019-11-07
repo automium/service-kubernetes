@@ -3,6 +3,10 @@ stages:
 - test-infra
 - build-image
 
+after_script:
+  - docker volume prune -f
+
+
 run-molecule:
   image: automium/molecule:2.22-bionic
   stage: test-infra
