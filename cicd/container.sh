@@ -7,5 +7,5 @@ docker build --no-cache --pull --tag "$IMAGE_NAME" .
 docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
 docker tag "$IMAGE_NAME" "${IMAGE_NAME}:${TAG_NAME}"
 #docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
-docker push "${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}"
+docker push "${IMAGE_NAME}:${TAG_NAME}"
 #docker push "${IMAGE_NAME}:latest"
