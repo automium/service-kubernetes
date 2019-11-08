@@ -1,6 +1,7 @@
 ---
 stages:
 - test-infra
+- build-service-container
 - build-image
 
 after_script:
@@ -14,8 +15,14 @@ run-molecule:
   - bash cicd/test.sh
   only:
   - refactoring
-  tags:
-  - automium-infra-test
+
+build-service-container:
+  image: automium/molecule:2.22-bionic
+  stage: build-service-container
+  script:
+  - bash cicd/container.sh
+  only:
+  - refactoring
 
 build-image:
   image: automium/buildenv:bionic
