@@ -130,6 +130,17 @@
     name: docker 
     state: stopped
 
+- name: image | lock Docker and Kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - kubectl
+    - kubelet
+    - kubeadm
+    - kubernetes-cni
+    - docker-ce
+
 - name: image | remove useless dependecy
   apt:
     name: ["unattended-upgrades"]
