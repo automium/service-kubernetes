@@ -29,7 +29,7 @@ fi
 # echo The kubespray version used will be ${KUBESPRAY_VERSION}
 # KUBERNETES_VERSION=$(curl -sS https://raw.githubusercontent.com/kubernetes-sigs/kubespray/$KUBESPRAY_VERSION/inventory/sample/group_vars/k8s-cluster/k8s-cluster.yml | grep kube_version | cut -d ' ' -f 2)
 KUBERNETES_VERSION="1.15.3"
-IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$CI_COMMIT_SHA
+IMAGE_NAME=kubernetes-$KUBERNETES_VERSION-$CI_COMMIT_SHORT_SHA
 export IMAGE_NAME
 packer build packer.json
 sleep 10
