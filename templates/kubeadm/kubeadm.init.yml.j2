@@ -35,3 +35,10 @@ controllerManager:
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
 {% endif %}
+{% if testmode == "true" %}
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+conntrack:
+  maxPerCore: 0
+{% endif %}
