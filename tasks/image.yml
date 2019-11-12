@@ -58,15 +58,13 @@
 - name: image | create roles requirement
   copy:
     content: |
-      - src: https://github.com/entercloudsuite/ansible-consul.git
+      - src: entercloudsuite.consul
         version: 2.0.2
-        name: entercloudsuite.consul
-      - src: https://github.com/entercloudsuite/ansible-docker
+      - src: entercloudsuite.docker
         version: 2.0.4
       - src: https://github.com/AttilioGreco/ansible-cfssl.git
         version: master
         name: entercloudsuite.cfssl
-        name: entercloudsuite.docker
     dest: /usr/src/cloud/requirement.yml
 
 - name: image | ensure roles directory exist
