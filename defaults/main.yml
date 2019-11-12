@@ -2,7 +2,8 @@
 
 kubespray_version: v2.10.4
 name: name
-cluster_name: cluster_name
+cluster_name: samplecluster
+pool_name: mainpool
 consul: 127.0.0.1
 consul_port: 8500
 consul_datacenter: test
