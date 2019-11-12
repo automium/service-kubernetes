@@ -23,4 +23,3 @@
       docker_container:
         name: "consul"
         state: absent
-

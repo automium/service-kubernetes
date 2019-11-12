@@ -3,8 +3,8 @@ dependency:
   name: galaxy
 driver:
   name: docker
-#lint:
-#  name: yamllint
+lint:
+  name: yamllint
 platforms:
   - name: testcluster-testcluster-0
     dataVolume: testcluster-master-data
@@ -19,12 +19,14 @@ provisioner:
   playbooks:
     create: create.yml
     destroy: destroy.yml
-#  lint:
-#    name: ansible-lint
+    deploy: playbook.yml
+  lint:
+    name: ansible-lint
 scenario:
   name: default
   test_sequence:
-#    - lint
+    - lint
     - syntax
-#verifier:
-#  name: goss
+    - create
+    - deploy
+    - destroy

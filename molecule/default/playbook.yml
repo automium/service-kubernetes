@@ -21,38 +21,48 @@
        group: root
        mode: 0600
     with_items:
-    - { src: /usr/src/cloud/roles/service-kubernetes/testkey.pem, dst: /root/.ssh/id_rsa }
-    - { src: /usr/src/cloud/roles/service-kubernetes/testkey.pem.pub, dst: /root/.ssh/authorized_keys }
+       - { src: /usr/src/cloud/roles/service-kubernetes/testkey.pem, dst: /root/.ssh/id_rsa }
+       - { src: /usr/src/cloud/roles/service-kubernetes/testkey.pem.pub, dst: /root/.ssh/authorized_keys }
   - name: restart ssh service
     service:
-      name: ssh
-      state: restarted
+       name: ssh
+       state: restarted
 
 - name: test role wrapper
   hosts: all
   strategy: free
   tasks:
-  - name: launch the test playbook on the remote master instance 
-    command: ansible-playbook -i 127.0.0.1 --skip-tags others --extra-vars 'testmode="true" master="true" node="false" etcd="true" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
-    args:
-      chdir: /usr/src/cloud
-    environment:
-      ANSIBLE_ROLES_PATH: ":/tmp/:/usr/src/cloud/roles"
-      CONSUL: "consul.service.automium.consul"
-      CONSUL_DATACENTER: "automium"
-      CONSUL_PORT: "8500"
-      CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
-      SERVICE: "automium/service-kubernetes"
-    when: ansible_hostname == "testcluster-testcluster-0"
-  - name: launch the test playbook on the remote worker instance
-    command: ansible-playbook -i 127.0.0.1 --skip-tags bootstrap --extra-vars 'testmode="true" master="false" node="true" etcd="false" cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"' /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
-    args:
-      chdir: /usr/src/cloud
-    environment:
-      ANSIBLE_ROLES_PATH: ":/tmp/:/usr/src/cloud/roles"
-      CONSUL: "consul.service.automium.consul"
-      CONSUL_DATACENTER: "automium"
-      CONSUL_PORT: "8500"
-      CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
-      SERVICE: "automium/service-kubernetes"
-    when: ansible_hostname == "testcluster-testworker-0"
+     - name: launch the test playbook on the remote master instance
+       command: >-
+         ansible-playbook -i 127.0.0.1
+         --skip-tags others
+         --extra-vars 'testmode="true" master="true" node="false" etcd="true"
+         cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"'
+         /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+       args:
+          chdir: /usr/src/cloud
+       environment:
+          ANSIBLE_ROLES_PATH: ":/tmp/:/usr/src/cloud/roles"
+          CONSUL: "consul.service.automium.consul"
+          CONSUL_DATACENTER: "automium"
+          CONSUL_PORT: "8500"
+          CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
+          SERVICE: "automium/service-kubernetes"
+       when: ansible_hostname == "testcluster-testcluster-0"
+     - name: launch the test playbook on the remote worker instance
+       command: >-
+         ansible-playbook -i 127.0.0.1
+         --skip-tags bootstrap
+         --extra-vars 'testmode="true" master="false" node="true" etcd="false"
+         cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"'
+         /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
+       args:
+          chdir: /usr/src/cloud
+       environment:
+          ANSIBLE_ROLES_PATH: ":/tmp/:/usr/src/cloud/roles"
+          CONSUL: "consul.service.automium.consul"
+          CONSUL_DATACENTER: "automium"
+          CONSUL_PORT: "8500"
+          CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
+          SERVICE: "automium/service-kubernetes"
+       when: ansible_hostname == "testcluster-testworker-0"

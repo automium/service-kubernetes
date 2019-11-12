@@ -1,6 +1,6 @@
 ---
 - name: bootstrap | configure node | make sure the master service is resolvable
-  command: "dig +short {{ cluster_name }}-kube-master.service.automium.consul" 
+  command: "dig +short {{ cluster_name }}-kube-master.service.automium.consul"
   register: resolve_command
   retries: 100
   delay: 3
@@ -16,7 +16,7 @@
   set_fact:
     join_command: "{{ kubeadm_join_command.stdout }}"
 
-- name: bootstrap | configure node | add ignore preflight errors in test mode 
+- name: bootstrap | configure node | add ignore preflight errors in test mode
   set_fact:
     join_command: "{{ join_command }} --ignore-preflight-errors=all"
   when:
