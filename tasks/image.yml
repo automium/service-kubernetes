@@ -63,6 +63,9 @@
         name: entercloudsuite.consul
       - src: https://github.com/entercloudsuite/ansible-docker
         version: 2.0.4
+      - src: https://github.com/AttilioGreco/ansible-cfssl.git
+        version: master
+        name: entercloudsuite.cfssl
         name: entercloudsuite.docker
     dest: /usr/src/cloud/requirement.yml
 
@@ -145,3 +148,11 @@
   apt:
     name: ["unattended-upgrades"]
     state: absent
+
+- name: image | import cfssl role
+  include_role:
+    name: entercloudsuite.cfssl
+    public: yes
+  vars:
+    install: true
+    configure: false
