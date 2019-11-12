@@ -1,3 +1,4 @@
+---
 - name: others | master | upload certificates to the cluster with kubeadm
   command: kubeadm init phase upload-certs --upload-certs
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"

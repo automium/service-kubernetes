@@ -11,7 +11,7 @@
     owner: root
     group: root
     mode: 0700
-  
+
 - name: all | master | post_task | create kubeconfig for consul
   command: /tmp/consul_kubectl.sh
 

@@ -1,3 +1,4 @@
+---
 - name: vars | print env variable cluster_name
   debug:
     var: cluster_name
@@ -5,7 +6,7 @@
 - name: vars | print env name
   debug:
     var: name
-  
+
 - name: set_vars init_role to others
   set_fact:
     init_role: others

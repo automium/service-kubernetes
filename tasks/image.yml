@@ -13,11 +13,11 @@
   apt_repository:
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
-    
+
 - name: image | install kubernetes binaries
   apt:
     name: ["kubeadm={{ k8s_version }}-00", "kubelet={{ k8s_version }}-00", "kubectl={{ k8s_version }}-00", "glusterfs-client", "python-pip"]
-    state: present    
+    state: present
 
 - name: image | install consul.py
   pip:
@@ -30,7 +30,7 @@
   service:
     name: kubelet
     enabled: yes
-    
+
 - name: image | create Kubernetes configuration directory
   file:
     path: /etc/kubernetes
@@ -128,7 +128,7 @@
 
 - name: image | stop Docker
   systemd:
-    name: docker 
+    name: docker
     state: stopped
 
 - name: image | lock Docker and Kubernetes packages
