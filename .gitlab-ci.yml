@@ -35,4 +35,4 @@ build-image:
     refs:
       - master
     changes:
-      - image.yml
+      - tasks/image.yml
