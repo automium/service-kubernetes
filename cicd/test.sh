@@ -7,7 +7,7 @@ export TESTROLE_PATH=$(pwd)
 ssh-keygen -q -N "" -f testkey.pem
 
 # Start molecule
-molecule converge
+molecule test
 
 if [ $? -ne 0 ]; then
   echo "*** CLUSTER BUILD FAILED ***"
