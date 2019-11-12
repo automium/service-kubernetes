@@ -22,8 +22,10 @@ build-service-container:
   script:
   - bash cicd/container.sh
   only:
-  - master
-
+    refs:
+      - master
+    changes:
+      - config.tf.tmpl
 build-image:
   image: automium/buildenv:bionic
   stage: build-image
