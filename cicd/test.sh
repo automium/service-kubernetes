@@ -6,8 +6,10 @@ export TESTROLE_PATH=$(pwd)
 # Generate a SSH key for test instances
 ssh-keygen -q -N "" -f testkey.pem
 
-# Start molecule
+# Lint test
 molecule test
+# Start test cluster with molecule
+molecule converge
 
 if [ $? -ne 0 ]; then
   echo "*** CLUSTER BUILD FAILED ***"

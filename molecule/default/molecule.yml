@@ -19,7 +19,6 @@ provisioner:
   playbooks:
     create: create.yml
     destroy: destroy.yml
-    deploy: playbook.yml
   lint:
     name: ansible-lint
 scenario:
@@ -27,6 +26,4 @@ scenario:
   test_sequence:
     - lint
     - syntax
-    - create
-    - deploy
-    - destroy
+
