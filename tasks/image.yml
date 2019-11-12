@@ -152,5 +152,5 @@
     name: entercloudsuite.cfssl
     public: yes
   vars:
-    install: true
-    configure: false
+    install: True
+    configure: False
