@@ -8,6 +8,10 @@ ssh-keygen -q -N "" -f testkey.pem
 
 # Lint test
 molecule test
+if [ $? -ne 0 ]; then
+  echo "*** molecule test FAILED ***"
+  exit 1
+fi
 # Start test cluster with molecule
 molecule converge
 

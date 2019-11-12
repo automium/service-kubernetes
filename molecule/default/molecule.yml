@@ -26,4 +26,3 @@ scenario:
   test_sequence:
     - lint
     - syntax
-
