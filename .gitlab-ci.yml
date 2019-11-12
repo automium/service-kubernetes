@@ -26,6 +26,7 @@ build-service-container:
       - master
     changes:
       - config.tf.tmpl
+      - tasks/image.yml
 build-image:
   image: automium/buildenv:bionic
   stage: build-image
@@ -35,4 +36,5 @@ build-image:
     refs:
       - master
     changes:
+      - config.tf.tmpl
       - tasks/image.yml
