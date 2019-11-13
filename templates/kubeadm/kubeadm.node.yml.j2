@@ -9,11 +9,10 @@ discovery:
 nodeRegistration:
   kubeletExtraArgs:
     node-labels: "nodepool={{ pool_name }}"
-    {%- if provider != "none" %}
+{% if provider != "none" %}
     cloud-provider: "openstack"
     cloud-config: "/etc/kubernetes/cloud.conf"
-    {%- endif %}
-
+{% endif %}
 {% if testmode == "true" %}
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
