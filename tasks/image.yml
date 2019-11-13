@@ -62,9 +62,9 @@
         version: 2.0.2
       - src: entercloudsuite.docker
         version: 2.0.4
-      - src: https://github.com/AttilioGreco/ansible-cfssl.git
-        version: master
-        name: entercloudsuite.cfssl
+      - src: entercloudsuite.ansible_cfssl
+        version: 1.0.2
+        name: 
     dest: /usr/src/cloud/requirement.yml
 
 - name: image | ensure roles directory exist
@@ -149,7 +149,7 @@
 
 - name: image | import cfssl role
   include_role:
-    name: entercloudsuite.cfssl
+    name: entercloudsuite.ansible_cfssl
     public: yes
   vars:
     install: True
