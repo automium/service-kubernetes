@@ -7,11 +7,6 @@
   until: resolve_command.stdout != ""
   failed_when: resolve_command.stdout == ""
 
-- name: others | all | generate generic join command for node
-  command: kubeadm token create --print-join-command --ttl 5m
-  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
-  register: kubeadm_join_command
-
 - name: others | all | include configure role for "{{ cluster_role }}"
   include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
   static: no

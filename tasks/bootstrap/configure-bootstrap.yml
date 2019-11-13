@@ -1,9 +1,4 @@
 ---
-- name: bootstrap | all | create kubeadm configurations
-  template:
-    src: templates/kubeadm/kubeadm.init.yml.j2
-    dest: "/etc/kubernetes/kubeadm-conf.yml"
-
 - name: bootstrap | all | include configure role for "{{ cluster_role }}"
   include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
   static: no

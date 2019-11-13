@@ -1,4 +1,12 @@
 ---
+- name: bootstrap | all | render kubeadm configuration
+  template:
+    src: templates/kubeadm/kubeadm.master.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf.yml"
+    owner: root
+    group: root
+    mode: 0600
+
 - name: bootstrap | configure master | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present

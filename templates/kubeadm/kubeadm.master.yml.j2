@@ -4,15 +4,12 @@ kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ ansible_default_ipv4.address }}
   bindPort: 6443
+{% if provider != "none" %}
 nodeRegistration:
   kubeletExtraArgs:
-    {%- if node == "true" %}
-    node-labels: "nodepool={{ pool_name }}"
-    {%- endif %}
-    {%- if provider != "none" %}
     cloud-provider: "openstack"
     cloud-config: "/etc/kubernetes/cloud.conf"
-    {%- endif %}
+{% endif %}
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 clusterName: {{ cluster_name }}

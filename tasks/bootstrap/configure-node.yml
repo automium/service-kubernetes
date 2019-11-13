@@ -7,14 +7,22 @@
   until: resolve_command.stdout != ""
   failed_when: resolve_command.stdout == ""
 
-- name: bootstrap | configure node | kubead show me join command
-  command: kubeadm token create --print-join-command --ttl 5m
+- name: bootstrap | configure node | generate join token
+  command: kubeadm token create --ttl 5m
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
-  register: kubeadm_join_command
+  register: kubeadm_join_token
+
+- name: bootstrap | configure node | render kubeadm configuration
+  template:
+    src: templates/kubeadm/kubeadm.node.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf.yml"
+    owner: root
+    group: root
+    mode: 0600
 
 - name: bootstrap | configure node | compose join command
   set_fact:
-    join_command: "{{ kubeadm_join_command.stdout }}"
+    join_command: "kubeadm join --config /etc/kubernetes/kubeadm-conf.yml"
 
 - name: bootstrap | configure node | add ignore preflight errors in test mode
   set_fact:

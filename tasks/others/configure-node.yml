@@ -1,4 +1,17 @@
 ---
+- name: others | all | generate join token for node
+  command: kubeadm token create --ttl 5m
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_join_token
+
+- name: others | node | render kubeadm configuration
+  template:
+    src: templates/kubeadm/kubeadm.node.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf.yml"
+    owner: root
+    group: root
+    mode: 0600
+
 - name: others | node | compose join command for worker nodes
   set_fact:
-    join_command: "{{ kubeadm_join_command.stdout }}"
+    join_command: "kubeadm join --config /etc/kubernetes/kubeadm-conf.yml"
