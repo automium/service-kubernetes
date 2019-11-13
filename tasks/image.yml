@@ -146,10 +146,14 @@
     name: ["unattended-upgrades"]
     state: absent
 
-- name: image | import cfssl role
+- name: image | install cfssl binary
   include_role:
     name: entercloudsuite.ansible_cfssl
     public: yes
   vars:
     install: True
     configure: False
+    download_list:
+      - "{{ cfssl_pkg.cfssl }}"
+      - "{{ cfssl_pkg.cfssljson }}"
+
