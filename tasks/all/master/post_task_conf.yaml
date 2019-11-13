@@ -4,11 +4,8 @@
     name: entercloudsuite.ansible_cfssl
     public: yes
   vars:
-    install: True
-    configure: False
-    download_list:
-      - "{{ cfssl_pkg.cfssl }}"
-      - "{{ cfssl_pkg.cfssljson }}"
+    install: False
+    configure: True
     organizations: etcd
     certificate_base_path: /opt/consul/pki
     dir_list:
