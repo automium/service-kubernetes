@@ -6,6 +6,10 @@
       - name: "{{ identity }}-all"
         checks:
       {% if master == 'true' %}
+          - args: ["/usr/local/bin/etcd-consul-check", "--ca=/etc/kubernetes/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key"]
+            interval: "10s"
+      {% endif %}
+      {% if master == 'true' %}
           - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
           - tcp: localhost:6443

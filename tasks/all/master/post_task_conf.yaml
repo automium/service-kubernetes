@@ -1,4 +1,72 @@
 ---
+- name: cluster Role | master | create certificates for grant consul access to etcd
+  include_role:
+    name: entercloudsuite.ansible_cfssl
+    public: yes
+  vars:
+    install: True
+    configure: False
+    download_list:
+      - "{{ cfssl_pkg.cfssl }}"
+      - "{{ cfssl_pkg.cfssljson }}"
+    organizations: etcd
+    certificate_base_path: /opt/consul/pki
+    dir_list:
+      - "{{ certificate_base_path }}"
+      - "{{ certificate_configurations_base_path }}"
+      - "{{ certificate_configurations_base_path_organizations }}"
+    certificate_directive:
+      node_certificate:
+        path: "{{ certificate_base_path }}/{{ organizations }}"
+        configurations_path: "{{ certificate_configurations_base_path_organizations }}/etcd-client-{{ansible_hostname}}.json"
+        certificate_name: server
+        configuration:
+          CN: Server
+          hosts:
+            - 127.0.0.1
+            - localhost
+            - "{{ ansible_hostname }}.{{ base_domain }}"
+            - "{{ ansible_fqdn }}"
+          key:
+            algo: rsa
+            size: 2048
+      certificate_config:
+        path: "{{ certificate_base_path }}/certificate"
+        configurations_path: "{{ certificate_configurations_base_path_organizations }}/certificate.json"
+        configuration:
+          signing:
+            default:
+              expiry: 43800h
+            profiles:
+              client:
+                expiry: 43800h
+                usages:
+                  - signing
+                  - digital signature
+                  - key encipherment
+                  - client auth
+    command_run:
+      client_cert:
+        shell: "cfssl gencert -ca=/etc/kubernetes/pki/etcd/ca.crt -ca-key=/etc/kubernetes/pki/etcd/ca.key -config={{ certificate_directive.certificate_config.configurations_path }} -profile=client {{ certificate_directive.node_certificate.configurations_path }} | cfssljson -bare {{ ansible_hostname }}-consul"
+        chdir: "{{ certificate_directive.node_certificate.path }}/"
+        creates: "{{ certificate_directive.node_certificate.path }}/{{ ansible_hostname }}-consul.pem"
+        delegate_to: "{{ ansible_hostname }}"
+
+- name: copy etcd ca.crt to consul cert folder
+  copy:
+    src: /etc/kubernetes/pki/etcd/ca.crt
+    dest: /opt/consul/pki/etcd/ca.crt
+    owner: consul
+    group: consul
+
+- name: cluster Role | master | set permission
+  file:
+    path: /opt/consul/pki
+    owner: consul
+    group: consul
+    state: directory
+    recurse: yes
+
 - name: all | master | post_task | consul service account
   copy:
     src: kubernetes/consul_cluster_rolebinding.yaml
@@ -19,3 +87,8 @@
   service:
     name: consul
     state: restarted
+
+- name: all | master | post_task | configure kubectl for root user
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
