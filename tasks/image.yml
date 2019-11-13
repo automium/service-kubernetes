@@ -124,7 +124,7 @@
     docker_end_status: started
 
 - name: image | download Kubernetes system containers
-  command: kubeadm config images pull
+  command: "kubeadm config images pull --kubernetes-version v{{ k8s_version }}"
 
 - name: image | stop Docker
   systemd:
