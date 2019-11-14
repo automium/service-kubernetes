@@ -70,6 +70,10 @@
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
+      - name: "{{ cluster_name }}-etcd"
+        check:
+          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/etc/kubernetes/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
+            interval: "10s"
       {% endif %}
       {% if node == 'true' %}
       - name: "{{ cluster_name }}-kube-node"
