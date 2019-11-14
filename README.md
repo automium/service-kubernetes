@@ -1,7 +1,7 @@
 Automium Service: kubernetes 
 ======================================
 
-[![Build Status](https://travis-ci.org/automium/service-kubernetes.svg?branch=master)](https://travis-ci.org/automium/service-kubernetes)
+[![pipeline status](https://gitlab.com/automium/service-kubernetes/badges/master/pipeline.svg)](https://gitlab.com/automium/service-kubernetes/commits/master)
 
 this project is meant to be used by [automium provisioner](https://github.com/automium/provisioner)
 
