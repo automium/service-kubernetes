@@ -21,6 +21,12 @@ provisioner:
     destroy: destroy.yml
   lint:
     name: ansible-lint
+verifier:
+  name: ansible
+  playbooks:
+    verify: verify.yml
+  lint:
+    name: ansible-lint
 scenario:
   name: default
   test_sequence:
