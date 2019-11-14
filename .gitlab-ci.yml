@@ -2,9 +2,7 @@
 stages:
 - test-infra
 - build-service-container
-- build-release-service-container
 - build-image
-- build-release-image
 
 after_script:
   - docker volume prune -f
