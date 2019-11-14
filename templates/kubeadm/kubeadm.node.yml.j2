@@ -8,7 +8,7 @@ discovery:
     unsafeSkipCAVerification: true
 nodeRegistration:
   kubeletExtraArgs:
-    node-labels: "nodepool={{ pool_name }}"
+    node-labels: "node-role.kubernetes.io/worker=,nodepool={{ pool_name }}"
 {% if provider != "none" %}
     cloud-provider: "openstack"
     cloud-config: "/etc/kubernetes/cloud.conf"
