@@ -5,11 +5,11 @@
       - name: "{{ identity }}"
       - name: "{{ identity }}-all"
         checks:
-      {% if master == 'true' %}
-          - args: ["/usr/local/bin/etcd-consul-check", "--ca=/etc/kubernetes/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key"]
+      {% if cluster_role == 'master' %}
+          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/etc/kubernetes/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
       {% endif %}
-      {% if master == 'true' %}
+      {% if cluster_role == 'master' %}
           - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
           - tcp: localhost:6443
@@ -22,7 +22,6 @@
             interval: 10s
             timeout: 3s
       {% endif %}
-      {% if node == 'true' or master == 'true' %}
           - tcp: localhost:10250
             interval: 10s
             timeout: 1s
@@ -33,8 +32,7 @@
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
-      {% endif %}
-      {% if master == 'true' %}
+      {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kube-master"
         checks:
           - args: ["/opt/consul/bin/kubernetes-check-node"]
@@ -55,7 +53,7 @@
             interval: 10s
             timeout: 3s
       {% endif %}
-      {% if node == 'true' or master == 'true' %}
+      {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kubelet"
         check:
           - tcp: localhost:10250
