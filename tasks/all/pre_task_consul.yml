@@ -6,7 +6,7 @@
       - name: "{{ identity }}-all"
         checks:
       {% if cluster_role == 'master' %}
-          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/etc/kubernetes/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
+          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
       {% endif %}
       {% if cluster_role == 'master' %}
@@ -72,7 +72,7 @@
             timeout: 1s
       - name: "{{ cluster_name }}-etcd"
         check:
-          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/etc/kubernetes/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
+          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
       {% endif %}
       {% if node == 'true' %}
