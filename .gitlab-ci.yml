@@ -15,6 +15,7 @@ run-molecule:
   - bash cicd/test.sh
   only:
   - master
+  - tags
 
 build-service-container:
   image: automium/molecule:2.22-bionic
@@ -27,6 +28,15 @@ build-service-container:
     changes:
       - config.tf.tmpl
       - tasks/image.yml
+
+build-release-service-container:
+  image: automium/molecule:2.22-bionic
+  stage: build-service-container
+  script:
+  - bash cicd/container.sh
+  only:
+    - tags
+
 build-image:
   image: automium/buildenv:bionic
   stage: build-image
@@ -38,3 +48,11 @@ build-image:
     changes:
       - config.tf.tmpl
       - tasks/image.yml
+
+build-release-image:
+  image: automium/buildenv:bionic
+  stage: build-image
+  script:
+  - bash cicd/build.sh
+  only:
+    - tags

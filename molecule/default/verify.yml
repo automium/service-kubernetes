@@ -1,0 +1,39 @@
+---
+- name: Run quick cluster verification test
+  hosts: testcluster-testcluster-0
+  vars:
+    sonobuoy_version: "0.16.3"
+    sonobuoy_archive_sha256sum: "7639b457a5992ff14c25a0e9893a64b1a85386fd88a1934024fbc4c112d0aa07"
+  tasks:
+    - name: "Download Sonobuoy v{{ sonobuoy_version }} from GitHub"
+      get_url:
+        url: "https://github.com/vmware-tanzu/sonobuoy/releases/download/v{{ sonobuoy_version }}/sonobuoy_{{ sonobuoy_version }}_linux_amd64.tar.gz"
+        dest: /tmp/sonobuoy.tgz
+        sha256sum: "{{ sonobuoy_archive_sha256sum }}"
+
+    - name: Unpack Sonobuoy
+      unarchive:
+        remote_src: yes
+        src: /tmp/sonobuoy.tgz
+        dest: /tmp
+
+    - name: Launch Sonobuoy
+      command: "/tmp/sonobuoy run --kubeconfig /etc/kubernetes/admin.conf --mode quick --wait"
+      register: test_files
+
+    - name: Retrieve test results from cluster
+      command: "/tmp/sonobuoy --kubeconfig /etc/kubernetes/admin.conf retrieve"
+      register: sonobuoy_retrieve_outfile
+
+    - name: Read test results
+      command: "/tmp/sonobuoy results {{ sonobuoy_retrieve_outfile.stdout }}"
+      register: sonobuoy_results
+
+    - name: Show test results
+      debug:
+        msg: "{{ sonobuoy_results.stdout_lines }}"
+
+    - name: Fail if there are failed tests
+      fail:
+        msg: "Conformance test failed"
+      when: "'Status: failed' in sonobuoy_results.stdout"
