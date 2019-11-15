@@ -7,6 +7,19 @@
   until: resolve_command.stdout != ""
   failed_when: resolve_command.stdout == ""
 
+- import_tasks: helpers/generate_calico.yml
+  vars:
+    server_conf:
+      CN: Server
+      hosts:
+        - 127.0.0.1
+        - localhost
+        - "{{ ansible_hostname }}"
+        - "{{ ansible_fqdn }}"
+      key:
+        algo: rsa
+        size: 2048
+
 - name: others | all | include configure role for "{{ cluster_role }}"
   include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
   static: no
