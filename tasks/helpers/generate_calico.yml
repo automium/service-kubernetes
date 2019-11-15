@@ -1,4 +1,8 @@
 ---
+- name: helpers | generate calico | DEBUG show host delegate for cert generations
+  debug:
+    var: delegate_host_for_cert_generations
+
 - name: helpers | generate calico | Create /etc/calico dir
   file:
     state: directory
@@ -18,7 +22,7 @@
   environment:
     SERVER: "{{ server_conf | to_json }}"
   register: cfssl_out
-  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  delegate_to: "{{ delegate_host_for_cert_generations }}"
 
 - name: from json
   set_fact:
@@ -51,4 +55,4 @@
     src: /etc/kubernetes/pki/etcd/ca.crt
     dest: /etc/calico/pki/ca.crt
     flat: yes
-  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  delegate_to: "{{ delegate_host_for_cert_generations }}"
