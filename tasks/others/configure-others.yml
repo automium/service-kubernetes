@@ -9,6 +9,7 @@
 
 - include_tasks: helpers/generate_calico.yml
   vars:
+    delegate_host_for_cert_generations: "{{ cluster_name }}-kube-master.service.automium.consul"
     server_conf:
       CN: Server
       hosts:
