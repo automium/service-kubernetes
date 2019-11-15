@@ -17,6 +17,7 @@
         - localhost
         - "{{ ansible_hostname }}"
         - "{{ ansible_fqdn }}"
+        - "{{ cluster_name }}-etcd.service.automium.consul"
       key:
         algo: rsa
         size: 2048
