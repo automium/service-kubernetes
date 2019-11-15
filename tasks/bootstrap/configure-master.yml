@@ -1,5 +1,5 @@
 ---
-- name: bootstrap | all | render kubeadm configuration
+- name: bootstrap | configure master | kubeadm --> render configuration
   template:
     src: templates/kubeadm/kubeadm.master.yml.j2
     dest: "/etc/kubernetes/kubeadm-conf.yml"
@@ -7,7 +7,7 @@
     group: root
     mode: 0600
 
-- name: bootstrap | configure master | create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
+- name: bootstrap | configure master | OS create "{{ cluster_name }}-kube-apiserver.service.automium.consul" record in /etc/hosts for consul boostrap
   lineinfile:
     state: present
     path: /etc/hosts
@@ -37,6 +37,34 @@
 - name: bootstrap | configure master | bootstrap first master
   command: "{{ kubeadm_bootstrap_command }}"
   register: kubeadm_upload_cert
+
+- name: bootstrap | configure master | certs calico | Create directory tree
+  file:
+    state: directory
+    dest: "{{ item }}"
+  with_items:
+    - /etc/cfssl
+    - /etc/cfssl/etcd/
+
+- name: bootstrap | configure master | certs calico | set vars wit calico configurations
+  set_fact:
+    calico_conf:
+      signing:
+        default:
+          expiry: 43800h
+        profiles:
+          client:
+            expiry: 43800h
+            usages:
+              - signing
+              - digital signature
+              - key encipherment
+              - client auth
+
+- name: bootstrap | configure master | certs calico | Copy calico cert conf to file
+  copy:
+    content: "{{ calico_conf | to_json }}"
+    dest: /etc/cfssl/etcd/certificate.json
 
 - include_tasks: helpers/generate_calico.yml
   vars:
