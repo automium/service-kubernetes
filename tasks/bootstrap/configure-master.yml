@@ -38,6 +38,20 @@
   command: "{{ kubeadm_bootstrap_command }}"
   register: kubeadm_upload_cert
 
+- include_tasks: helpers/generate_calico.yml
+  vars:
+    delegate_host_for_cert_generations: "{{ ansible_hostname }}"
+    server_conf:
+      CN: Server
+      hosts:
+        - 127.0.0.1
+        - localhost
+        - "{{ ansible_hostname }}"
+        - "{{ ansible_fqdn }}"
+      key:
+        algo: rsa
+        size: 2048
+
 - name: bootstrap | configure master | deploy calico deployment
   template:
     src: templates/calico/calico.yaml.j2
