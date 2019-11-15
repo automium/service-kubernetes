@@ -45,7 +45,7 @@
 
 - name: create certificates
   shell: |
-   cat /etc/calico/cert.json | cfssljson -bare {{ ansible_hostname }}-node-calico
+   cat /etc/calico/cert.json | cfssljson -bare node-calico
    rm -rfv /etc/calico/cert.json
   args:
     chdir: /etc/calico/pki
