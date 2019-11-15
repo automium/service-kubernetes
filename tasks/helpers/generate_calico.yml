@@ -1,3 +1,4 @@
+---
 - name: helpers | generate calico | Create /etc/calico dir
   file:
     state: directory
