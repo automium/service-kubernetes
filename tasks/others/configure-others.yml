@@ -7,7 +7,7 @@
   until: resolve_command.stdout != ""
   failed_when: resolve_command.stdout == ""
 
-- import_tasks: helpers/generate_calico.yml
+- include_tasks: helpers/generate_calico.yml
   vars:
     server_conf:
       CN: Server
