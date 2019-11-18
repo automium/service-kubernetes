@@ -1,3 +1,4 @@
+---
 - name: bootstrap | master | run script to add kubernetes to Rancher
   shell: |
     #!/bin/sh
