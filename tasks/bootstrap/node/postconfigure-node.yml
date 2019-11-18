@@ -1,0 +1,3 @@
+- name:  bootstrap | node | Debug
+  debug:
+    msg: "No task nead in post configure for boostrap node"

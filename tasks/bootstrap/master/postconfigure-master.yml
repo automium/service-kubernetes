@@ -1,0 +1,24 @@
+- name: bootstrap | master | run script to add kubernetes to Rancher
+  shell: |
+    #!/bin/sh
+    RANCHER_URL="{{ rancher_url }}"
+    RANCHER_CLUSTER_TOKEN="{{ rancher_cluster_token }}"
+    export CLUSTER_NAME="{{ cluster_name }}"
+    CLUSTER_ID=$(curl -sS -k -H "Content-Type: application/json" -H "Authorization: Bearer ${RANCHER_CLUSTER_TOKEN}" "https://${RANCHER_URL}/v3/cluster" --data-binary "{\"dockerRootDir\":\"/var/lib/docker\",\"enableNetworkPolicy\":false,\"type\":\"cluster\",\"name\":\"$CLUSTER_NAME\"}" | jq '.id' | tr -d "\"")
+    if [ "${CLUSTER_ID}" != "null" ]; then
+        echo "Cluster created with ID ${CLUSTER_ID} -- waiting for manifest generation..."
+        sleep 5
+        APPLY_URL=$(curl -sS -k -H "Content-Type: application/json" -H "Authorization: Bearer ${RANCHER_CLUSTER_TOKEN}" "https://${RANCHER_URL}/v3/clusterregistrationtoken" --data-binary "{\"type\":\"clusterRegistrationToken\",\"clusterId\":\"${CLUSTER_ID}\"}" | jq '.manifestUrl' | tr -d "\"")
+        if [ "${APPLY_URL}" != "null" ]; then
+            echo "Manifest URL: ${APPLY_URL}"
+            curl -sS -k ${APPLY_URL} | kubectl apply -f -
+        fi
+    fi
+  register: rancher_add
+  until: rancher_add.rc == 0
+  delay: 1
+  retries: 6000
+  when:
+    - rancher_url != ""
+    - rancher_cluster_token != ""
+  
