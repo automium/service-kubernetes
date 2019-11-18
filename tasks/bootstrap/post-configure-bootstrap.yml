@@ -1,0 +1,4 @@
+---
+- name: bootstrap | all | include postconfigure role for "{{ cluster_role }}"
+  include: "{{ init_role }}/{{ cluster_role }}/postconfigure-{{ cluster_role }}.yml"
+  static: no

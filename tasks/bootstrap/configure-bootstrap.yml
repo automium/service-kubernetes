@@ -1,4 +1,4 @@
 ---
 - name: bootstrap | all | include configure role for "{{ cluster_role }}"
-  include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
+  include: "{{ init_role }}/{{ cluster_role }}/configure-{{ cluster_role }}.yml"
   static: no
