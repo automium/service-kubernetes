@@ -125,6 +125,18 @@
 - name: image | download Kubernetes system containers
   command: "kubeadm config images pull --kubernetes-version v{{ k8s_version }}"
 
+- name: image | install etcdctl tools in hosts
+  shell: |
+    #!/bin/bash
+
+    # get etcd image name and version
+    IMAGENAME=$(docker image ls | grep etcd | awk '{print $1":"$2 }')
+    # copy etcdctl from container to hosts
+
+    ID=$(docker create $IMAGENAME)
+    docker cp $ID:/usr/local/bin/etcdctl  > /usr/local/bin/etcdctl
+    docker rm -v $ID
+
 - name: image | stop Docker
   systemd:
     name: docker
