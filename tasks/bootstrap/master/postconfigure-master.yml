@@ -22,4 +22,3 @@
   when:
     - rancher_url != ""
     - rancher_cluster_token != ""
-  
