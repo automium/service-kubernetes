@@ -143,6 +143,8 @@
     ID=$(docker create $IMAGENAME)
     docker cp $ID:/usr/local/bin/etcdctl /usr/local/bin/etcdctl
     docker rm -v $ID
+    # configure root shell for use ETCD_APIV3
+    echo "export ETCDCTL_API=3" >> /root/.bashrc
 
 - name: image | stop Docker
   systemd:
