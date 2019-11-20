@@ -174,7 +174,7 @@
     mode: '0755'
 
 - name: image | configure network manager for working wit calico
-  file:
+  copy:
     src: calico/network_manager.conf
     dest: /etc/NetworkManager/conf.d/calico.conf
 
