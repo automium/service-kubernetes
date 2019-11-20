@@ -52,9 +52,9 @@ data:
           "type": "calico",
           "log_level": "info",
           "etcd_endpoints": "__ETCD_ENDPOINTS__",
-          "etcd_key_file": "__ETCD_KEY_FILE__",
-          "etcd_cert_file": "__ETCD_CERT_FILE__",
-          "etcd_ca_cert_file": "__ETCD_CA_CERT_FILE__",
+          "etcd_key_file": "/etc/calico/pki/node-calico-key.pem",
+          "etcd_cert_file": "/etc/calico/pki/node-calico.pem",
+          "etcd_ca_cert_file": "/etc/calico/pki/ca.crt",
           "mtu": __CNI_MTU__,
           "ipam": {
               "type": "calico-ipam"
@@ -314,7 +314,7 @@ spec:
             # chosen from this range. Changing this value after installation will have
             # no effect. This should fall within `--cluster-cidr`.
             - name: CALICO_IPV4POOL_CIDR
-              value: "{{ calico_pool_cidr }}"
+              value: "192.168.0.0/16"
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
