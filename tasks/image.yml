@@ -167,6 +167,12 @@
     name: ["unattended-upgrades"]
     state: absent
 
+- name: image | create  NetworkManager/conf.d directory
+  file:
+    path: /etc/NetworkManager/conf.d
+    state: directory
+    mode: '0755'
+
 - name: image | configure network manager for working wit calico
   file:
     src: calico/network_manager.conf
