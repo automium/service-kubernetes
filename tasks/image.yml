@@ -172,6 +172,14 @@
     src: calico/network_manager.conf
     dest: /etc/NetworkManager/conf.d/calico.conf
 
+- name: prevent out of space in the conntrack table
+  sysctl:
+    name: net.netfilter.nf_conntrack_max
+    value: '1000000'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
 - name: image | install cfssl binary
   include_role:
     name: entercloudsuite.ansible_cfssl
