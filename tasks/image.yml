@@ -167,6 +167,11 @@
     name: ["unattended-upgrades"]
     state: absent
 
+- name: image | configure network manager for working wit calico
+  file:
+    src: calico/network_manager.conf
+    dest: /etc/NetworkManager/conf.d/calico.conf
+
 - name: image | install cfssl binary
   include_role:
     name: entercloudsuite.ansible_cfssl
