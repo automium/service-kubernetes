@@ -55,7 +55,6 @@
          --skip-tags bootstrap
          --extra-vars 'testmode="true" master="false" node="true" etcd="false"
          cluster_name="testcluster" pool_name="testpool" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"
-         rancher_url="" rancher_cluster_token = ""
          '
          /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
        args:

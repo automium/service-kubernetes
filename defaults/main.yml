@@ -25,3 +25,5 @@ kernel_modules:
   - "dm_thin_pool"
 init_role: "bootstrap"
 cluster_role: "master"
+rancher_url: ""
+rancher_cluster_token: ""
