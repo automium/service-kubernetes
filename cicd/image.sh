@@ -3,6 +3,7 @@
 # Wait until the instance is ready
 until [[ -f /var/lib/cloud/instance/boot-finished ]]; do sleep 1; done
 
+sudo apt-get update
 source /usr/src/cloud/venv/bin/activate
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
