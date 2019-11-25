@@ -38,15 +38,9 @@ def main():
     # log.fatal('fatal message')
     hostname = os.uname()[1]
 
-    etcd_ca = f"/etc/ssl/etcd/ssl/ca.pem"
-{% if master == 'true' %}
-    etcd_crt = f"/etc/ssl/etcd/ssl/node-{hostname}.pem"
-    etcd_key = f"/etc/ssl/etcd/ssl/node-{hostname}-key.pem"
-{% endif %}
-{% if etcd == 'true' %}
-    etcd_crt = f"/etc/ssl/etcd/ssl/member-{hostname}.pem"
-    etcd_key = f"/etc/ssl/etcd/ssl/member-{hostname}-key.pem"
-{% endif %}
+    etcd_ca = f"/etc/kubernetes/pki/etcd/ca.crt"
+    etcd_crt = f"/etc/kubernetes/pki/etcd/peer.crt"
+    etcd_key = f"/etc/kubernetes/pki/etcd/peer.key"
 
     remove_list = []
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
