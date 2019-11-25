@@ -206,6 +206,8 @@
     add_repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
     filebeat_pakage: filebeat=7.4.2
     filebeat_conf:
+      output.elasticsearch:
+        hosts: ["https://localhost:9200"]
     filebeat_enable_modules:
       - system
     filebeat_enabled: false
