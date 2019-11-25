@@ -151,8 +151,23 @@
     ID=$(docker create $IMAGENAME)
     docker cp $ID:/usr/local/bin/etcdctl /usr/local/bin/etcdctl
     docker rm -v $ID
-    # configure root shell for use ETCD_APIV3
-    echo "export ETCDCTL_API=3" >> /root/.bashrc
+
+- name: image | add usefull environment variables
+  blockinfile:
+    path: /root/.bashrc
+    block: |
+      # ETCDCTL Env Vars
+      export ETCDCTL_API=3
+      export ETCDCTL_CACERT=/etc/kubernetes/pki/etcd/ca.crt
+      export ETCDCTL_CERT=/etc/kubernetes/pki/etcd/peer.crt
+      export ETCDCTL_KEY=/etc/kubernetes/pki/etcd/peer.key
+      export ETCDCTL_ENDPOINTS='https://127.0.0.1:2379'
+      # Calicoctl Env Vars
+      export DATASTORE_TYPE=etcdv3
+      export ETCD_ENDPOINTS=https://127.0.0.1:2379
+      export ETCD_KEY_FILE=/etc/calico/pki/node-calico-key.pem
+      export ETCD_CERT_FILE=/etc/calico/pki/node-calico.csr
+      export ETCD_CA_CERT_FILE=/etc/calico/pki/ca.crt
 
 - name: image | stop Docker
   systemd:
