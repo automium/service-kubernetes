@@ -208,7 +208,5 @@
     filebeat_conf:
       output.elasticsearch:
         hosts: ["https://localhost:9200"]
-    filebeat_enable_modules:
-      - system
     filebeat_enabled: false
     filebeat_state: stopped
