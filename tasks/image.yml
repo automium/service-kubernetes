@@ -196,3 +196,15 @@
     download_list:
       - "{{ cfssl_pkg.cfssl }}"
       - "{{ cfssl_pkg.cfssljson }}"
+
+- name: image | install filebeat
+  include_role:
+    name: entercloudsuite.filebeat
+  vars:
+    add_repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    filebeat_pakage: filebeat=7.4.2
+    filebeat_conf:
+    filebeat_enable_modules:
+      - system
+    filebeat_enabled: false
+    filebeat_state: stopped
