@@ -1,3 +1,4 @@
+---
 - name: all | pretask | generics cleanup
   service:
     name: consul
