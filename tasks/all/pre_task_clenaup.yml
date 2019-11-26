@@ -15,6 +15,7 @@
     - "/opt/consul/pki"
     - "/etc/calico"
     - "/root/.kube/*"
+
 - name: all | prestask | kubeadm reset
   command: kubeadm reset --force
   register: kubeadm_reset_out
