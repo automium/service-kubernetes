@@ -86,7 +86,7 @@
         prefix: "{{ cluster_name }}/.cleanup"
         args:
       {% if etcd == 'true' or master == 'true' %}
-          - "/opt/consul/bin/kubernetes-scripts/cleanup"
+          - "/opt/consul/bin/cleanup"
       {% else %}
           - "/bin/true"
       {% endif %}
@@ -94,7 +94,7 @@
         key: "{{ cluster_name }}/.deploy/start"
         args:
       {% if master == 'true' %}
-          - "/opt/consul/bin/kubernetes-scripts/deploy"
+          - "/opt/consul/bin/deploy"
       {% else %}
           - "/bin/true"
       {% endif %}
