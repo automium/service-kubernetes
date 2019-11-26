@@ -33,7 +33,7 @@
 - name: all | prestask | iptables cleanup
   iptables:
     flush: yes
-  
+
 - name: all | prestask | iptables flush nat
   iptables:
     table: nat
