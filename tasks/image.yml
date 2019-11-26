@@ -23,6 +23,8 @@
         "kubectl={{ k8s_version }}-00",
         "glusterfs-client",
         "python-pip",
+        "python3-venv",
+        "python3-dev"
       ]
     state: present
 
@@ -228,11 +230,13 @@
   template:
     src: cleanup.sh.j2
     dest: /opt/consul/bin/cleanup
+    mode: '0755'
 
 - name: image | deploy deploy.sh.j2 script
   template:
     src: deploy.sh.j2
     dest: /opt/consul/bin/deploy
+    mode: '0755'
 
 - name: image | create cleanup script folders
   file:
