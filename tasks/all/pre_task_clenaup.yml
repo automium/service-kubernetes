@@ -16,6 +16,12 @@
     - "/etc/calico"
     - "/root/.kube/*"
 
+- name: remove all entry in etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '.*automium.consul$'
+    state: absent
+
 - name: all | prestask | kubeadm reset
   command: kubeadm reset --force
   register: kubeadm_reset_out
