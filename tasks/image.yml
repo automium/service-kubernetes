@@ -236,7 +236,8 @@
 
 - name: image | create cleanup script folders
   file:
-    dest: /opt/consul/bin/kubernetes-scripts
+    dest: /usr/local/bin/etcd-scripts
+    state: directory
 
 - name: image | create remove-etcd script
   template:
