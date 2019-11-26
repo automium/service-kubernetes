@@ -1,0 +1,40 @@
+- name: all | pretask | generics cleanup
+  service:
+    name: consul
+    state: stopped
+
+- name: all | pretask | directory cleanup
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - "/opt/consul/.profile"
+    - "/opt/consul/data"
+    - "/opt/consul/.kube"
+    - "/opt/consul/pki"
+    - "/etc/calico"
+    - "/root/.kube/*"
+- name: all | prestask | kubeadm reset
+  command: kubeadm reset --force
+  register: kubeadm_reset_out
+
+- name: all | pretask | debug  kubeadm output
+  debug:
+    var: kubeadm_reset_out.stdout
+
+- name: all | prestask | iptables cleanup
+  iptables:
+    flush: yes
+  
+- name: all | prestask | iptables flush nat
+  iptables:
+    table: nat
+    flush: yes
+
+- name: all | prestask | iptables flush mangle
+  iptables:
+    table: mangle
+    flush: yes
+
+- name: all | prestask | iptables clean all
+  command: iptables -X

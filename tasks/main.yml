@@ -5,6 +5,8 @@
 - import_tasks: image.yml
   tags: image
 
+- import_tasks: all/pre_task_clenaup.yml
+
 - import_tasks: all/pre_task_consul.yml
 
 - import_tasks: all/pre_task_configure.yml
