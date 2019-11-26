@@ -22,7 +22,7 @@
         size: 2048
 
 - name: others | all | include configure role for "{{ cluster_role }}"
-  include: "{{ init_role }}/configure-{{ cluster_role }}.yml"
+  include: "{{ init_role }}/{{ cluster_role }}/configure-{{ cluster_role }}.yml"
   static: no
 
 - name: others | all | add preflight ignore in test
