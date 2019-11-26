@@ -1,0 +1,4 @@
+---
+- name: bootstrap | all | pre_task | no actions
+  debug:
+    msg: "No actions are request in pre_task for other boostrap Node"

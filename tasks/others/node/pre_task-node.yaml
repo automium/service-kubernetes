@@ -1,0 +1,4 @@
+---
+- name: others | node | pre_task  | no actions
+  debug:
+    msg: "No actions are request in post-configure for other nodes"

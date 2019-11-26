@@ -11,6 +11,10 @@
 
 - import_tasks: all/pre_task_configure.yml
 
+- name: include pre_task for "{{ init_role }}"
+  include: "{{ init_role }}/{{ cluster_role }}/pretask.yml"
+  static: no
+
 - name: include configure role for "{{ init_role }}"
   include: "{{ init_role }}/configure-{{ init_role }}.yml"
   static: no

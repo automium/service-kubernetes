@@ -1,0 +1,4 @@
+---
+- name: others | all | include pre_task for "{{ cluster_role }}"
+  include: "{{ init_role }}/{{ cluster_role }}/pre_task-{{ cluster_role }}.yml"
+  static: no

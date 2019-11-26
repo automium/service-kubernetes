@@ -1,12 +1,12 @@
 ---
-- name: others | master | pretask | check ETCD cluster for remove useless member
+- name: others | master | pre_task | check ETCD cluster for remove useless member
   shell: |
     [ -f /usr/local/bin/etcd-scripts/remove-etcd ] && REMOVE_ETCD=/usr/local/bin/etcd-scripts/remove-etcd
     [ -f /usr/local/bin/remove_etcd.py ] && REMOVE_ETCD=/usr/local/bin/remove_etcd.py
     $REMOVE_ETCD --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-ip-check={{ ansible_default_ipv4.address }} --cluster-host-check {{ ansible_hostname }}
   delegate_to: "{{ cluster_name }}-etcd.service.automium.consul"
 
-- name: others | master | prestask | cleanup ETCD lib folder
+- name: others | master | pre_task | cleanup ETCD lib folder
   file:
     path: /var/lib/etcd
     state: absent
