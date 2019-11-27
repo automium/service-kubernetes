@@ -41,7 +41,7 @@ roleRef:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: consul-node-check-rb
+  name: consul-autoscaler-restarter-rb
 subjects:
 - kind: ServiceAccount
   name: consul-node-check
