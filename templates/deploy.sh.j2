@@ -28,7 +28,7 @@ else
   exit 0
 fi
 
-/usr/local/bin/kubernetes-scripts/autoscaler-restart
+/opt/consul/bin/autoscaler-restart
 
 # Cleanup lock
 curl -s -X DELETE "http://{{ consul }}:{{ consul_port }}/v1/kv/{{ cluster_name }}/.deploy/start_lock?recurse=yes" > /dev/null
