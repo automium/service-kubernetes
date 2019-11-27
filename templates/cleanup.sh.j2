@@ -26,7 +26,7 @@ kubectl_uncordon () {
 
 etcd_member_remove () {
   echo [START] Remove $1 from etcd cluster
-  /usr/local/bin/etcd-scripts/remove-etcd --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1} -c /opt/consul/pki/etcd/ca.crt -k /opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem -c /opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem
+  /usr/local/bin/etcd-scripts/remove-etcd --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1} -c /opt/consul/pki/etcd/ca.crt -r /opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem -k /opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem
   echo [END] Remove $1 from etcd cluster
 }
 
