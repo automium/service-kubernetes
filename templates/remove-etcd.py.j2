@@ -38,9 +38,10 @@ def main():
     # log.fatal('fatal message')
     hostname = os.uname()[1]
 
-    etcd_ca = f"/etc/kubernetes/pki/etcd/ca.crt"
-    etcd_crt = f"/etc/kubernetes/pki/etcd/peer.crt"
-    etcd_key = f"/etc/kubernetes/pki/etcd/peer.key"
+    # set vars from args if not set use default
+    etcd_ca = args.etcd_ca
+    etcd_crt = args.etcd_crt
+    etcd_key = args.etcd_key
 
     remove_list = []
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
@@ -101,6 +102,18 @@ def parse_args():
                      default=None)
 
     # Common CLI arguments
+
+    parser.add_option('-c', '--ca', help='certification autority path',
+                      default="/etc/kubernetes/pki/etcd/ca.crt", type=str,
+                      dest='etcd_ca', metavar='/path/ca.pem')
+
+    parser.add_option('-r', '--cert-file', help='certificate file path',
+                      default="/etc/kubernetes/pki/etcd/peer.crt",
+                      type=str, dest='etcd_crt', metavar='/path/cert.pem')
+
+    parser.add_option('-k', '--key', help='certificate key path',
+                      default="/etc/kubernetes/pki/etcd/peer.key",
+                      type=str, dest='etcd_key', metavar='/path/key.pem')
 
     parser.add_option('-e', '--etcd-host', help='etcd host and ports',
                       default="127.0.0.1:2379", type=str,
