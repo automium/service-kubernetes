@@ -1,4 +1,29 @@
 ---
+- name: bootstrap | master | copy autoscaler-restart script
+  template:
+    src: autoscaler/autoscaler-restart.sh.j2
+    dest: /usr/local/bin/kubernetes-scripts/autoscaler-restart
+    mode: 0775
+
+- name: bootstrap | master | save kubeconfig in base64
+  set_fact:
+    kubeconfig64: "{{ lookup('file', '/etc/kubernetes/admin.conf') | b64encode }}"
+
+- name: bootstrap | master | render automium-cluster-autoscaler.cm.yml
+  template:
+    src: autoscaler/automium-cluster-autoscaler.cm.yml.j2
+    dest: /usr/src/cloud/automium-cluster-autoscaler.cm.yml
+
+- name: bootstrap | master | copy automium-cluster-autoscaler.yml
+  copy:
+    src: autoscaler/automium-cluster-autoscaler.yml
+    dest: /usr/src/cloud/automium-cluster-autoscaler.yml
+
+- name: bootstrap | master | apply autoscaler config map and deployment
+  shell: |
+    kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.cm.yml
+    kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.yml
+
 - name: bootstrap | master | run script to add kubernetes to Rancher
   shell: |
     #!/bin/sh
