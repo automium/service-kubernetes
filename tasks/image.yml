@@ -252,5 +252,5 @@
 - name: image | create autoscaler-restart script
   template:
     src: autoscaler/autoscaler-restart.sh.j2
-    dest: /opt/consul/bin/autoscaler-restart.sh
+    dest: /opt/consul/bin/autoscaler-restart
     mode: 0755
