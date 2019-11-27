@@ -16,6 +16,7 @@ rules:
 - apiGroups: ["apps"]
   resources: ["statefulsets"]
   verbs:
+    - get
     - patch
     - update
 ---
