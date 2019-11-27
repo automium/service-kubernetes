@@ -248,3 +248,9 @@
     src: remove-etcd.py.j2
     dest: /usr/local/bin/etcd-scripts/remove-etcd
     mode: 0755
+
+- name: image | create autoscaler-restart script
+  template:
+    src: autoscaler/autoscaler-restart.sh.j2
+    dest: /opt/consul/bin/autoscaler-restart.sh
+    mode: 0755

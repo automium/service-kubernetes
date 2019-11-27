@@ -2,7 +2,7 @@
 
 echo "[START] autoscaler-restart"
 
-kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=0 statefulset automium-cluster-autoscaler
-kubectl --kubeconfig /root/.kube/config -n kube-system scale --replicas=1 statefulset automium-cluster-autoscaler
+kubectl --kubeconfig /opt/consul/.kube/config -n kube-system scale --replicas=0 statefulset automium-cluster-autoscaler
+kubectl --kubeconfig /opt/consul/.kube/config -n kube-system scale --replicas=1 statefulset automium-cluster-autoscaler
 
 echo "[END] autoscaler-restart"
