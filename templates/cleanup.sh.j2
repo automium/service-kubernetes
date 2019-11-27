@@ -8,25 +8,25 @@
 kubectl_drain () {
   echo [START] Drain $1 from kubernetes cluster {{ cluster_name }}
   timeout 30 \
-  kubectl --kubeconfig /root/.kube/config drain ${1} --ignore-daemonsets --delete-local-data
+  kubectl --kubeconfig /opt/consul/.kube/config drain ${1} --ignore-daemonsets --delete-local-data
   echo [END] Drain $1 from kubernetes cluster {{ cluster_name }}
 }
 
 kubectl_delete () {
   echo [START] Delete $1 from kubernetes cluster {{ cluster_name }}
-  kubectl --kubeconfig /root/.kube/config delete node ${1}
+  kubectl --kubeconfig /opt/consul/.kube/config delete node ${1}
   echo [END] Delete $1 from kubernetes cluster {{ cluster_name }}
 }
 
 kubectl_uncordon () {
   echo [START] Uncordon $1 from kubernetes cluster {{ cluster_name }}
-  kubectl --kubeconfig /root/.kube/config uncordon ${1}
+  kubectl --kubeconfig /opt/consul/.kube/config uncordon ${1}
   echo [END] Uncordon $1 from kubernetes cluster {{ cluster_name }}
 }
 
 etcd_member_remove () {
   echo [START] Remove $1 from etcd cluster
-  /usr/local/bin/etcd-scripts/remove-etcd --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1}
+  /usr/local/bin/etcd-scripts/remove-etcd --etcd-host={{ cluster_name }}-etcd.service.automium.consul:2379  --cluster-host-check ${1} -c /opt/consul/pki/etcd/ca.crt -k /opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem -c /opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem
   echo [END] Remove $1 from etcd cluster
 }
 
