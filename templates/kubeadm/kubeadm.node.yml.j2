@@ -9,8 +9,8 @@ discovery:
 nodeRegistration:
   kubeletExtraArgs:
     node-labels: "node-role.kubernetes.io/worker=,nodepool={{ pool_name }}"
-{% if provider != "none" %}
-    cloud-provider: "openstack"
+{% if ( provider != "vcd" and provider != "none") %}
+    cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% endif %}
 {% if testmode == "true" %}
