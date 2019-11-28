@@ -26,3 +26,5 @@
 - name: include post configure role for "{{ init_role }}"
   include: "{{ init_role }}/post-configure-{{ init_role }}.yml"
   static: no
+
+# build image
