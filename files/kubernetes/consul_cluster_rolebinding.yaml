@@ -14,11 +14,39 @@ metadata:
   name: automium-autoscaler-restarter
 rules:
 - apiGroups: ["apps"]
-  resources: ["statefulsets"]
+  resources: ["statefulsets","statefulsets/scale"]
   verbs:
     - get
     - patch
     - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:node-drainer
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - pods/eviction
+  verbs:
+  - create
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  - statefulsets
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - replicasets
+  verbs:
+  - get
+  - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -30,6 +58,18 @@ rules:
   verbs:
     - get
     - delete
+    - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: consul-pod-remover
+rules:
+- apiGroups: [""]
+  resources: ["pods","daemonsets"]
+  verbs:
+    - get
+    - list
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -66,6 +106,19 @@ roleRef:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  name: consul-node-drainer-rb
+subjects:
+- kind: ServiceAccount
+  name: consul-node-check
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: system:node-drainer
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
   name: consul-node-remover-rb
 subjects:
 - kind: ServiceAccount
@@ -74,4 +127,17 @@ subjects:
 roleRef:
   kind: ClusterRole
   name: consul-node-remover
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: consul-pods-check-rb
+subjects:
+- kind: ServiceAccount
+  name: consul-node-check
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: consul-pod-remover
   apiGroup: rbac.authorization.k8s.io
