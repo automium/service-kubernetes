@@ -26,7 +26,7 @@ metadata:
   name: system:node-drainer
 rules:
 - apiGroups:
-  - apps
+  - ""
   resources:
   - pods/eviction
   verbs:
