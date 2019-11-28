@@ -254,6 +254,7 @@
     dest: /usr/local/bin/etcd-scripts/remove-etcd
     mode: 0755
 
+# Build image
 - name: image | create autoscaler-restart script
   template:
     src: autoscaler/autoscaler-restart.sh.j2
