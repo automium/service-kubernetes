@@ -25,15 +25,15 @@
       command: "/tmp/sonobuoy --kubeconfig /etc/kubernetes/admin.conf retrieve"
       register: sonobuoy_retrieve_outfile
 
-- name: Read test results
-  command: "/tmp/sonobuoy results {{ sonobuoy_retrieve_outfile.stdout }}"
-  register: sonobuoy_results
-
-- name: Show test results
-  debug:
-    msg: "{{ sonobuoy_results.stdout_lines }}"
-
-- name: Fail if there are failed tests
-  fail:
-    msg: "Conformance test failed"
-  when: "'Status: failed' in sonobuoy_results.stdout"
+    - name: Read test results
+      command: "/tmp/sonobuoy results {{ sonobuoy_retrieve_outfile.stdout }}"
+      register: sonobuoy_results
+    
+    - name: Show test results
+      debug:
+        msg: "{{ sonobuoy_results.stdout_lines }}"
+    
+    - name: Fail if there are failed tests
+      fail:
+        msg: "Conformance test failed"
+      when: "'Status: failed' in sonobuoy_results.stdout"
