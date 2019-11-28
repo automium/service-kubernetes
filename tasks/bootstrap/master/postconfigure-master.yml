@@ -23,6 +23,7 @@
   shell: |
     kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.cm.yml
     kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.yml
+  when: testmode != "true"
 
 - name: bootstrap | master | run script to add kubernetes to Rancher
   shell: |
