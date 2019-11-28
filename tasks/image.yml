@@ -238,6 +238,11 @@
     dest: /opt/consul/bin/deploy
     mode: '0755'
 
+- name: image | create kubernetes scripts folder
+  file:
+    dest: /usr/local/bin/kubernetes-scripts
+    state: directory
+
 - name: image | create cleanup script folders
   file:
     dest: /usr/local/bin/etcd-scripts
