@@ -103,12 +103,7 @@
   set_fact:
     consul_node_meta_render: |
       image: "{{ image }}"
-      {% if provider == "openstack" %}
       flavor: "{{ flavor }}"
-      {% elif provider == "vsphere" %}
-      cpus: "{{ cpus }}"
-      memory: "{{ memory }}"
-      {% endif %}
 
 - name: consul | convert from string to service object
   set_fact:
