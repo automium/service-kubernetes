@@ -37,7 +37,9 @@
          ansible-playbook -i 127.0.0.1
          --skip-tags others
          --extra-vars 'testmode="true" master="true" node="false" etcd="true"
-         cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"'
+         cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"
+         flavor="test-mode-flavor"
+         '
          /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
        args:
           chdir: /usr/src/cloud
@@ -55,6 +57,7 @@
          --skip-tags bootstrap
          --extra-vars 'testmode="true" master="false" node="true" etcd="false"
          cluster_name="testcluster" pool_name="testpool" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"
+         flavor="test-mode-flavor"
          '
          /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
        args:
