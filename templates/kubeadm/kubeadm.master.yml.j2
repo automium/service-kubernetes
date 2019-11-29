@@ -7,7 +7,7 @@ localAPIEndpoint:
 {% if ( provider != "vcd" and provider != "none") %}
 nodeRegistration:
   kubeletExtraArgs:
-    cloud-provider: "openstack"
+    cloud-provider: "{{ cloud_provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% endif %}
 ---
@@ -18,7 +18,7 @@ controlPlaneEndpoint: {{ cluster_name }}-kube-apiserver.service.automium.consul:
 kubernetesVersion: v{{ k8s_version }}
 networking:
   serviceSubnet: {{ calico_pool_cidr }}
-{% if provider != "none" %}
+{% if ( provider != "vcd" and provider != "none") %}
 apiServer:
   extraArgs:
     cloud-provider: {{ cloud_provider }}
@@ -28,7 +28,7 @@ apiServer:
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
 controllerManager:
-  extraArgs:ki
+  extraArgs:
     cloud-provider: {{ cloud_provider }}
     cloud-config: "/etc/kubernetes/cloud.conf"
   extraVolumes:
