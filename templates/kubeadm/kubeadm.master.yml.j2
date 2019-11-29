@@ -4,7 +4,7 @@ kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ ansible_default_ipv4.address }}
   bindPort: 6443
-{% if provider != "none" %}
+{% if ( provider != "vcd" and provider != "none") %}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "openstack"
@@ -28,7 +28,7 @@ apiServer:
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
 controllerManager:
-  extraArgs:
+  extraArgs:ki
     cloud-provider: {{ cloud_provider }}
     cloud-config: "/etc/kubernetes/cloud.conf"
   extraVolumes:
