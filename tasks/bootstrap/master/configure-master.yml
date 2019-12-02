@@ -1,7 +1,7 @@
 ---
 - name: bootstrap | configure master | kubeadm --> render configuration
   template:
-    src: templates/kubeadm/kubeadm.master.yml.j2
+    src: templates/kubeadm/kubeadm.master.init.yml.j2
     dest: "/etc/kubernetes/kubeadm-conf.yml"
     owner: root
     group: root
