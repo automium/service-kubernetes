@@ -12,7 +12,7 @@
   command: kubeadm token create --ttl 5m
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
   register: kubeadm_token
-  
+
 - name: others | master | generate join command for master
   command: kubeadm token create --ttl 5m
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
