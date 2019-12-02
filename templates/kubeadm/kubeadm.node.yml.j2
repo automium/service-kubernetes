@@ -8,7 +8,7 @@ discovery:
     unsafeSkipCAVerification: true
 nodeRegistration:
   kubeletExtraArgs:
-    node-labels: "node-role.kubernetes.io/worker=,nodepool={{ pool_name }}"
+    node-labels: "node-role.kubernetes.io/worker=,nodepool={{ name }}"
 {% if ( provider != "vcd" and provider != "none") %}
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
