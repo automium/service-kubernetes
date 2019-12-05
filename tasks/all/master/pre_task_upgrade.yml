@@ -73,12 +73,23 @@
               src: /etc/ssl/etcd/ssl/ca.pem 
               dest: /etc/kubernetes/pki/etcd/ca.crt
               remote_src: yes
-
+          
           - name: copy cert to path
             copy:
               src: /etc/ssl/etcd/ssl/ca-key.pem
               dest: /etc/kubernetes/pki/etcd/ca.key
               remote_src: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: {{item}}
+              dest: {{item}}
+              flat: yes
+            with_items:
+              - /etc/kubernetes/pki/ca.crt
+              - /etc/kubernetes/pki/ca.key
+              - /etc/kubernetes/pki/etcd/ca.crt
+              - /etc/kubernetes/pki/etcd/ca.key
 
           - name: certs calico | Copy calico cert conf to file
             copy:
