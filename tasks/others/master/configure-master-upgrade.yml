@@ -26,22 +26,22 @@
     group: root
     mode: 0600
 
-- name: other | master | upgrade | generate certificates
-  command: kubeadm join phase control-plane-prepare certs --config /etc/kubernetes/kubeadm-conf.yml
-  register: kubeadm_join_phase_control-plane-prepare_certs
-
-- name: other | master | upgrade | control-plane-prepare kubeconfig 
-  command: kubeadm join phase control-plane-prepare kubeconfig --config /etc/kubernetes/kubeadm-conf.yml
-  register: kubeadm_join_phase_control-plane-prepare_certs 
-
-- name: other | master | upgrade | control-plane-prepare kubeconfig 
-  command: kubeadm join phase control-plane-prepare control-plane --config /etc/kubernetes/kubeadm-conf.yml
-  register: kubeadm_join_phase_control-plane-prepare_certs
-
-- name: Synchronization of src on the control machine to dest on the remote hosts
-  synchronize:
-    src: /etc/kubernetes/ssl/
-    dest: /etc/kubernetes/pki/
+# - name: other | master | upgrade | generate certificates
+#   command: kubeadm join phase control-plane-prepare certs --config /etc/kubernetes/kubeadm-conf.yml
+#   register: kubeadm_join_phase_control-plane-prepare_certs
+# 
+# - name: other | master | upgrade | control-plane-prepare kubeconfig 
+#   command: kubeadm join phase control-plane-prepare kubeconfig --config /etc/kubernetes/kubeadm-conf.yml
+#   register: kubeadm_join_phase_control-plane-prepare_certs 
+# 
+# - name: other | master | upgrade | control-plane-prepare kubeconfig 
+#   command: kubeadm join phase control-plane-prepare control-plane --config /etc/kubernetes/kubeadm-conf.yml
+#   register: kubeadm_join_phase_control-plane-prepare_certs
+# 
+# - name: Synchronization of src on the control machine to dest on the remote hosts
+#   synchronize:
+#     src: /etc/kubernetes/ssl/
+#     dest: /etc/kubernetes/pki/
 
 - fail:
     msg: The system may not be provisioned according to the CMDB status.
