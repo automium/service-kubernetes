@@ -26,36 +26,6 @@
     group: root
     mode: 0600
 
-- name: rsync remote cert
-  fetch:
-    src: "/etc/kubernetes/pki/ca.crt"
-    dest: "/etc/kubernetes/pki/ca.crt"
-    flat: yes
-
-- name: rsync remote cert
-  fetch:
-    src: "/etc/kubernetes/pki/ca.key"
-    dest: "/etc/kubernetes/pki/ca.key"
-    flat: yes
-
-- name: rsync remote cert
-  fetch:
-    src: "/etc/kubernetes/pki/ca.key"
-    dest: "/etc/kubernetes/pki/ca.key"
-    flat: yes
-
-- name: rsync remote cert
-  fetch:
-    src: "/etc/kubernetes/pki/etcd/ca.crt"
-    dest: "/etc/kubernetes/pki/etcd/ca.crt"
-    flat: yes
-
-- name: rsync remote cert
-  fetch:
-    src: "/etc/kubernetes/pki/etcd/ca.key"
-    dest: "/etc/kubernetes/pki/etcd/ca.key"
-    flat: yes
-
 - name: other | master | upgrade | generate certificates
   command: kubeadm join phase control-plane-prepare certs --config /etc/kubernetes/kubeadm-conf.yml
   register: kubeadm_join_phase_control-plane-prepare_certs
