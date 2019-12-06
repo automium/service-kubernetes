@@ -14,7 +14,7 @@
   register: kubeadm_token
 
 - name: others | master | generate join command for master
-  command: kubeadm token create --ttl 5m
+  command: kubeadm token create --ttl 60m
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
   register: kubeadm_join_command
 
@@ -26,6 +26,18 @@
     group: root
     mode: 0600
 
-- name: others | master | compose join command for master joiners nodes
-  set_fact:
-    join_command: "kubeadm join --config /etc/kubernetes/kubeadm-conf.yml"
+- name: other | master | upgrade | generate certificates
+  command: kubeadm join phase control-plane-prepare certs --config /etc/kubernetes/kubeadm-conf.yml
+  register: kubeadm_join_phase_control-plane-prepare_certs
+
+- name: other | master | upgrade | control-plane-prepare kubeconfig 
+  command: kubeadm join phase control-plane-prepare kubeconfig --config /etc/kubernetes/kubeadm-conf.yml
+  register: kubeadm_join_phase_control-plane-prepare_certs 
+
+- name: other | master | upgrade | control-plane-prepare kubeconfig 
+  command: kubeadm join phase control-plane-prepare control-plane --config /etc/kubernetes/kubeadm-conf.yml
+  register: kubeadm_join_phase_control-plane-prepare_certs 
+
+- fail:
+    msg: The system may not be provisioned according to the CMDB status.
+  when: cmdb_status != "to-be-staged"
