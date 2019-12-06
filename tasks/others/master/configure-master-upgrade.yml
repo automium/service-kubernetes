@@ -26,6 +26,14 @@
     group: root
     mode: 0600
 
+- name: others | master | render kubeadm configuration for join controlplane
+  template:
+    src: templates/kubeadm/kubeadm.master.init.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf-init.yml"
+    owner: root
+    group: root
+    mode: 0600
+
 # - name: other | master | upgrade | generate certificates
 #   command: kubeadm join phase control-plane-prepare certs --config /etc/kubernetes/kubeadm-conf.yml
 #   register: kubeadm_join_phase_control-plane-prepare_certs
