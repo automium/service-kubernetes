@@ -1,3 +1,4 @@
+---
 - name: upgrade create upgrade dir
   file:
     path: /opt/upgrade
