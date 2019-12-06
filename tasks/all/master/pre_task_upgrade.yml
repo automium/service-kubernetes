@@ -82,14 +82,33 @@
 
           - name: rsync remote cert
             fetch:
-              src: {{item}}
-              dest: {{item}}
+              src: "/etc/kubernetes/pki/ca.crt"
+              dest: "/etc/kubernetes/pki/ca.crt"
               flat: yes
-            with_items:
-              - /etc/kubernetes/pki/ca.crt
-              - /etc/kubernetes/pki/ca.key
-              - /etc/kubernetes/pki/etcd/ca.crt
-              - /etc/kubernetes/pki/etcd/ca.key
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/ca.key"
+              dest: "/etc/kubernetes/pki/ca.key"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/ca.key"
+              dest: "/etc/kubernetes/pki/ca.key"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/etcd/ca.crt"
+              dest: "/etc/kubernetes/pki/etcd/ca.crt"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/etcd/ca.key"
+              dest: "/etc/kubernetes/pki/etcd/ca.key"
+              flat: yes
 
           - name: certs calico | Copy calico cert conf to file
             copy:
