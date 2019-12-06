@@ -120,4 +120,4 @@
     dest: /usr/src/cloud/playbook_upgrade.yml
 
 - name: run ansible playbook
-  command: ansible-playbook -i /usr/src/cloud/upgrade_host.ini /usr/src/cloud/playbook_upgrade.yml >> /var/log/cloud-scripts.log
+  command: ansible-playbook -i /usr/src/cloud/upgrade_host.ini /usr/src/cloud/playbook_upgrade.yml
