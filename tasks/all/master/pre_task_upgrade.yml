@@ -16,15 +16,16 @@
       import http.client
       import json
       import os
+
       service_name = os.environ['SERVICE_NAME']
       url = f"/v1/health/service/{service_name}?passing=true"
       conn = http.client.HTTPConnection("automium-agent.node.automium.consul", 8500)
       conn.request("GET", url)
-      
+
       r1 = conn.getresponse()
       data1 = r1.read().decode("utf-8")
       obj = json.loads(data1)
-      
+
       #print(obj)
       print(f"[master]")
       for node in obj:
@@ -32,7 +33,6 @@
           print(single_node['Address'])
     dest: /opt/upgrade/consul_inventory.py
     mode: 0755
-
 
 - name: create inventory
   command: /opt/upgrade/consul_inventory.py
@@ -71,10 +71,10 @@
 
           - name: copy cert to path
             copy:
-              src: /etc/ssl/etcd/ssl/ca.pem 
+              src: /etc/ssl/etcd/ssl/ca.pem
               dest: /etc/kubernetes/pki/etcd/ca.crt
               remote_src: yes
-          
+
           - name: copy cert to path
             copy:
               src: /etc/ssl/etcd/ssl/ca-key.pem
