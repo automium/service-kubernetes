@@ -34,6 +34,7 @@
     group: root
     mode: 0600
 
-- fail:
+- name: fail by default
+  fail:
     msg: The system may not be provisioned according to the CMDB status.
   when: cmdb_status != "to-be-staged"
