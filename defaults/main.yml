@@ -17,7 +17,7 @@ node: true
 # rancher_url:
 # rancher_cluster_token:
 # automium_autoscaler_kubeconfig:
-k8s_version: 1.15.3
+k8s_version: 1.16.3
 calico_pool_cidr: 10.233.64.0/20
 cloud_provider: "openstack"
 testmode: false
