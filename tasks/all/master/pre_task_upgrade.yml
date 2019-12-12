@@ -111,6 +111,26 @@
               dest: "/etc/kubernetes/pki/etcd/ca.key"
               flat: yes
 
+          - name: others | master | prepare premissions
+            copy:
+              content: |
+                apiVersion: rbac.authorization.k8s.io/v1
+                kind: Role
+                metadata:
+                  name: kubeadm:kubelet-config-1.14
+                  namespace: kube-system
+                rules:
+                - apiGroups:
+                  - ""
+                  resourceNames:
+                  - kubelet-config-1.14
+                  - kubelet-config-1.15
+                  resources:
+                  - configmaps
+                  verbs:
+                  - get
+              dest: /tmp/kubeadm-14.3-15.3.yaml
+
           - name: certs calico | Copy calico cert conf to file
             copy:
               content: |
