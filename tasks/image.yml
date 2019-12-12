@@ -186,6 +186,7 @@
     - kubeadm
     - kubernetes-cni
     - docker-ce
+    - ipset 
 
 - name: image | remove useless dependecy
   apt:
