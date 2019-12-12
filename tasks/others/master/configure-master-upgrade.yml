@@ -38,15 +38,7 @@
     group: root
     mode: 0600
 
-- name: others | master | exec configure operations
-  shell: |
-    kubeadm join phase control-plane-prepare certs --config /etc/kubernetes/kubeadm-conf.yml
-    kubeadm join phase control-plane-prepare kubeconfig --config /etc/kubernetes/kubeadm-conf.yml
-    kubeadm join phase control-plane-prepare control-plane --config /etc/kubernetes/kubeadm-conf.yml
-    kubeadm join phase kubelet-start --config /etc/kubernetes/kubeadm-conf.yml
-    # kubeadm init phase kubelet-start
-
-# - name: fail by default
-#   fail:
-#     msg: The system may not be provisioned according to the CMDB status.
-#   when: cmdb_status != "to-be-staged"
+- name: fail by default
+  fail:
+    msg: The system may not be provisioned according to the CMDB status.
+  when: cmdb_status != "to-be-staged"
