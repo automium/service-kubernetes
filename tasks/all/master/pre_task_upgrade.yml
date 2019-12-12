@@ -121,3 +121,5 @@
 
 - name: run ansible playbook
   command: ansible-playbook -i /usr/src/cloud/upgrade_host.ini /usr/src/cloud/playbook_upgrade.yml
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: False
