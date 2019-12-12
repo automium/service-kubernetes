@@ -260,4 +260,3 @@
     src: autoscaler/autoscaler-restart.sh.j2
     dest: /opt/consul/bin/autoscaler-restart
     mode: 0755
-# Trigguer build
