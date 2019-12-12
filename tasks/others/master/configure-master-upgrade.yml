@@ -20,7 +20,7 @@
     dest: /tmp/kubeadm-14.3-15.3.yaml
 
 - name:  others | master | deply kubeadm rbac for upgrade
-  command: kubectl -f /tmp/kubeadm-14.3-15.3.yaml
+  command: kubectl apply -f /tmp/kubeadm-14.3-15.3.yaml
 
 - name: others | master | upload certificates to the cluster with kubeadm
   command: kubeadm init phase upload-certs --experimental-upload-certs
