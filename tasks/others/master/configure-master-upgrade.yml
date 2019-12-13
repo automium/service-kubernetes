@@ -1,5 +1,5 @@
 ---
-- name:  others | master | deply kubeadm rbac for upgrade
+- name: others | master | deply kubeadm rbac for upgrade
   command: kubectl apply -f /tmp/kubeadm-14.3-15.3.yaml
   delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
 

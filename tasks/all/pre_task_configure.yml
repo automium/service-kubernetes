@@ -28,7 +28,7 @@
     filebeat_conf:
       output.elasticsearch:
           hosts:
-          - https://log.automium.io:443
+            - https://log.automium.io:443
           protocol: "https"
           path: /elasticsearch
     filebeat_enable_modules:
