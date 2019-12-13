@@ -31,6 +31,8 @@
           - https://log.automium.io:443
         protocol: "https"
         path: /elasticsearch
+      setup.ilm.enabled: false
+      setup.dashboards.enabled: false
     filebeat_enable_modules:
       - system
     filebeat_enabled: true
