@@ -1,0 +1,145 @@
+---
+- name: upgrade create upgrade dir
+  file:
+    path: /opt/upgrade
+    state: directory
+
+- name: upgrade create roles dir
+  file:
+    path: /opt/upgrade/roles
+    state: directory
+
+- name: upgrade deploy inventory script
+  copy:
+    content: |
+      #!/usr/bin/env python3
+      import http.client
+      import json
+      import os
+
+      service_name = os.environ['SERVICE_NAME']
+      url = f"/v1/health/service/{service_name}?passing=true"
+      conn = http.client.HTTPConnection("automium-agent.node.automium.consul", 8500)
+      conn.request("GET", url)
+
+      r1 = conn.getresponse()
+      data1 = r1.read().decode("utf-8")
+      obj = json.loads(data1)
+
+      #print(obj)
+      print(f"[master]")
+      for node in obj:
+          single_node = node['Node']
+          print(single_node['Address'])
+    dest: /opt/upgrade/consul_inventory.py
+    mode: 0755
+
+- name: create inventory
+  command: /opt/upgrade/consul_inventory.py
+  environment:
+    SERVICE_NAME: "{{ cluster_name }}-kube-controller-manager"
+  register: consul_inventory
+
+- name: debug
+  debug:
+    var: consul_inventory
+
+- name: create inventory
+  copy:
+    content: "{{ consul_inventory.stdout }}"
+    dest: /usr/src/cloud/upgrade_host.ini
+
+- name: create playbook_upgrade.yml
+  copy:
+    content: |
+      ---
+      - hosts: master
+        roles:
+          - role: entercloudsuite.ansible_cfssl
+            install: True
+            configure: False
+        post_tasks:
+          - name: upgrade create upgrade dir
+            file:
+              path: /etc/cfssl/etcd/
+              state: directory
+
+          - name: upgrade create upgrade dir
+            file:
+              path: /etc/kubernetes/pki/etcd
+              state: directory
+
+          - name: copy cert to path
+            copy:
+              src: /etc/ssl/etcd/ssl/ca.pem
+              dest: /etc/kubernetes/pki/etcd/ca.crt
+              remote_src: yes
+
+          - name: copy cert to path
+            copy:
+              src: /etc/ssl/etcd/ssl/ca-key.pem
+              dest: /etc/kubernetes/pki/etcd/ca.key
+              remote_src: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/ca.crt"
+              dest: "/etc/kubernetes/pki/ca.crt"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/ca.key"
+              dest: "/etc/kubernetes/pki/ca.key"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/ca.key"
+              dest: "/etc/kubernetes/pki/ca.key"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/etcd/ca.crt"
+              dest: "/etc/kubernetes/pki/etcd/ca.crt"
+              flat: yes
+
+          - name: rsync remote cert
+            fetch:
+              src: "/etc/kubernetes/pki/etcd/ca.key"
+              dest: "/etc/kubernetes/pki/etcd/ca.key"
+              flat: yes
+
+          - name: others | master | prepare premissions
+            copy:
+              content: |
+                apiVersion: rbac.authorization.k8s.io/v1
+                kind: Role
+                metadata:
+                  name: kubeadm:kubelet-config-1.14
+                  namespace: kube-system
+                rules:
+                - apiGroups:
+                  - ""
+                  resourceNames:
+                  - kubelet-config-1.14
+                  - kubelet-config-1.15
+                  resources:
+                  - configmaps
+                  verbs:
+                  - get
+              dest: /tmp/kubeadm-14.3-15.3.yaml
+
+          - name: certs calico | Copy calico cert conf to file
+            copy:
+              content: |
+                {"signing":{"default":{"expiry":"43800h"},"profiles":{"client":{"expiry":"43800h","usages":["signing","digital signature","key encipherment","client auth"]}}}}
+              dest: /etc/cfssl/etcd/certificate.json
+
+    dest: /usr/src/cloud/playbook_upgrade.yml
+
+- name: run ansible playbook
+  command: ansible-playbook -i /usr/src/cloud/upgrade_host.ini /usr/src/cloud/playbook_upgrade.yml
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: False

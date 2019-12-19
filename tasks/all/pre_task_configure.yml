@@ -27,7 +27,10 @@
     filebeat_pakage: filebeat=7.4.2
     filebeat_conf:
       output.elasticsearch:
-        hosts: ["http://10.2.0.12:9200"]
+        hosts:
+          - https://log.automium.io:443
+        protocol: "https"
+        path: /elasticsearch
     filebeat_enable_modules:
       - system
     filebeat_enabled: true

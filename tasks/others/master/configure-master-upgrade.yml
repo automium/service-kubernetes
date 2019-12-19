@@ -1,0 +1,44 @@
+---
+- name: others | master | deply kubeadm rbac for upgrade
+  command: kubectl apply -f /tmp/kubeadm-14.3-15.3.yaml
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+
+- name: others | master | upload certificates to the cluster with kubeadm
+  command: kubeadm init phase upload-certs --experimental-upload-certs
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_certficate_key
+
+- name: others | master | DEBUG generated certificate key for debug
+  debug:
+    var: kubeadm_certficate_key.stdout_lines[2]
+
+- name: others | master | generate create token with ttl 5m
+  command: kubeadm token create --ttl 5m
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_token
+
+- name: others | master | generate join command for master
+  command: kubeadm token create --ttl 60m
+  delegate_to: "{{ cluster_name }}-kube-master.service.automium.consul"
+  register: kubeadm_join_command
+
+- name: others | master | render kubeadm configuration for join controlplane
+  template:
+    src: templates/kubeadm/kubeadm.master.join.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf.yml"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: others | master | render kubeadm configuration for join controlplane
+  template:
+    src: templates/kubeadm/kubeadm.master.init.yml.j2
+    dest: "/etc/kubernetes/kubeadm-conf-init.yml"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: fail by default
+  fail:
+    msg: The system may not be provisioned according to the CMDB status.
+  when: cmdb_status != "to-be-staged"
