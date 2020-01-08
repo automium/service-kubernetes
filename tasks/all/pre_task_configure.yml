@@ -18,6 +18,13 @@
     name: docker
     state: started
 
+- name: configure | set filebeat facts
+  set_fact:
+    filebeat_es_url: "{{ lookup('env', 'LOG_FILEBEAT_ES_URL') }}"
+    filebeat_es_path: "{{ lookup('env', 'LOG_FILEBEAT_ES_URL_PATH') }}"
+    filebeat_es_user: "{{ lookup('env', 'LOG_FILEBEAT_ES_USER') }}"
+    filebeat_es_pass: "{{ lookup('env', 'LOG_FILEBEAT_ES_PASS') }}"
+
 - name: configure | configure filebeat
   include_role:
     name: entercloudsuite.filebeat
@@ -28,12 +35,15 @@
     filebeat_conf:
       output.elasticsearch:
         hosts:
-          - https://log.automium.io:443
+          - "{{ filebeat_es_url }}"
         protocol: "https"
-        path: /elasticsearch
+        path: "{{ filebeat_es_path }}"
+        username: "{{ filebeat_es_user }}"
+        password: "{{ filebeat_es_pass }}"
       setup.ilm.enabled: false
       setup.dashboards.enabled: false
     filebeat_enable_modules:
       - system
     filebeat_enabled: true
     filebeat_state: started
+  when: filebeat_es_url | length > 0
