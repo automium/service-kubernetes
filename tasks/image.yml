@@ -261,3 +261,56 @@
     src: autoscaler/autoscaler-restart.sh.j2
     dest: /opt/consul/bin/autoscaler-restart
     mode: 0755
+
+- name: image | reduce noise in falco audit disabling services
+  service: name={{ item }} enabled=no
+  with_items:
+    - apt-daily.timer
+    - apt-daily-upgrade.timer
+    - motd-news.timer
+
+- name: image | reduce noise in falco audit removing packages
+  package: name={{ item }}
+  with_items:
+    - ubuntu-release-upgrader-core
+    - update-notifier-common
+
+- name: image | reduce noise in falco audit
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/cron.daily/dpkg
+    - /etc/cron.daily/man-db
+    - /etc/cron.daily/mlocate
+    - /etc/cron.daily/ubuntu-advantage-tools
+    - /etc/cron.daily/apt-compat
+    - /etc/cron.weekly/update-notifier-common
+    - /etc/cron.weekly/man-db
+    - /etc/update-motd.d
+    - /var/run/motd.dynamic
+
+- name: image | install kernel headers
+  apt:
+    name: "linux-headers-{{ ansible_kernel }}"
+    state: present
+
+- name: image | add draios key
+  apt_key:
+    url: https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public
+    state: present
+  register: pkg_result
+  until: pkg_result is success
+
+- name: install draios apt source
+  get_url:
+    url: http://download.draios.com/stable/deb/draios.list
+    dest: /etc/apt/sources.list.d/draios.list
+    mode: 0444
+    checksum: 'sha256:e9e2ed7d6f02607d855cfe14ef3d37eb13bdb75cecb735b93f12c9af6693185f'
+
+- name: image | install falco
+  apt:
+    name: falco
+    state: present
+    update_cache: yes
+  register: pkg_result
+  until: pkg_result is success

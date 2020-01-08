@@ -158,9 +158,7 @@ webserver:
 # Also, the program will be closed and reopened if falco is signaled with
 # SIGUSR1.
 program_output:
-  enabled: true
-  keep_alive: false
-  program: "/etc/falco/tg-notify.sh"
+  enabled: false
 
 http_output:
   enabled: false

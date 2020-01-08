@@ -1,0 +1,22 @@
+---
+- name: all | falco | stop falco
+  service:
+    name: falco
+    state: stopped
+
+- name: all | falco | copy falco conf
+  copy:
+    src: falco/falco.conf.yaml
+    dest: /etc/falco/falco.yaml
+    mode: 0644
+
+- name: all | falco | copy falco checks
+  copy:
+    src: falco/falco_rules.yaml
+    dest: /etc/falco/falco_rules.yaml
+    mode: 0644
+
+- name: all | falco | start falco
+  service:
+    name: falco
+    state: restarted
