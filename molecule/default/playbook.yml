@@ -39,6 +39,7 @@
          --extra-vars 'testmode="true" master="true" node="false" etcd="true"
          cluster_name="testcluster" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"
          flavor="test-mode-flavor"
+         filebeat_es_url="" filebeat_es_path="" filebeat_es_user="" filebeat_es_pass=""
          '
          /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
        args:
@@ -58,6 +59,7 @@
          --extra-vars 'testmode="true" master="false" node="true" etcd="false"
          cluster_name="testcluster" pool_name="testpool" identity="testcluster-ci" image="kubernetes-ci-test" provider="none"
          flavor="test-mode-flavor"
+         filebeat_es_url="" filebeat_es_path="" filebeat_es_user="" filebeat_es_pass=""
          '
          /usr/src/cloud/roles/service-kubernetes/molecule/default/playbook.test.yml
        args:
