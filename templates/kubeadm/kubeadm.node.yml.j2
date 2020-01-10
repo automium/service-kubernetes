@@ -9,14 +9,18 @@ discovery:
 nodeRegistration:
   kubeletExtraArgs:
     node-labels: "nodepool={{ name }}"
+    tls-cert-file: "/var/lib/kubelet/pki/kubelet-client-current.pem"
+    tls-private-key-file: "/var/lib/kubelet/pki/kubelet-client-current.pem"
 {% if ( provider != "vcd" and provider != "none") %}
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% endif %}
-{% if testmode == "true" %}
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
 conntrack:
+{% if testmode == "true" %}
   maxPerCore: 0
+{% else %}
+  maxPerCore: 512000
 {% endif %}

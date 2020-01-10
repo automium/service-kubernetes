@@ -34,6 +34,7 @@ apiServer:
     endpoint-reconciler-type: lease
     service-node-port-range: 30000-32767
     kubelet-preferred-address-types: "InternalDNS,InternalIP,Hostname,ExternalDNS,ExternalIP"
+    kubelet-certificate-authority: "/etc/kubernetes/pki/ca.crt"
     profiling: "False"
     request-timeout: "1m0s"
     enable-aggregator-routing: "False"
@@ -54,10 +55,15 @@ controllerManager:
   extraArgs:
     cloud-provider: {{ cloud_provider }}
     cloud-config: "/etc/kubernetes/cloud.conf"
+    terminated-pod-gc-threshold: "10"
+    profiling: "False"
   extraVolumes:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+scheduler:
+  extraArgs:
+    profiling: "False"
 {% endif %}
 etcd:
   local:
