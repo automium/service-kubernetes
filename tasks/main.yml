@@ -31,3 +31,5 @@
   static: no
 
 - import_tasks: all/post_task_falco.yml
+  when:
+    - testmode != "true"
