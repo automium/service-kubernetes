@@ -9,6 +9,7 @@ cleanup(){
 
 # Export role path
 export TESTROLE_PATH=$(pwd)
+export ANSIBLE_STDOUT_CALLBACK=debug
 
 # Generate a SSH key for test instances
 ssh-keygen -q -N "" -f testkey.pem

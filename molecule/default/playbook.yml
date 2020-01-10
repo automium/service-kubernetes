@@ -51,6 +51,7 @@
           CONSUL_PORT: "8500"
           CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
           SERVICE: "automium/service-kubernetes"
+          ANSIBLE_STDOUT_CALLBACK: debug
        when: ansible_hostname == "testcluster-testcluster-0"
      - name: launch the test playbook on the remote worker instance
        command: >-
@@ -71,4 +72,5 @@
           CONSUL_PORT: "8500"
           CONSUL_ENCRYPT: "A2+WhqBtZjsA5tLlpOOmBXoTprRFMWnc+N5beexyZiM="
           SERVICE: "automium/service-kubernetes"
+          ANSIBLE_STDOUT_CALLBACK: debug
        when: ansible_hostname == "testcluster-testworker-0"
