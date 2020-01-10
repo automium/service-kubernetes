@@ -44,6 +44,22 @@ rancher token
 
 base64 automium kubeconfig
 
+### LOG_FILEBEAT_ES_URL _optional_ 
+
+elasticsearch URL for filebeat logs
+
+### LOG_FILEBEAT_ES_URL_PATH _optional_
+
+path on which elasticsearch is exposed on the provided URL
+
+### LOG_FILEBEAT_ES_USER _optional_
+
+basic auth username for elasticsearch 
+
+### LOG_FILEBEAT_ES_PASS _optional_ 
+
+basic auth password for elasticsearch 
+
 ## usage
 
 setup service var:
@@ -55,6 +71,10 @@ export ETCD=true
 export RANCHER_URL=http://rancher.local
 export RANCHER_CLUSTER_TOKEN=237dh928gd2
 export AUTOMIUM_AUTOSCALER_KUBECONFIG=YPBpVmVyq2lvbjogdjEKY2x1c3...RlWTFVMjU2Vkc1Q2RYTjZVMGhpYm1wUfo=
+export LOG_FILEBEAT_ES_URL=http://es.local:80
+export LOG_FILEBEAT_ES_URL_PATH=/es
+export LOG_FILEBEAT_ES_USER=myusername
+export LOG_FILEBEAT_ES_PASS=mypass
 ```
 
 and follow the guide [here](https://github.com/automium/provisioner/blob/master/README.md#guide)
