@@ -1,0 +1,44 @@
+---
+- name: helpers | generate "{{ cert_name }}" cert | DEBUG show host delegate for cert generations
+  debug:
+    var: delegate_host_for_cert_generations
+
+- name: helpers | generate "{{ cert_name }}" cert | Create "{{ cert_path }}" dir
+  file:
+    state: directory
+    path: "{{ cert_path }}"
+    recurse: yes
+
+- name: helpers | generate "{{ cert_name }}" cert | Generate "{{cert_name}}" cert
+  shell: echo $SERVER | cfssl gencert -ca="{{ cfssl_conf.path_ca }}" -ca-key="{{ cfssl_conf.path_key }}" -config="{{ cfssl_conf.path_config }}" -profile="{{ cfssl_conf.profile }}" -
+  environment:
+    SERVER: "{{ server_conf | to_json }}"
+  register: cfssl_out
+  delegate_to: "{{ delegate_host_for_cert_generations }}"
+
+- name: helpers | generate "{{ cert_name }}" cert | Create temp vars
+  set_fact:
+    cfssl_clean: "{{ cfssl_out.stdout | from_json }}"
+
+- name: helpers | generate "{{ cert_name }}" cert | copy cretificat to file
+  copy:
+    content: "{{ cfssl_clean }}"
+    dest: "{{ cert_path }}/cert.json"
+
+- name: helpers | generate "{{ cert_name }}" cert | create certificates with cfssljson
+  shell: |
+   cat "{{ cert_path }}/cert.json" | cfssljson -bare "{{ cert_name }}"
+  args:
+    chdir: "{{ cert_path }}"
+
+- name: helpers | generate "{{ cert_name }}" cert | clenup useless file ( "{{ cert_path }}"/cert.json )
+  file:
+    state: absent
+    path: "{{ cert_path }}/cert.json"
+
+- name: helpers | generate "{{ cert_name }}" cert | Copy etcd ca.cert
+  fetch:
+    src: "{{cfssl_conf.path_ca}}"
+    dest: "{{ cert_path }}/ca.crt"
+    flat: yes
+  delegate_to: "{{ delegate_host_for_cert_generations }}"

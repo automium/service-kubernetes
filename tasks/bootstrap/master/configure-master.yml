@@ -66,9 +66,16 @@
     content: "{{ calico_conf | to_json }}"
     dest: /etc/cfssl/etcd/certificate.json
 
-- include_tasks: helpers/generate_calico.yml
+- include_tasks: helpers/generate_certificate.yml
   vars:
     delegate_host_for_cert_generations: "{{ ansible_hostname }}"
+    cert_path: /etc/calico/pki
+    cert_name: "node-calico"
+    cfssl_conf:
+      profile: "client"
+      path_ca: "/etc/kubernetes/pki/etcd/ca.crt"
+      path_key: "/etc/kubernetes/pki/etcd/ca.key"
+      path_config: "/etc/cfssl/etcd/certificate.json"
     server_conf:
       CN: Server
       hosts:
@@ -76,7 +83,6 @@
         - localhost
         - "{{ ansible_hostname }}"
         - "{{ ansible_fqdn }}"
-        - "{{ cluster_name }}-etcd.service.automium.consul"
       key:
         algo: rsa
         size: 2048

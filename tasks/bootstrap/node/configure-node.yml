@@ -7,9 +7,16 @@
   until: resolve_command.stdout != ""
   failed_when: resolve_command.stdout == ""
 
-- include_tasks: helpers/generate_calico.yml
+- include_tasks: helpers/generate_certificate.yml
   vars:
     delegate_host_for_cert_generations: "{{ cluster_name }}-kube-master.service.automium.consul"
+    cert_path: /etc/calico/pki
+    cert_name: "node-calico"
+    cfssl_conf:
+      profile: "client"
+      path_ca: "/etc/kubernetes/pki/etcd/ca.crt"
+      path_key: "/etc/kubernetes/pki/etcd/ca.key"
+      path_config: "/etc/cfssl/etcd/certificate.json"
     server_conf:
       CN: Server
       hosts:
