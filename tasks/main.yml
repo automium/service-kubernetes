@@ -1,6 +1,5 @@
 ---
 - import_tasks: all/pre_task_get_vars.yaml
-  tags: image
 
 - import_tasks: image.yml
   tags: image
