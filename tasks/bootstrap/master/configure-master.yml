@@ -87,7 +87,7 @@
     dest: /etc/kubernetes/calico.yaml
     owner: root
     group: root
-    mode: 0700
+    mode: 0600
 
 - name: bootstrap | configure master | apply calico deployment
   command: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /etc/kubernetes/calico.yaml
