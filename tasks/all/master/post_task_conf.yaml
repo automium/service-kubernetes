@@ -89,3 +89,38 @@
   copy:
     src: /etc/kubernetes/admin.conf
     dest: /root/.kube/config
+
+- name: get info about prometheus certificates
+  k8s_info:
+    api_version: v1
+    kind: secret
+    name: etcd-secret
+    namespace: cattle-prometheus
+  register: cattle_prometheus
+
+- name: debug
+  debug:
+    var: cattle_prometheus
+
+# - name: Generate certificate for Prometheus
+#   include_tasks: tasks/helpers/generate_certificate.yml
+#   vars:
+#     delegate_host_for_cert_generations: "127.0.0.1"
+#     cert_path: "/root/prometheus_cert"
+#     cert_name: "prometheus"
+#     cfssl_conf:
+#       profile: "client"
+#       path_ca: "/etc/kubernetes/pki/etcd/ca.crt"
+#       path_key: "/etc/kubernetes/pki/etcd/ca.key"
+#       path_config: "/etc/cfssl/etcd/certificate.json"
+#     server_conf:
+#       CN: Server
+#       hosts:
+#         - 127.0.0.1
+#         - localhost
+#         - "{{ ansible_hostname }}"
+#         - "{{ ansible_fqdn }}"
+#         - "{{ cluster_name }}-etcd.service.automium.consul"
+#       key:
+#         algo: rsa
+#         size: 2048
