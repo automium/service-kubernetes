@@ -118,14 +118,21 @@
     prometheus_etcd_crt: "{{ lookup('file', '/root/prometheus_cert/prometheus.pem') }}"
     prometheus_etcd_key: "{{ lookup('file', '/root/prometheus_cert/prometheus-key.pem') }}"
 
-- name: all | master | post_task | Debug show vars
-  debug:
-    var: prometheus_etcd_ca
+- name: all | master | post_task | create or patch etcd secret for prometheus
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: etcd-certs
+      type: Opaque
+      data:
+        ca.crt: "{{ prometheus_etcd_ca | b64encode }}"
+        prometheus_key.pem: "{{ prometheus_etcd_key | b64encode }}"
+        prometheus.pem: "{{ prometheus_etcd_crt | b64encode }}"
 
-- name: all | master | post_task | Debug show vars
-  debug:
-    var: prometheus_etcd_crt
-
-- name: all | master | post_task | Debug show vars
-  debug:
-    var: prometheus_etcd_key
+- name: all | master | post_task | cleanup "/root/prometheus_cert"
+  file:
+    path: /root/prometheus_cert
+    state: absent
