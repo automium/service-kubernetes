@@ -22,7 +22,7 @@
         "kubelet={{ k8s_version }}-00",
         "kubectl={{ k8s_version }}-00",
         "glusterfs-client",
-        "python-pip",
+        "python3-pip",
         "python3-venv",
         "python3-dev"
       ]
@@ -31,9 +31,11 @@
 - name: image | install consul.py
   pip:
     name: "{{ item }}"
+    executable: pip3
   with_items:
     - python-consul==1.0.0
     - netaddr
+    - openshift
 
 - name: image | enable kubelet service
   service:
