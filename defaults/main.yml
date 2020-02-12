@@ -1,5 +1,4 @@
 ---
-kubespray_version: v2.10.4
 name: name
 cluster_name: samplecluster
 pool_name: mainpool

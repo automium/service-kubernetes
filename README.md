@@ -21,7 +21,6 @@ if true configure the instance as a etcd node
 
 ### KUBE_CONF _optional_
 
-[kubespray variables](https://github.com/kubernetes-sigs/kubespray/blob/master/docs/vars.md)
 
 es. in docker compose:
 ```

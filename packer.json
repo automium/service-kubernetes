@@ -26,10 +26,7 @@
     {
       "type": "shell",
       "inline_shebang": "/bin/bash -e",
-      "script": "cicd/image.sh",
-      "environment_vars": [
-         "KUBESPRAY_VERSION={{user `kubespray_version`}}"
-      ]
+      "script": "cicd/image.sh"
     }
   ],
   "variables": {
@@ -41,7 +38,6 @@
     "tenant":  "{{env `OS_TENANT`}}",
     "username":  "{{env `OS_USERNAME`}}",
     "password":  "{{env `OS_PASSWORD`}}",
-    "network":  "{{env `OS_NETWORK`}}",
-    "kubespray_version": "{{env `KUBESPRAY_VERSION`}}"
+    "network":  "{{env `OS_NETWORK`}}"
   }
 }
