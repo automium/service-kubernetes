@@ -1,7 +1,7 @@
 ---
 - name: configure | ssh config
   template:
-    src: ssh_config
+    src: ssh_config.j2
     dest: /root/.ssh/config
 
 - name: configure | render cloud configurations
