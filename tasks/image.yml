@@ -69,8 +69,8 @@
 - name: image | create roles requirement
   copy:
     content: |
-      - src: entercloudsuite.consul
-        version: 2.0.2
+      - src: automium.consul
+        version: 2.0.4
       - src: entercloudsuite.docker
         version: 2.0.4
       - src: entercloudsuite.ansible_cfssl
@@ -99,7 +99,7 @@
 
 - name: image | install consul service
   include_role:
-    name: entercloudsuite.consul
+    name: automium.consul
     public: yes
   vars:
     consul_version: 1.4.4
