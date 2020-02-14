@@ -222,7 +222,7 @@
     install: True
     configure: False
     download_list:
-      - "{{ cfssl19022020_pkg.cfssl }}"
+      - "{{ cfssl_pkg.cfssl }}"
       - "{{ cfssl_pkg.cfssljson }}"
 
 - name: image | install filebeat
