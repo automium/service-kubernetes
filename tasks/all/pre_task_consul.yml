@@ -125,7 +125,7 @@
 
 - name: consul | start consul role
   include_role:
-    name: entercloudsuite.consul
+    name: automium.consul
     public: yes
   vars:
     configure: true
