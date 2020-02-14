@@ -70,7 +70,7 @@
   copy:
     content: |
       - src: automium.consul
-        version: 2.0.4
+        version: 2.1.2
       - src: entercloudsuite.docker
         version: 2.0.4
       - src: entercloudsuite.ansible_cfssl
@@ -106,6 +106,7 @@
     configure: false
     install: true
     consul_service_status: "stopped"
+    
 
 - name: image | deploy consul check kubernetes-check-node
   copy:
