@@ -106,7 +106,6 @@
     configure: false
     install: true
     consul_service_status: "stopped"
-    
 
 - name: image | deploy consul check kubernetes-check-node
   copy:
@@ -223,7 +222,7 @@
     install: True
     configure: False
     download_list:
-      - "{{ cfssl_pkg.cfssl }}"
+      - "{{ cfssl19022020_pkg.cfssl }}"
       - "{{ cfssl_pkg.cfssljson }}"
 
 - name: image | install filebeat
