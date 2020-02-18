@@ -143,3 +143,22 @@
         ca.crt: "{{ prometheus_etcd_ca | b64encode }}"
         prometheus_key.pem: "{{ prometheus_etcd_key | b64encode }}"
         prometheus.pem: "{{ prometheus_etcd_crt | b64encode }}"
+
+- name: all | master | post_task | create or patch etcd Service in kube-system
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: etcd-k8s
+        namespace: kube-system
+        labels:
+          k8s-app: etcd
+      spec:
+        ports:
+        - name: port
+          port: 2379
+          protocol: TCP
+        selector:
+          component: etcd
