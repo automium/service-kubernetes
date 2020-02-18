@@ -125,9 +125,9 @@
       apiVersion: v1
       kind: Namespace
       metadata:
-        name: prometheus-cattel
+        name: cattle-prometheus
         labels:
-          name: prometheus-cattel
+          name: cattle-prometheus
 
 - name: all | master | post_task | create or patch etcd secret for prometheus
   k8s:
@@ -136,7 +136,7 @@
       apiVersion: v1
       kind: Secret
       metadata:
-        namespace: prometheus-cattel
+        namespace: cattle-prometheus
         name: etcd-certs
       type: Opaque
       data:
