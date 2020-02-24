@@ -154,7 +154,7 @@
         name: etcd-k8s
         namespace: kube-system
         labels:
-          k8s-app: etcd
+          k8s-app: etcd-server
       spec:
         ports:
         - name: port
