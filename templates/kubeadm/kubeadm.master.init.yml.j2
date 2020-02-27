@@ -50,6 +50,9 @@ apiServer:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+  - name: apiserver-audit-log
+    hostPath: "/var/log/audit/kube-apiserver-audit.log"
+    mountPath: "/var/log/audit/kube-apiserver-audit.log"
 controllerManager:
   extraArgs:
     cloud-provider: {{ cloud_provider }}
