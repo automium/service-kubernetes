@@ -1,3 +1,4 @@
+---
 - name: all | node | pre_task_configure.yml | debug
   debug:
     msg: no actions is required for node during all | node | pre_task

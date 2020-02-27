@@ -1,3 +1,4 @@
+---
 - name: all | master | pre_task_configure render copy audit policy to master
   copy:
     src: kubernetes/audit-policy.yaml
