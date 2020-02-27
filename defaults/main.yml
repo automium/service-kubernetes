@@ -8,7 +8,6 @@ consul: 127.0.0.1
 consul_port: 8500
 consul_datacenter: test
 consul_encrypt: "K8n07GA/ZoANSmJ5zkvgOg=="
-install_type: standard
 # kube_conf: ""
 etcd: true
 master: true

@@ -4,9 +4,6 @@
 - import_tasks: image.yml
   tags: image
 
-- import_tasks: all/master/pre_task_upgrade.yml
-  when: install_type == "upgrade"
-
 - import_tasks: all/pre_task_clenaup.yml
 
 - import_tasks: all/pre_task_consul.yml
