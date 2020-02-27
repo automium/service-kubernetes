@@ -12,4 +12,4 @@ export ANSIBLE_BECOME_METHOD=sudo
 export ANSIBLE_BECOME_USER=root
 export ANSIBLE_HOST_KEY_CHECKING=False
 export ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s'
-ansible-playbook --tags=image -e ansible_python_interpreter=/usr/bin/python --connection=local /tmp/service-kubernetes/molecule/default/build_image.yml
+ansible-playbook --tags=image -e ansible_python_interpreter=/usr/bin/python3 --connection=local /tmp/service-kubernetes/molecule/default/build_image.yml
