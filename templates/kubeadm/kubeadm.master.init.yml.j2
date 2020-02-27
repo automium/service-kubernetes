@@ -41,6 +41,8 @@ apiServer:
     runtime-config:
     allow-privileged: "true"
     audit-log-path: "/var/log/audit/kube-apiserver-audit.log"
+    audit-policy-file: "/etc/kubernetes/audit-policy.yaml"
+    audit-log-path: /etc/kubernetes/audit-policy.yaml
     audit-log-maxage: "30"
     audit-log-maxbackup: "10"
     audit-log-maxsize: "100"
@@ -63,6 +65,12 @@ controllerManager:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+  - hostPath: /var/log/audit
+    mountPath: /var/log/audit
+    name: apiserver-audit-log
+  - hostPath: /etc/kubernetes/audit-policy.yaml
+    mountPath: /etc/kubernetes/audit-policy.yaml
+    name: audit-policy
 scheduler:
   extraArgs:
     profiling: "False"

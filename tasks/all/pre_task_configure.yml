@@ -1,4 +1,7 @@
 ---
+- name: import pretask {{ cluster_role }}
+  import_tasks: all/{{ cluster_role }}/pre_task_configure.yml
+
 - name: configure | ssh config
   template:
     src: ssh_config.j2
