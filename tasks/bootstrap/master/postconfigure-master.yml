@@ -19,10 +19,16 @@
     src: autoscaler/automium-cluster-autoscaler.yml
     dest: /usr/src/cloud/automium-cluster-autoscaler.yml
 
-- name: bootstrap | master | apply autoscaler config map and deployment
-  shell: |
-    kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.cm.yml
-    kubectl apply -f /usr/src/cloud/automium-cluster-autoscaler.yml
+- name:  bootstrap | master | apply autoscaler config map
+  k8s:
+    state: present
+    src: /usr/src/cloud/automium-cluster-autoscaler.cm.yml
+  when: testmode != "true"
+
+- name: bootstrap | master | apply autoscaler deployment
+  k8s:
+    state: present
+    src: /usr/src/cloud/automium-cluster-autoscaler.yml
   when: testmode != "true"
 
 - name: bootstrap | master | run script to add kubernetes to Rancher
