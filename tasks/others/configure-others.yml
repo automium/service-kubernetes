@@ -30,7 +30,7 @@
 
 # install_type Are you upgrading old installations ?
 - name: others | all | include configure role for "{{ cluster_role }}"
-  include: "{{ init_role }}/{{ cluster_role }}/configure-{{ cluster_role }}-{{ install_type }}.yml"
+  include: "{{ init_role }}/{{ cluster_role }}/configure-{{ cluster_role }}.yml"
   static: no
 
 - name: others | all | add preflight ignore in test
