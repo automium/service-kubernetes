@@ -19,7 +19,7 @@
     src: autoscaler/automium-cluster-autoscaler.yml
     dest: /usr/src/cloud/automium-cluster-autoscaler.yml
 
-- name:  bootstrap | master | apply autoscaler config map
+- name: bootstrap | master | apply autoscaler config map
   k8s:
     state: present
     src: /usr/src/cloud/automium-cluster-autoscaler.cm.yml
