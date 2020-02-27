@@ -160,5 +160,5 @@
           - name: metrics
             port: 2379
             protocol: TCP
-          selector:
-            component: etcd
+            selector:
+              component: etcd
