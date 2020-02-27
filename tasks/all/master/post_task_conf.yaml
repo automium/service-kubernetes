@@ -157,8 +157,8 @@
           k8s-app: etcd-server
       spec:
         ports:
-        - name: metrics
-          port: 2379
-          protocol: TCP
-        selector:
-          component: etcd
+          - name: metrics
+            port: 2379
+            protocol: TCP
+          selector:
+            component: etcd
