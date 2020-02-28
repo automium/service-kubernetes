@@ -52,6 +52,6 @@
 - name: configure other | exec post join command
   command: "{{ post_join_command }}"
   retries: 3
-  delay: 5
+  delay: 7
   register: result
   until: result.rc == 0
