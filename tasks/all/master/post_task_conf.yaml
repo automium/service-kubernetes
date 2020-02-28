@@ -162,3 +162,8 @@
             protocol: TCP
             selector:
               component: etcd
+
+- name: all | master | post_task | cert clenup prometheus certificates
+  file:
+    path: "/root/prometheus_cert"
+    state: absent
