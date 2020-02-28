@@ -40,4 +40,4 @@
 
 - name: others | all | add preflight ignore in test
   set_fact:
-    post_join_command: "kubeadm upgrade apply --config /etc/kubernetes/kubeadm-upgrade-conf.yml"
+    post_join_command: "kubeadm upgrade apply --config /etc/kubernetes/kubeadm-upgrade-conf.yml -y"
