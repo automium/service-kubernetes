@@ -28,6 +28,9 @@
         algo: rsa
         size: 2048
 
+- name: others | all | add preflight ignore in test
+  set_fact:
+    post_join_command: "echo 'Defaut no actions, this var will overide if nead'"
 # install_type Are you upgrading old installations ?
 - name: others | all | include configure role for "{{ cluster_role }}"
   include: "{{ init_role }}/{{ cluster_role }}/configure-{{ cluster_role }}.yml"
@@ -45,3 +48,6 @@
 
 - name: configure other | execute the generated join command
   command: "{{ join_command }}"
+
+- name: configure other | exec post join command
+  command: "{{ post_join_command }}"
