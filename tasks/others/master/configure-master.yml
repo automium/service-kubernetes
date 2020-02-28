@@ -20,6 +20,14 @@
 
 - name: others | master | render kubeadm configuration for join controlplane
   template:
+    src: templates/kubeadm/kubeadm.master.init.yml.j2
+    dest: "/etc/kubernetes/kubeadm-upgrade-conf.yml"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: others | master | render kubeadm configuration for join controlplane
+  template:
     src: templates/kubeadm/kubeadm.master.join.yml.j2
     dest: "/etc/kubernetes/kubeadm-conf.yml"
     owner: root
