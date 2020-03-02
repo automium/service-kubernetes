@@ -9,6 +9,9 @@ nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "{{ cloud_provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
+{% if kubeadm_custom.kubeletExtraArgs is defined %}
+{{ kubeadm_custom.kubeletExtraArgs | to_nice_yaml(indent=4) }}
+{% endif %}
 {% endif %}
 {% if kubeadm_custom.InitConfiguration is defined %}
 {{ kubeadm_custom.InitConfiguration | to_nice_yaml}}
