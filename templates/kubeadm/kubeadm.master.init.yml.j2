@@ -10,6 +10,7 @@ nodeRegistration:
     cloud-provider: "{{ cloud_provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% endif %}
+{{ kubeadm_custom.InitConfiguration | to_nice_yaml}}
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 clusterName: {{ cluster_name }}
@@ -21,6 +22,7 @@ networking:
   serviceSubnet: {{ calico_pool_cidr_serviceSubnet }}
   podSubnet: {{ calico_pool_cidr_podSubnet }}
 {% if ( provider != "vcd" and provider != "none") %}
+{{ kubeadm_custom.ClusterConfiguration | to_nice_yaml}}
 apiServer:
   extraArgs:
     cloud-provider: {{ cloud_provider }}
@@ -47,6 +49,7 @@ apiServer:
     audit-log-maxsize: "100"
     tls-cipher-suites: "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
     feature-gates: RotateKubeletServerCertificate=true
+{{ kubeadm_custom.apiServer.extraArgs | to_nice_yaml(indent=4) }}
   extraVolumes:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
@@ -57,19 +60,23 @@ apiServer:
   - hostPath: "/etc/kubernetes/audit-policy.yaml"
     mountPath: "/etc/kubernetes/audit-policy.yaml"
     name: audit-policy
+{{ kubeadm_custom.apiServer.extraVolumes | to_nice_yaml(indent=4) }}
 controllerManager:
   extraArgs:
     cloud-provider: {{ cloud_provider }}
     cloud-config: "/etc/kubernetes/cloud.conf"
     terminated-pod-gc-threshold: "10"
     profiling: "False"
+{{ kubeadm_custom.controllerManager.extraArgs | to_nice_yaml(indent=4) }}
   extraVolumes:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+{{ kubeadm_custom.controllerManager.extraVolumes | to_nice_yaml(indent=4) }}
 scheduler:
   extraArgs:
     profiling: "False"
+{{ kubeadm_custom.scheduler.extraArgs | to_nice_yaml(indent=4) }}
 {% endif %}
 etcd:
   local:
