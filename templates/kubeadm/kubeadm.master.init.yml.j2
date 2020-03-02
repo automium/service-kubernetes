@@ -53,7 +53,7 @@ apiServer:
     audit-log-maxsize: "100"
     tls-cipher-suites: "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256"
     feature-gates: RotateKubeletServerCertificate=true
-{% if kubeadm_custom.apiServer.extraArgs is defined %}
+{% if kubeadm_custom.apiServer is defined and kubeadm_custom.apiServer.extraArgs is defined  %}
 {{ kubeadm_custom.apiServer.extraArgs | to_nice_yaml(indent=4) }}
 {% endif %}
   extraVolumes:
@@ -66,7 +66,7 @@ apiServer:
   - hostPath: "/etc/kubernetes/audit-policy.yaml"
     mountPath: "/etc/kubernetes/audit-policy.yaml"
     name: audit-policy
-{% if kubeadm_custom.apiServer.extraVolumes is defined %}
+{% if kubeadm_custom.apiServer is defined and kubeadm_custom.apiServer.extraVolumes is defined %}
 {{ kubeadm_custom.apiServer.extraVolumes | to_nice_yaml(indent=4) }}
 {% endif %}
 controllerManager:
@@ -75,20 +75,20 @@ controllerManager:
     cloud-config: "/etc/kubernetes/cloud.conf"
     terminated-pod-gc-threshold: "10"
     profiling: "False"
-{% if kubeadm_custom.controllerManager.extraArgs is defined %}
+{% if kubeadm_custom.controllerManager is defined and kubeadm_custom.controllerManager.extraArgs is defined %}
 {{ kubeadm_custom.controllerManager.extraArgs | to_nice_yaml(indent=4) }}
 {% endif %}
   extraVolumes:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
-{% if kubeadm_custom.controllerManager.extraVolumes is defined %}
+{% if kubeadm_custom.controllerManager is defined and kubeadm_custom.controllerManager.extraVolumes is defined %}
 {{ kubeadm_custom.controllerManager.extraVolumes | to_nice_yaml(indent=4) }}
 {% endif %}
 scheduler:
   extraArgs:
     profiling: "False"
-{% if kubeadm_custom.scheduler.extraArgs is defined %}
+{% if kubeadm_custom.scheduler is defined and kubeadm_custom.scheduler.extraArgs is defined %}
 {{ kubeadm_custom.scheduler.extraArgs | to_nice_yaml(indent=4) }}
 {% endif %}
 {% endif %}

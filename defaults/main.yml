@@ -32,13 +32,13 @@ automium_autoscaler_kubeconfig: ""
 rancher_url: ""
 rancher_cluster_token: ""
 # kubeadm_custom:
-#   InitConfiguration: ""
-#   ClusterConfiguration: ""
+#   InitConfiguration:
+#   ClusterConfiguration:
 #   apiServer:
-#     extraArgs: ""
-#     extraVolumes: ""
+#     extraArgs:
+#     extraVolumes:
 #   controllerManager:
-#     extraArgs: ""
-#     extraVolumes: ""
+#     extraArgs:
+#     extraVolumes:
 #   scheduler:
-#     extraArgs: ""
+#     extraArgs:
