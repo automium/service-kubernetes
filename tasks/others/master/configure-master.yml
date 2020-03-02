@@ -26,7 +26,7 @@
     group: root
     mode: 0600
 
-- name: others | master | render kubeadm configuration for join controlplane
+- name: others | master | render kubeadm configuration for upgrade controlplane
   template:
     src: templates/kubeadm/kubeadm.master.join.yml.j2
     dest: "/etc/kubernetes/kubeadm-conf.yml"
