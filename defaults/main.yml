@@ -31,14 +31,14 @@ cluster_role: "master"
 automium_autoscaler_kubeconfig: ""
 rancher_url: ""
 rancher_cluster_token: ""
-kubeadm_custom:
-  InitConfiguration: ""
-  ClusterConfiguration: ""
-  apiServer:
-    extraArgs: ""
-    extraVolumes: ""
-  controllerManager:
-    extraArgs: ""
-    extraVolumes: ""
-  scheduler:
-    extraArgs: ""
+# kubeadm_custom:
+#   InitConfiguration: ""
+#   ClusterConfiguration: ""
+#   apiServer:
+#     extraArgs: ""
+#     extraVolumes: ""
+#   controllerManager:
+#     extraArgs: ""
+#     extraVolumes: ""
+#   scheduler:
+#     extraArgs: ""
