@@ -37,4 +37,3 @@
 - name: others | master | compose join command for master joiners nodes
   set_fact:
     join_command: "kubeadm join --config /etc/kubernetes/kubeadm-conf.yml"
-
