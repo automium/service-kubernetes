@@ -15,8 +15,8 @@ nodeRegistration:
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% endif %}
-{% if kubeadm_custom.kubeletExtraArgs is defined %}
-{{ kubeadm_custom.kubeletExtraArgs | to_nice_yaml| indent(4, true) }}
+{% if kubeadm_custom_row.kubeletExtraArgs is defined %}
+{{ kubeadm_custom_row.kubeletExtraArgs | to_nice_yaml| indent(4, true) }}
 {% endif %}
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1

@@ -7,6 +7,10 @@
   debug:
     var: name
 
+- name: set_vars kubeadm_custom to others
+  set_fact:
+    kubeadm_custom_row: "{{ kubeadm_custom | from_yaml }}"
+
 - name: set_vars init_role to others
   set_fact:
     init_role: others

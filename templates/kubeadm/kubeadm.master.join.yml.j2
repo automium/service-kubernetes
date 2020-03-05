@@ -11,8 +11,8 @@ nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
-{% if kubeadm_custom.kubeletExtraArgs is defined %}
-{{ kubeadm_custom.kubeletExtraArgs | to_nice_yaml| indent(4, true) }}
+{% if kubeadm_custom_row.kubeletExtraArgs is defined %}
+{{ kubeadm_custom_row.kubeletExtraArgs | to_nice_yaml| indent(4, true) }}
 {% endif %}
 {% endif %}
 controlPlane:
