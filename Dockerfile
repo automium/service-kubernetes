@@ -7,3 +7,4 @@ ENV PROVISIONER_ROLE https://github.com/automium/service-kubernetes
 ENV PROVISIONER_CONFIG_WAIT_CLEANUP true
 ENV PROVISIONER_CONFIG_WAIT_CLEANUP_TIMEOUT 30
 ENV KUBE_CONF dummy_value: true
+ENV KUBEADM_CUSTOM dummy_value: true
