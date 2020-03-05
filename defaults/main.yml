@@ -31,6 +31,7 @@ cluster_role: "master"
 automium_autoscaler_kubeconfig: ""
 rancher_url: ""
 rancher_cluster_token: ""
+kubeadm_custom: ""
 kubeadm_custom_row:
 #   InitConfiguration:
 #   ClusterConfiguration:
