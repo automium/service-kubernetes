@@ -38,8 +38,9 @@ kubeadm_custom:
 #   InitConfiguration:
 #   ClusterConfiguration:
 #   kubeletExtraArgs
-#   apiServer:
-#     extraArgs:
+  apiServer:
+    extraArgs:
+      enable-admission-plugins: ServiceAccount,PodSecurityPolicy,PodNodeSelector
 #     extraVolumes:
 #   controllerManager:
 #     extraArgs:
