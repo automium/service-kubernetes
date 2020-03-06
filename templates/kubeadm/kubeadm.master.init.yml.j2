@@ -7,9 +7,6 @@ localAPIEndpoint:
 {% if ( provider != "vcd" and provider != "none") %}
 nodeRegistration:
   kubeletExtraArgs:
-    memory.available: <256Mi
-    system-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
-    kube-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
     cloud-provider: "{{ cloud_provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% if kubeadm_custom_row.kubeletExtraArgs is defined %}
