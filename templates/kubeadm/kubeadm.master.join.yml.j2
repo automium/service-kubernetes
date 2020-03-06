@@ -11,6 +11,9 @@ nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
+    memory.available: <256Mi
+    system-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
+    kube-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
 {% if kubeadm_custom_row.kubeletExtraArgs is defined %}
 {{ kubeadm_custom_row.kubeletExtraArgs | to_nice_yaml| indent(4, true) }}
 {% endif %}

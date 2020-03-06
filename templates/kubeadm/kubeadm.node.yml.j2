@@ -11,6 +11,9 @@ nodeRegistration:
     node-labels: "nodepool={{ name }}"
     tls-cert-file: "/var/lib/kubelet/pki/kubelet-client-current.pem"
     tls-private-key-file: "/var/lib/kubelet/pki/kubelet-client-current.pem"
+    memory.available: <256Mi
+    system-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
+    kube-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
 {% if ( provider != "vcd" and provider != "none") %}
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
