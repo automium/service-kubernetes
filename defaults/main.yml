@@ -34,8 +34,9 @@ rancher_cluster_token: ""
 kubeadm_custom: ""
 kubeadm_custom_row:
   kubeletExtraArgs:
-    system-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
-    kube-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
+    kube-reserved: cpu=300m,memory=0.3Gi,ephemeral-storage=1Gi
+    system-reserved: cpu=200m,memory=0.2Gi,ephemeral-storage=1Gi
+    eviction-hard: memory.available<200Mi,nodefs.available<10%
 #   InitConfiguration:
 #   ClusterConfiguration:
 #     extraVolumes:
