@@ -33,9 +33,11 @@ rancher_url: ""
 rancher_cluster_token: ""
 kubeadm_custom: ""
 kubeadm_custom_row:
+  kubeletExtraArgs:
+    system-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
+    kube-reserved: cpu=500m,memory=500Mi,ephemeral-storage=1Gi
 #   InitConfiguration:
 #   ClusterConfiguration:
-#   kubeletExtraArgs
 #     extraVolumes:
 #   controllerManager:
 #     extraArgs:
