@@ -91,45 +91,10 @@
   debug:
     var: kubeadm_custom_row
 
-- name: bootstrap | configure master | create psp-deplotyment default-psp-with-rbac
-  copy:
-    src: kubernetes/default-psp-with-rbac.yaml
-    dest: /etc/kubernetes/default-psp-with-rbac.yaml
-    owner: root
-    group: root
-    mode: 0644
+- name: bootstrap | check if pod security policies are enabled
+  include: helpers/deploy_psp.yml
   when:
     - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
-    - '"PodSecurityPolicy" in kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"]'
-
-- name: bootstrap | configure master | deploy psp-deplotyment default-psp-with-rbac.yaml
-  k8s:
-    state: present
-    kubeconfig: /etc/kubernetes/admin.conf
-    src: /etc/kubernetes/default-psp-with-rbac.yaml
-  when:
-    - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
-    - '"PodSecurityPolicy" in kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"]'
-
-- name: bootstrap | configure master | create psp-deplotyment privileged-psp-with-rbac.yaml
-  copy:
-    src: kubernetes/privileged-psp-with-rbac.yaml
-    dest: /etc/kubernetes/privileged-psp-with-rbac.yaml
-    owner: root
-    group: root
-    mode: 0644
-  when:
-    - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
-    - '"PodSecurityPolicy" in kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"]'
-
-- name: bootstrap | configure master | deploy psp-deplotyment privileged-psp-with-rbac.yaml
-  k8s:
-    state: present
-    kubeconfig: /etc/kubernetes/admin.conf
-    src: /etc/kubernetes/privileged-psp-with-rbac.yaml
-  when:
-    - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
-    - '"PodSecurityPolicy" in kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"]'
 
 - name: bootstrap | configure master | deploy calico deployment
   template:
