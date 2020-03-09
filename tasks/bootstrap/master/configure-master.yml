@@ -91,25 +91,9 @@
   debug:
     var: kubeadm_custom_row
 
-- name: debug 1
-  debug:
-    msg: "Entra ??"
-  when:
-    - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
-    - '"PodSecurityPolicy" in kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"]'
-
-- name: debug 2
-  debug:
-    msg: "NON Entra ??"
-  when:
-    - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
-    - '"SUKA" in kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"]'
-
-
-
 - name: bootstrap | configure master | create psp-deplotyment default-psp-with-rbac
   copy:
-    src: default-psp-with-rbac.yaml
+    src: kubernetes/files/default-psp-with-rbac.yaml
     dest: /etc/kubernetes/default-psp-with-rbac.yaml
     owner: root
     group: root
@@ -129,7 +113,7 @@
 
 - name: bootstrap | configure master | create psp-deplotyment privileged-psp-with-rbac.yaml
   copy:
-    src: privileged-psp-with-rbac.yaml
+    src: kubernetes/filesprivileged-psp-with-rbac.yaml
     dest: /etc/kubernetes/privileged-psp-with-rbac.yaml
     owner: root
     group: root
