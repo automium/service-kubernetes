@@ -87,6 +87,46 @@
         algo: rsa
         size: 2048
 
+- name: bootstrap | configure master | create psp-deplotyment default-psp-with-rbac
+  copy:
+    src: default-psp-with-rbac.yaml
+    dest: /etc/kubernetes/default-psp-with-rbac.yaml
+    owner: root
+    group: root
+    mode: 0644
+  when: 
+    - kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins is defined
+    - '"PodSecurityPolicy" in kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins'
+
+- name:  bootstrap | configure master | deploy psp-deplotyment default-psp-with-rbac.yaml
+  k8s:
+    state: present
+    kubeconfig: /etc/kubernetes/admin.conf
+    src: /etc/kubernetes/default-psp-with-rbac.yaml
+  when: 
+    - kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins is defined
+    - '"PodSecurityPolicy" in kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins'
+
+- name: bootstrap | configure master | create psp-deplotyment privileged-psp-with-rbac.yaml
+  copy:
+    src: privileged-psp-with-rbac.yaml
+    dest: /etc/kubernetes/privileged-psp-with-rbac.yaml
+    owner: root
+    group: root
+    mode: 0644
+  when: 
+    - kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins is defined
+    - '"PodSecurityPolicy" in kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins'
+
+- name:  bootstrap | configure master | deploy psp-deplotyment privileged-psp-with-rbac.yaml
+  k8s:
+    state: present
+    kubeconfig: /etc/kubernetes/admin.conf
+    src: /etc/kubernetes/privileged-psp-with-rbac.yaml
+  when: 
+    - kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins is defined
+    - '"PodSecurityPolicy" in kubeadm_custom_row.kubeletExtraArgs.enable-admission-plugins'
+
 - name: bootstrap | configure master | deploy calico deployment
   template:
     src: templates/calico/calico.yaml.j2
@@ -96,4 +136,7 @@
     mode: 0600
 
 - name: bootstrap | configure master | apply calico deployment
-  command: kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /etc/kubernetes/calico.yaml
+  k8s:
+    kubeconfig: /etc/kubernetes/admin.conf
+    src: /etc/kubernetes/calico.yaml
+
