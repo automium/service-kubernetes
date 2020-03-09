@@ -94,6 +94,8 @@
 - name: bootstrap | check if pod security policies are enabled
   include: helpers/deploy_psp.yml
   when:
+    - kubeadm_custom_row.apiServer is defined
+    - kubeadm_custom_row.apiServer.extraArgs is defined
     - kubeadm_custom_row.apiServer.extraArgs["enable-admission-plugins"] is defined
 
 - name: bootstrap | configure master | deploy calico deployment
