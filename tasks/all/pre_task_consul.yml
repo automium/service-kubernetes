@@ -38,19 +38,19 @@
           - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
       - name: "{{ cluster_name }}-kube-apiserver"
-        port: "6443"
+        port: 6443
         check:
           - tcp: localhost:6443
             interval: 10s
             timeout: 3s
       - name: "{{ cluster_name }}-kube-scheduler"
-        port: "10251"
+        port: 10251
         check:
           - tcp: localhost:10251
             interval: 10s
             timeout: 3s
       - name: "{{ cluster_name }}-kube-controller-manager"
-        port: "10252"
+        port: 10252
         check:
           - tcp: localhost:10252
             interval: 10s
@@ -58,26 +58,25 @@
       {% endif %}
       {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kubelet"
-        port: "10250"
+        port: 10250
         check:
           - tcp: localhost:10250
             interval: 10s
             timeout: 1s
       - name: "{{ cluster_name }}-kubelet-health"
-        port: "10248"
+        port: 10248
         check:
           - http: http://localhost:10248/healthz
             method: "GET"
             interval: 30s
             timeout: 5s
       - name: "{{ cluster_name }}-kube-proxy"
-        port: "6443"
+        port: 6443
         check:
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
       - name: "{{ cluster_name }}-etcd"
-        port: ""
         check:
           - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
