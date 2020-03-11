@@ -71,12 +71,18 @@
             interval: 30s
             timeout: 5s
       - name: "{{ cluster_name }}-kube-proxy"
-        port: 6443
+        port: 10256
         check:
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
       - name: "{{ cluster_name }}-etcd"
+        port: 2379
+        check:
+          - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
+            interval: "10s"
+      - name: "{{ cluster_name }}-transport"
+        port: 2380
         check:
           - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
