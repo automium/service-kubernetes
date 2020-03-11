@@ -34,6 +34,7 @@
             timeout: 1s
       {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kube-master"
+        port: 6443
         checks:
           - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
