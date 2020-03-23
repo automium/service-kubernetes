@@ -3,7 +3,9 @@
   set_fact:
     consul_service_render: |
       - name: "{{ identity }}"
+        address: "{{ ansible_default_ipv4['address'] }}"
       - name: "{{ identity }}-all"
+        address: "{{ ansible_default_ipv4['address'] }}"
         checks:
       {% if cluster_role == 'master' %}
           - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
@@ -34,23 +36,27 @@
             timeout: 1s
       {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kube-master"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 6443
         checks:
           - args: ["/opt/consul/bin/kubernetes-check-node"]
             interval: "30s"
       - name: "{{ cluster_name }}-kube-apiserver"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 6443
         check:
           - tcp: localhost:6443
             interval: 10s
             timeout: 3s
       - name: "{{ cluster_name }}-kube-scheduler"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 10251
         check:
           - tcp: localhost:10251
             interval: 10s
             timeout: 3s
       - name: "{{ cluster_name }}-kube-controller-manager"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 10252
         check:
           - tcp: localhost:10252
@@ -59,12 +65,14 @@
       {% endif %}
       {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kubelet"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 10250
         check:
           - tcp: localhost:10250
             interval: 10s
             timeout: 1s
       - name: "{{ cluster_name }}-kubelet-health"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 10248
         check:
           - http: http://localhost:10248/healthz
@@ -72,17 +80,20 @@
             interval: 30s
             timeout: 5s
       - name: "{{ cluster_name }}-kube-proxy"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 10256
         check:
           - tcp: localhost:10256
             interval: 10s
             timeout: 1s
       - name: "{{ cluster_name }}-etcd"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 2379
         check:
           - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
       - name: "{{ cluster_name }}-transport"
+        address: "{{ ansible_default_ipv4['address'] }}"
         port: 2380
         check:
           - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
