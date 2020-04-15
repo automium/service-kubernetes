@@ -158,10 +158,10 @@
       spec:
         clusterIP: None
         ports:
-        - name: metrics
-          port: 2379
-          protocol: TCP
-          targetPort: 2379
+          - name: metrics
+            port: 2379
+            protocol: TCP
+            targetPort: 2379
         selector:
           component: etcd
           tier: control-plane
