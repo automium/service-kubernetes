@@ -310,6 +310,8 @@
   apt_repository:
     repo: deb https://dl.bintray.com/falcosecurity/deb stable main
     state: present
+  when:
+    - testmode != "true"
 
 - name: image | install falco
   apt:
