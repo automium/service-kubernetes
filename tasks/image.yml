@@ -22,6 +22,7 @@
         "kubelet={{ k8s_version }}-00",
         "kubectl={{ k8s_version }}-00",
         "glusterfs-client",
+        "nfs-common",
         "python3-pip",
         "python3-venv",
         "python3-dev"
@@ -102,7 +103,7 @@
     name: automium.consul
     public: yes
   vars:
-    consul_version: 1.4.4
+    consul_version: 1.6.5
     configure: false
     install: true
     consul_service_status: "stopped"
