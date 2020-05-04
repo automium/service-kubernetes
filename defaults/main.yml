@@ -2,7 +2,7 @@
 name: name
 cluster_name: samplecluster
 pool_name: mainpool
-calicoctl_version: v3.5.8
+calicoctl_version: v3.13.3
 calicoctl_download_url: https://github.com/projectcalico/calicoctl/releases/download/{{ calicoctl_version }}/calicoctl
 consul: 127.0.0.1
 consul_port: 8500
