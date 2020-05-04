@@ -37,3 +37,11 @@
 - name: others | master | compose join command for master joiners nodes
   set_fact:
     join_command: "kubeadm join --config /etc/kubernetes/kubeadm-conf.yml"
+
+- name: others | master | calico get calico version
+  shell: calicoctl version
+  register: calico_version_row
+
+- name: debug
+  debug:
+    var: calico_version_row
