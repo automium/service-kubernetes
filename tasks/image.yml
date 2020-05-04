@@ -172,7 +172,7 @@
       export DATASTORE_TYPE=etcdv3
       export ETCD_ENDPOINTS=https://127.0.0.1:2379
       export ETCD_KEY_FILE=/etc/calico/pki/node-calico-key.pem
-      export ETCD_CERT_FILE=/etc/calico/pki/node-calico.csr
+      export ETCD_CERT_FILE=/etc/calico/pki/node-calico.pem
       export ETCD_CA_CERT_FILE=/etc/calico/pki/ca.crt
 
 - name: image | stop Docker
