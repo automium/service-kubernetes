@@ -1,0 +1,4 @@
+---
+- name: others | all | postconfigure | no actions
+  debug:
+    msg: "Qui faccio cose con calico molto presto"

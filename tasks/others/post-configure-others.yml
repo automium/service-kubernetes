@@ -1,4 +1,4 @@
 ---
-- name: others | all | postconfigure | no actions
-  debug:
-    msg: "No actions are request in post-configure for other nodes"
+- name: others | all | include postconfigure role for "{{ cluster_role }}"
+  include: "{{ init_role }}/{{ cluster_role }}/postconfigure-{{ cluster_role }}.yml"
+  static: no

@@ -1,0 +1,4 @@
+---
+- name: others | all | postconfigure | no actions
+  debug:
+    msg: "No actions are request in post-configure for other {{ cluster_role }}"
