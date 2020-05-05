@@ -37,6 +37,7 @@
     - python-consul==1.0.0
     - netaddr
     - openshift
+    - requests
 
 - name: image | enable kubelet service
   service:
