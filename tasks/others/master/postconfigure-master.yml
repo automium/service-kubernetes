@@ -1,4 +1,12 @@
 ---
-- name: others | all | postconfigure | no actions
+- name: others | master | postconfigure | Debug Message
   debug:
     msg: "Qui faccio cose con calico molto presto"
+
+- name: others | master | postconfigure | check calico version
+  command: calicoctl version
+  register: calico_version_row
+
+- name: others | master | postconfigure | Debug Message
+  debug:
+    var: calico_version_row
