@@ -77,10 +77,8 @@ data:
         }
       ]
     }
-
 ---
 # Source: calico/templates/rbac.yaml
-
 # Include a clusterrole for the kube-controllers component,
 # and bind it to the calico-kube-controllers serviceaccount.
 kind: ClusterRole
@@ -157,7 +155,6 @@ rules:
     verbs:
       # Needed for clearing NodeNetworkUnavailable flag.
       - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -171,7 +168,6 @@ subjects:
 - kind: ServiceAccount
   name: calico-node
   namespace: kube-system
-
 ---
 # Source: calico/templates/calico-node.yaml
 # This manifest installs the calico-node container, as well
@@ -422,16 +418,13 @@ spec:
             type: DirectoryOrCreate
             path: /usr/libexec/kubernetes/kubelet-plugins/volume/exec/nodeagent~uds
 ---
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: calico-node
   namespace: kube-system
-
 ---
 # Source: calico/templates/calico-kube-controllers.yaml
-
 # See https://github.com/projectcalico/kube-controllers
 apiVersion: apps/v1
 kind: Deployment
@@ -517,21 +510,9 @@ spec:
           hostPath:
             type: Directory
             path: /etc/calico/pki
-
 ---
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: calico-kube-controllers
   namespace: kube-system
----
-# Source: calico/templates/calico-typha.yaml
-
----
-# Source: calico/templates/configure-canal.yaml
-
----
-# Source: calico/templates/kdd-crds.yaml
-
-
