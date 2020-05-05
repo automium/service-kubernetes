@@ -3,3 +3,7 @@
   copy:
     src: kubernetes/audit-policy.yaml
     dest: /etc/kubernetes/audit-policy.yaml
+
+- name: "all | master | pre_task_configure | check if there are master nodes with this version of Kubernetes ( v{{ k8s_version }} )"
+  shell: "python3 {{ role_path }}/files/scripts/vercheck.py '{{ cluster_name }}' 'v{{ k8s_version }}'"
+  register: upgrade_check_script

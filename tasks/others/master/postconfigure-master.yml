@@ -25,3 +25,7 @@
     kubeconfig: /etc/kubernetes/admin.conf
     src: /etc/kubernetes/calico.yaml
   when: calico_cluster_version != calicoctl_version
+
+- name: bootstrap | configure master | execute master node upgrade playbook if needed
+  import_tasks: others/master/postconfigure-upgrade.yaml
+  when: "{{ upgrade_check_script.stdout }} == 'False'" 
