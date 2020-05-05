@@ -1,6 +1,12 @@
 ---
 - name: others | master | postconfigure | check calico version
   command: calicoctl version
+  environment:
+    DATASTORE_TYPE: "etcdv3"
+    ETCD_ENDPOINTS: "https://127.0.0.1:2379"
+    ETCD_KEY_FILE: "/etc/calico/pki/node-calico-key.pem"
+    ETCD_CERT_FILE: "/etc/calico/pki/node-calico.pem"
+    ETCD_CA_CERT_FILE: "/etc/calico/pki/ca.crt"
   register: calico_version_row
 
 - name: others | master | postconfigure | Debug Message
