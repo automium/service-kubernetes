@@ -8,6 +8,20 @@
     calico_cluster_version: '{{ item.split(":") | map("trim") | list | reject("search","Cluster Version")|list | join }}'
   with_items: "{{ calico_version_row.stdout_lines|select('search','Cluster Version')|list }}"
 
+- name: bootstrap | configure master | deploy calico deployment
+  template:
+    src: templates/calico/calico.yaml.j2
+    dest: /etc/kubernetes/calico.yaml
+    owner: root
+    group: root
+    mode: 0600
+
 - name: others | master | postconfigure | Debug show calico version
   debug:
     var: calico_cluster_version
+
+- name: bootstrap | configure master | apply calico deployment
+  k8s:
+    kubeconfig: /etc/kubernetes/admin.conf
+    src: /etc/kubernetes/calico.yaml
+  when: calico_cluster_version != calicoctl_version
