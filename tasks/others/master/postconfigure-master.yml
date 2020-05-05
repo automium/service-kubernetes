@@ -1,12 +1,13 @@
 ---
-- name: others | master | postconfigure | Debug Message
-  debug:
-    msg: "Qui faccio cose con calico molto presto"
-
 - name: others | master | postconfigure | check calico version
   command: calicoctl version
   register: calico_version_row
 
 - name: others | master | postconfigure | Debug Message
+  set_fact:
+    calico_cluster_version: '{{ item.split(":") | map("trim") | list | reject("search","Cluster Version")|list | join }}'
+  with_items: "{{ calico_version_row.stdout_lines|select('search','Cluster Version')|list }}"
+
+- name: others | master | postconfigure | Debug show calico version
   debug:
-    var: calico_version_row
+    var: calico_cluster_version
