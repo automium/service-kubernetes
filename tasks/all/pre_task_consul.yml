@@ -11,8 +11,6 @@
       {% if cluster_role == 'master' %}
           - args: ["/opt/consul/bin/etcd-consul-check", "--ca=/opt/consul/pki/etcd/ca.crt", "--cert-file=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul.pem", "--key=/opt/consul/pki/etcd/{{ ansible_hostname }}-consul-key.pem"]
             interval: "10s"
-          - args: ["/opt/consul/bin/kubernetes-cpversion-check"]
-            interval: "30s"
       {% endif %}
       {% if cluster_role == 'master' %}
           - args: ["/opt/consul/bin/kubernetes-check-node"]
@@ -65,6 +63,12 @@
           - tcp: localhost:10252
             interval: 10s
             timeout: 3s
+      - name: "{{ cluster_name }}-kube-cpversion"
+        address: "{{ ansible_default_ipv4['address'] }}"
+        port: 0
+        checks:
+          - args: ["/opt/consul/bin/kubernetes-cpversion-check"]
+            interval: "30s"
       {% endif %}
       {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kubelet"
