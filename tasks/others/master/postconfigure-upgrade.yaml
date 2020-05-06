@@ -14,4 +14,4 @@
     dest: /etc/kubernetes/cpversion_check
     owner: root
     group: root
-    mode: 0600
+    mode: 0644

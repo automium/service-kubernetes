@@ -36,8 +36,8 @@
     dest: /etc/kubernetes/cpversion_check
     owner: root
     group: root
-    mode: 0600
+    mode: 0644
 
 - name: bootstrap | configure master | start the upgrade if no control planes are updated
-  import_tasks: others/master/postconfigure-upgrade.yaml
-  when: "{{ upgrade_check_script.stdout }} == 'False'" 
+  import: others/master/postconfigure-upgrade.yaml
+  when: upgrade_check_script.stdout == "False"
