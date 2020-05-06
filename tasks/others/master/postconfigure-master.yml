@@ -26,10 +26,18 @@
     src: /etc/kubernetes/calico.yaml
   when: calico_cluster_version != calicoctl_version
 
-- name: bootstrap | configure master | check if we need to start an upgrade version of Kubernetes
+- name: "bootstrap | configure master | check if almost one control plane is updated to the desired version ( v{{ k8s_version }} )"
   shell: "python3 {{ role_path }}/files/scripts/vercheck.py '{{ cluster_name }}' 'v{{ k8s_version }}'"
   register: upgrade_check_script
 
-- name: bootstrap | configure master | start the upgrade if needed
+- name: bootstrap | configure master | register control plane status output
+  copy:
+    content: "{{ upgrade_check_script.stdout }}"
+    dest: /etc/kubernetes/cpversion_check
+    owner: root
+    group: root
+    mode: 0600
+
+- name: bootstrap | configure master | start the upgrade if no control planes are updated
   import_tasks: others/master/postconfigure-upgrade.yaml
   when: "{{ upgrade_check_script.stdout }} == 'False'" 

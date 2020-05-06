@@ -7,3 +7,11 @@
 
 - name: bootstrap | master upgrade | upgrade Kubernetes via kubeadm
   shell: "kubeadm upgrade apply --force v{{ k8s_version }}"
+
+- name: bootstrap | master upgrade | make upgrade check passing
+  copy:
+    content: "True"
+    dest: /etc/kubernetes/cpversion_check
+    owner: root
+    group: root
+    mode: 0600

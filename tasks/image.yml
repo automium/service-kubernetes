@@ -125,6 +125,14 @@
     group: consul
     mode: 0700
 
+- name: image | deploy consul check kubernetes-cpversion-check
+  copy:
+    src: scripts/kubernetes-cpversion-check.sh
+    dest: /opt/consul/bin/kubernetes-cpversion-check
+    owner: consul
+    group: consul
+    mode: 0700
+
 - name: image | make sure consul data is free
   file:
     path: /opt/consul/data
