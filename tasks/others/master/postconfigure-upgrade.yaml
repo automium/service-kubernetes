@@ -1,0 +1,17 @@
+---
+- name: bootstrap | master upgrade | plan upgrade via kubeadm
+  shell: "kubeadm upgrade plan v{{ k8s_version }}"
+
+- name: bootstrap | master upgrade | dry-run the upgrade via kubeadm
+  shell: "kubeadm upgrade apply --dry-run v{{ k8s_version }}"
+
+- name: bootstrap | master upgrade | upgrade Kubernetes via kubeadm
+  shell: "kubeadm upgrade apply --force v{{ k8s_version }}"
+
+- name: bootstrap | master upgrade | make upgrade check passing
+  copy:
+    content: "True"
+    dest: /etc/kubernetes/cpversion_check
+    owner: root
+    group: root
+    mode: 0644

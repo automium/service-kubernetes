@@ -37,6 +37,7 @@
     - python-consul==1.0.0
     - netaddr
     - openshift
+    - requests
 
 - name: image | enable kubelet service
   service:
@@ -120,6 +121,14 @@
   copy:
     src: scripts/etcd-consul-check.py
     dest: /opt/consul/bin/etcd-consul-check
+    owner: consul
+    group: consul
+    mode: 0700
+
+- name: image | deploy consul check kubernetes-cpversion-check
+  copy:
+    src: scripts/kubernetes-cpversion-check.sh
+    dest: /opt/consul/bin/kubernetes-cpversion-check
     owner: consul
     group: consul
     mode: 0700

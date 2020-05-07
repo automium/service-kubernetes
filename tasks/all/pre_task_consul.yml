@@ -63,6 +63,12 @@
           - tcp: localhost:10252
             interval: 10s
             timeout: 3s
+      - name: "{{ cluster_name }}-kube-cpversion"
+        address: "{{ ansible_default_ipv4['address'] }}"
+        port: 0
+        checks:
+          - args: ["/opt/consul/bin/kubernetes-cpversion-check"]
+            interval: "30s"
       {% endif %}
       {% if cluster_role == 'master' %}
       - name: "{{ cluster_name }}-kubelet"
