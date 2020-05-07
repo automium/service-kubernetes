@@ -71,7 +71,7 @@
   copy:
     content: |
       - src: automium.consul
-        version: 2.1.2
+        version: 2.1.4
       - src: entercloudsuite.docker
         version: 2.0.4
       - src: entercloudsuite.ansible_cfssl
