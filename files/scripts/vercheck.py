@@ -1,5 +1,7 @@
 import sys
-import requests
+import http.client
+import ssl
+import json
 from dns.resolver import query
 
 def usage():
@@ -18,9 +20,14 @@ KUBERNETES_VERSION = sys.argv[2]
 VERSION_FOUND = False
 
 try:
+    ctx = ssl.create_default_context(cafile="/etc/kubernetes/pki/ca.crt")
     answer = query("{}-kube-apiserver.service.automium.consul".format(SERVICE_NAME), "A")
     for k8snode in answer:
-        if requests.get("https://{}:6443/version".format(k8snode), verify="/etc/kubernetes/pki/ca.crt").json()["gitVersion"] == KUBERNETES_VERSION:
+        conn = http.client.HTTPSConnection(k8snode.address, 6443, context=ctx)
+        conn.request("GET", "/version")
+        jsonResp = json.loads(conn.getresponse().read())
+        conn.close()
+        if jsonResp["gitVersion"] == KUBERNETES_VERSION:
             VERSION_FOUND = True
             break
     print("{}".format(VERSION_FOUND))
