@@ -7,7 +7,7 @@ CONTENT="$(cat /etc/kubernetes/cpversion_check)"
 if [ "${CONTENT}" == "True" ]; then
   echo "Control plane version check passed "
   exit 0
-elif [ "${CONTENT}" == "False"]; then
+elif [ "${CONTENT}" == "False" ]; then
   echo "Control plane version check failed - node will execute control plane upgrade"
   exit 2
 else
