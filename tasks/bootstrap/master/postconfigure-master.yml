@@ -1,4 +1,12 @@
 ---
+- name: bootstrap | master | register control plane status output
+  copy:
+    content: "True"
+    dest: /etc/kubernetes/cpversion_check
+    owner: root
+    group: root
+    mode: 0644
+
 - name: bootstrap | master | copy autoscaler-restart script
   template:
     src: autoscaler/autoscaler-restart.sh.j2
