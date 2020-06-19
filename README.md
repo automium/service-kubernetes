@@ -19,17 +19,37 @@ if true configure the instance as a kubernetes worker node
 
 if true configure the instance as a etcd node
 
-### KUBE_CONF _optional_
+### KUBEADM_CUSTOM _optional_
 
 
 es. in docker compose:
-```
+```yaml
 environment:
-  KUBE_CONF: |-
-    podsecuritypolicy_enabled: true
-    kubelet_custom_flags:
-      - "--event-qps=0"
+  KUBEADM_CUSTOM: |-
+    kubeletExtraArgs:
+      kube-reserved: cpu=300m,memory=0.3Gi,ephemeral-storage=1Gi
+      system-reserved: cpu=200m,memory=0.2Gi,ephemeral-storage=1Gi
+      eviction-hard: memory.available<200Mi,nodefs.available<10%
+    apiServer:
+      extraArgs:
+        enable-admission-plugins: ServiceAccount,PodSecurityPolicy,PodNodeSelector
+
 ```
+
+kubernetes definitions:
+```yaml
+  - name: kubeadm_custom
+    value: |-
+      kubeletExtraArgs:
+        kube-reserved: cpu=300m,memory=0.3Gi,ephemeral-storage=1Gi
+        system-reserved: cpu=200m,memory=0.2Gi,ephemeral-storage=1Gi
+        eviction-hard: memory.available<200Mi,nodefs.available<10%
+      apiServer:
+        extraArgs:
+          enable-admission-plugins: ServiceAccount,PodSecurityPolicy,PodNodeSelector
+
+```
+
 
 ### RANCHER_URL _optional_
 
