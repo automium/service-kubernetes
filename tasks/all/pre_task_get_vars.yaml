@@ -7,7 +7,7 @@
   debug:
     var: name
 
-- name: set_vars kubeadm_custom to others
+- name: set_vars kubeadm_custom_row from string kubeadm_custom
   set_fact:
     kubeadm_custom_row: "{{ kubeadm_custom | from_yaml }}"
 
