@@ -11,6 +11,10 @@
   set_fact:
     kubeadm_custom_row: "{{ kubeadm_custom | from_yaml }}"
 
+- name: debug show kubeadm_custom
+  debug:
+    var: kubeadm_custom
+
 - name: set_vars init_role to others
   set_fact:
     init_role: others
