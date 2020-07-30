@@ -7,5 +7,5 @@ ENV PROVISIONER_ROLE https://github.com/automium/service-kubernetes
 ENV PROVISIONER_CONFIG_WAIT_CLEANUP true
 ENV PROVISIONER_CONFIG_WAIT_CLEANUP_TIMEOUT 30
 ENV KUBE_CONF dummy_value: true
-ENV KUBEADM_CUSTOM dummy_value: true
+ENV KUBEADM_CUSTOM kubeletExtraArgs:\n  kube-reserved: cpu=300m,memory=0.3Gi,ephemeral-storage=1Gi\n  system-reserved: cpu=200m,memory=0.2Gi,ephemeral-storage=1Gi\n  eviction-hard: memory.available<200Mi,nodefs.available<10%
 
