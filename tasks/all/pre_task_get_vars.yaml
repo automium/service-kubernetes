@@ -7,13 +7,9 @@
   debug:
     var: name
 
-- name: set_vars kubeadm_custom_row from string kubeadm_custom
+- name: set_vars kubeadm_custom to others
   set_fact:
     kubeadm_custom_row: "{{ kubeadm_custom | from_yaml }}"
-
-- name: debug show kubeadm_custom
-  debug:
-    var: kubeadm_custom
 
 - name: set_vars init_role to others
   set_fact:
@@ -25,9 +21,17 @@
     init_role: bootstrap
   tags: bootstrap
 
-- name: vars | print env init_role
-  debug:
-    var: init_role
+- name: set_vars check if "{{ cluster_name }}-kube-master.service.automium.consul" exist
+  command: "dig +short {{ cluster_name }}-kube-master.service.automium.consul"
+  register: dnsrecord_kube_master
+
+- name: set_vars check if "{{ cluster_name }}-etcd.service.automium.consul" exist
+  command: "dig +short {{ cluster_name }}-etcd.service.automium.consul"
+  register: dnsrecord_etcd
+
+- name: set_vars check if "{{ cluster_name }}-kube-apiserver.service.automium.consul" exist
+  command: "dig +short {{ cluster_name }}-kube-master.service.automium.consul"
+  register: dnsrecord_kube_apiserver
 
 - name: set_vars cluster_role to master
   set_fact:
@@ -38,6 +42,40 @@
   set_fact:
     cluster_role: "node"
   when: node == "true"
+
+- name: vars | print env dnsrecord_kube_master
+  debug:
+    var: dnsrecord_kube_master
+
+- name: vars | print env dnsrecord_etcd
+  debug:
+    var: dnsrecord_etcd
+
+- name: vars | print env dnsrecord_kube_apiserver
+  debug:
+    var: dnsrecord_kube_apiserver
+
+- name: vars | print env init_role
+  debug:
+    var: init_role
+
+- name: vars | print env cluster_role
+  debug:
+    var: cluster_role
+
+- name: var | check if master pool is not boostrap
+  set_fact:
+    init_role: others
+  when:
+    - dnsrecord_kube_master.stdout != ""
+    - dnsrecord_etcd.stdout != ""
+    - dnsrecord_kube_apiserver.stdout != ""
+    - init_role == "bootstrap"
+    - cluster_role == "master"
+
+- name: vars | print env init_role
+  debug:
+    var: init_role
 
 - name: vars | print env cluster_role
   debug:
