@@ -82,7 +82,7 @@
     var: cluster_role
 
 - name: vars | override the kubernetes provider
-  set_facts:
+  set_fact:
     provider: "{{ kube_provider }}"
   when: kube_provider != ""
 
