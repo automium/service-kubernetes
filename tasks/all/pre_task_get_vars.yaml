@@ -80,3 +80,13 @@
 - name: vars | print env cluster_role
   debug:
     var: cluster_role
+
+- name: vars | override the kubernetes provider
+  set_facts:
+    provider: "{{ kube_provider }}"
+  when: kube_provider is defined
+
+- name: vars | print env kube_provider
+  debug:
+    var: kube_provider
+  when: kube_provider is defined
