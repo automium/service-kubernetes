@@ -81,12 +81,15 @@
   debug:
     var: cluster_role
 
-- name: vars | override the kubernetes provider
+- name: vars | set service_provider to provider
   set_fact:
-    provider: "{{ kube_provider }}"
+    service_provider: "{{ provider }}"
+
+- name: vars | set service_provider to kube_provider
+  set_fact:
+    service_provider: "{{ kube_provider }}"
   when: kube_provider != ""
 
-- name: vars | print env kube_provider
+- name: vars | print new provider
   debug:
-    var: kube_provider
-  when: kube_provider != ""
+    var: service_provider

@@ -11,7 +11,7 @@ nodeRegistration:
     node-labels: "nodepool={{ name }}"
     tls-cert-file: "/var/lib/kubelet/pki/kubelet-client-current.pem"
     tls-private-key-file: "/var/lib/kubelet/pki/kubelet-client-current.pem"
-{% if ( provider != "vcd" and provider != "none") %}
+{% if ( service_provider != "vcd" and service_provider != "none") %}
     cloud-provider: "{{ provider }}"
     cloud-config: "/etc/kubernetes/cloud.conf"
 {% endif %}

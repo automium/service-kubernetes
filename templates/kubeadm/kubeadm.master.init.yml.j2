@@ -4,7 +4,7 @@ kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ ansible_default_ipv4.address }}
   bindPort: 6443
-{% if ( provider != "vcd" and provider != "none") %}
+{% if ( service_provider != "vcd" and service_provider != "none") %}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "{{ cloud_provider }}"
@@ -26,7 +26,7 @@ networking:
   dnsDomain: cluster.local
   serviceSubnet: {{ calico_pool_cidr_serviceSubnet }}
   podSubnet: {{ calico_pool_cidr_podSubnet }}
-{% if ( provider != "vcd" and provider != "none") %}
+{% if ( service_provider != "vcd" and service_provider != "none") %}
 {% if kubeadm_custom_row.ClusterConfiguration is defined %}
 {{ kubeadm_custom_row.ClusterConfiguration | to_nice_yaml}}
 {% endif %}

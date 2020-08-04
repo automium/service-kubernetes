@@ -14,7 +14,7 @@
     owner: root
     group: root
     mode: 0600
-  when: provider != "none"
+  when: (service_provider != "none") and (service_provider != "vcd")
 
 - name: configure | ensure Docker service is started
   service:

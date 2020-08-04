@@ -6,7 +6,7 @@ discovery:
     apiServerEndpoint: {{ cluster_name }}-kube-apiserver.service.automium.consul:6443
     token: {{ kubeadm_token.stdout_lines[0] }}
     unsafeSkipCAVerification: true
-{% if ( provider != "vcd" and provider != "none") %}
+{% if ( service_provider != "vcd" and service_provider != "none") %}
 nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: "{{ provider }}"
