@@ -7,10 +7,6 @@
   debug:
     var: name
 
-- name: set_vars kubeadm_custom to others
-  set_fact:
-    kubeadm_custom_row: "{{ kubeadm_custom | from_yaml }}"
-
 - name: set_vars init_role to others
   set_fact:
     init_role: others
@@ -80,6 +76,19 @@
 - name: vars | print env cluster_role
   debug:
     var: cluster_role
+
+- name: vars | set kubeadm_custom_row to default value
+  set_fact:
+    kubeadm_custom_row:
+      kubeletExtraArgs:
+        kube-reserved: cpu=300m,memory=0.3Gi,ephemeral-storage=1Gi
+        system-reserved: cpu=200m,memory=0.2Gi,ephemeral-storage=1Gi
+        eviction-hard: memory.available<200Mi,nodefs.available<10%
+
+- name: vars | set kubeadm_custom_row to custom value if defined
+  set_fact:
+    kubeadm_custom_row: "{{ kubeadm_custom | from_yaml }}"
+  when: kubeadm_custom != ""
 
 - name: vars | set service_provider to provider
   set_fact:

@@ -31,11 +31,7 @@ cluster_role: "master"
 automium_autoscaler_kubeconfig: ""
 rancher_url: ""
 rancher_cluster_token: ""
-kubeadm_custom:
-  kubeletExtraArgs:
-    kube-reserved: cpu=300m,memory=0.3Gi,ephemeral-storage=1Gi
-    system-reserved: cpu=200m,memory=0.2Gi,ephemeral-storage=1Gi
-    eviction-hard: memory.available<200Mi,nodefs.available<10%
+kubeadm_custom: ""
 #  apiServer:
 #    extraArgs:
 #    InitConfiguration:
