@@ -32,8 +32,10 @@ networking:
 {% endif %}
 apiServer:
   extraArgs:
+{%- if ( service_provider != "vcd" and service_provider != "none") %}
     cloud-provider: {{ cloud_provider }}
     cloud-config: "/etc/kubernetes/cloud.conf"
+{%- endif %}
     anonymous-auth: "True"
     authorization-mode: Node,RBAC
     bind-address: 0.0.0.0
@@ -60,9 +62,11 @@ apiServer:
 {{ kubeadm_custom_row.apiServer.extraArgs | to_nice_yaml |indent(4, true) }}
 {% endif %}
   extraVolumes:
+{%- if ( service_provider != "vcd" and service_provider != "none") %}
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+{%- endif %}
   - name: apiserver-audit-log
     hostPath: "/var/log/audit/"
     mountPath: "/var/log/audit/"
@@ -74,17 +78,21 @@ apiServer:
 {% endif %}
 controllerManager:
   extraArgs:
+{%- if ( service_provider != "vcd" and service_provider != "none") %}
     cloud-provider: {{ cloud_provider }}
     cloud-config: "/etc/kubernetes/cloud.conf"
+{%- endif %}
     terminated-pod-gc-threshold: "10"
     profiling: "False"
 {% if kubeadm_custom_row.controllerManager is defined and kubeadm_custom_row.controllerManager.extraArgs is defined %}
 {{ kubeadm_custom_row.controllerManager.extraArgs | to_nice_yaml|indent(4, true) }}
 {% endif %}
+{% if ( service_provider != "vcd" and service_provider != "none") %}
   extraVolumes:
   - name: cloud
     hostPath: "/etc/kubernetes/cloud.conf"
     mountPath: "/etc/kubernetes/cloud.conf"
+{% endif %}
 {% if kubeadm_custom_row.controllerManager is defined and kubeadm_custom_row.controllerManager.extraVolumes is defined %}
 {{ kubeadm_custom_row.controllerManager.extraVolumes | to_nice_yaml|indent(4, true) }}
 {% endif %}
