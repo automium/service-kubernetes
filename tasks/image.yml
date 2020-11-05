@@ -320,3 +320,9 @@
   until: pkg_result is success
   when:
     - testmode != "true"
+
+- name: image | configure journald
+  template:
+    src: journald.conf.j2
+    dest: /etc/systemd/journald.conf
+    mode: 0644
