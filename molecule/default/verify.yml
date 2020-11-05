@@ -2,8 +2,8 @@
 - name: Run quick cluster verification test
   hosts: testcluster-testcluster-0
   vars:
-    sonobuoy_version: "0.16.3"
-    sonobuoy_archive_sha256sum: "7639b457a5992ff14c25a0e9893a64b1a85386fd88a1934024fbc4c112d0aa07"
+    sonobuoy_version: "0.18.5"
+    sonobuoy_archive_sha256sum: "2d384d965341b0b6d2bf31e7f9aef6af64d32de9fdcf8a4061a6df7928c56757"
   tasks:
     - name: "Download Sonobuoy v{{ sonobuoy_version }} from GitHub"
       get_url:
