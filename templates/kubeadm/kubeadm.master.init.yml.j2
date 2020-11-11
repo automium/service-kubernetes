@@ -83,6 +83,7 @@ controllerManager:
 {% endif %}
     terminated-pod-gc-threshold: "10"
     profiling: "False"
+    port: "10252"
 {% if kubeadm_custom_row.controllerManager is defined and kubeadm_custom_row.controllerManager.extraArgs is defined %}
 {{ kubeadm_custom_row.controllerManager.extraArgs | to_nice_yaml|indent(4, true) }}
 {% endif %}
@@ -98,6 +99,7 @@ controllerManager:
 scheduler:
   extraArgs:
     profiling: "False"
+    port: "10251"
 {% if kubeadm_custom_row.scheduler is defined and kubeadm_custom_row.scheduler.extraArgs is defined %}
 {{ kubeadm_custom_row.scheduler.extraArgs | to_nice_yaml|indent(4, true) }}
 {% endif %}

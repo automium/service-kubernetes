@@ -18,10 +18,10 @@
           - tcp: localhost:6443
             interval: 10s
             timeout: 3s
-          - tcp: localhost:10259
+          - tcp: localhost:10251
             interval: 10s
             timeout: 3s
-          - tcp: localhost:10257
+          - tcp: localhost:10252
             interval: 10s
             timeout: 3s
       {% endif %}
@@ -51,16 +51,16 @@
             timeout: 3s
       - name: "{{ cluster_name }}-kube-scheduler"
         address: "{{ ansible_default_ipv4['address'] }}"
-        port: 10259
+        port: 10251
         check:
-          - tcp: localhost:10259
+          - tcp: localhost:10251
             interval: 10s
             timeout: 3s
       - name: "{{ cluster_name }}-kube-controller-manager"
         address: "{{ ansible_default_ipv4['address'] }}"
-        port: 10257
+        port: 10252
         check:
-          - tcp: localhost:10257
+          - tcp: localhost:10252
             interval: 10s
             timeout: 3s
       - name: "{{ cluster_name }}-kube-cpversion"
