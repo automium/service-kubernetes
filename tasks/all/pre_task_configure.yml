@@ -29,6 +29,25 @@
     add_repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
     filebeat_pakage: filebeat=7.4.2
     filebeat_conf:
+
+      filebeat.inputs:
+      - type: log
+        paths:
+          - /var/log/audit/kube-apiserver-audit.log
+        json.keys_under_root: true
+      
+      processors:
+        - decode_json_fields:
+            fields: ["message"]
+        - timestamp:
+            field: requestReceivedTimestamp
+            layouts:
+              - '2006-01-02T15:04:05Z'
+              - '2006-01-02T15:04:05.999Z'
+            test:
+              - '2019-06-22T16:33:51Z'
+              - '2019-11-18T04:59:51.123Z'
+
       output.elasticsearch:
         hosts:
           - "{{ filebeat_es_url }}"
