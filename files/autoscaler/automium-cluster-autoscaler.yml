@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: cluster-autoscaler
-          image: automium/cluster-autoscaler:v1.14-1
+          image: automium/cluster-autoscaler:v1.14-2
           imagePullPolicy: Always
           args:
             - --logtostderr
