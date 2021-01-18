@@ -48,18 +48,16 @@ def main():
     context.load_verify_locations(etcd_ca)
     context.load_cert_chain(etcd_crt, etcd_key)
     conn = http.client.HTTPSConnection(args.etcd_host, context=context)
-    conn.putrequest('GET', '/v2/members')
-    conn.endheaders()
+    conn.request('POST', '/v3/cluster/member/list')
     response = conn.getresponse().read()
     responseObject = json.loads(response)
     member_list = responseObject
 
-
     for member in member_list['members']:
         member_etcd_host = urlparse(str(member['peerURLs'][0])).hostname
         if (member['name'] == args.cluster_etcd_host and args.cluster_etcd_host != "") or args.cluster_ip_check == member_etcd_host:
-            log.debug(f"add {member['name']} to remove list ( Raft-ID: {member['id']} )")
-            remove_list.append(member['id'])
+            log.debug(f"add {member['name']} to remove list ( Raft-ID: {member['ID']} )")
+            remove_list.append(member['ID'])
         else:
             log.debug(f"not the host im checking, member: {member['name']}, IP {member['peerURLs']} check host: cluster_etcd_host IP: {args.cluster_ip_check}  ")
     
@@ -67,10 +65,9 @@ def main():
     if len(remove_list) == 0:
         gtfo(0, f'Status: 0; Status-Verbose: Host not in cluster; Debug: {remove_list}')
     elif len(remove_list) == 1:
-        remove_url = f"/v2/members/{remove_list[0]}"
-        log.debug(remove_url)
-        conn.putrequest('DELETE', remove_url)
-        conn.endheaders()
+        remove_headers = {'Content-Type': 'application/json'}
+        remove_body = {'ID': f'{remove_list[0]}'}
+        conn.request('POST', '/v3/cluster/member/remove', json.dumps(remove_body), remove_headers)
         response = conn.getresponse()
         if 200 < response.status and 300 > response.status:
             log.info(f"Status: {response.status} Reason: {response.reason}")
