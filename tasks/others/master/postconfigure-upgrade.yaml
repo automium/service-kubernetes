@@ -1,4 +1,7 @@
 ---
+- name: bootstrap | master upgrade | execute pre-kubeadm upgrade tasks
+  include: others/master/postconfigure-upgrade-pretasks.yaml
+
 - name: bootstrap | master upgrade | plan upgrade via kubeadm
   shell: "kubeadm upgrade plan v{{ k8s_version }}"
 
