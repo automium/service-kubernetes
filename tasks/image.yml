@@ -143,7 +143,7 @@
     public: yes
   vars:
     docker_end_status: started
-    docker_version: 5:18.09.9~3-0~ubuntu-bionic
+    docker_version: 5:19.03.14~3-0~ubuntu-bionic
 
 - name: image | download Kubernetes system containers
   command: "kubeadm config images pull --kubernetes-version v{{ k8s_version }}"
