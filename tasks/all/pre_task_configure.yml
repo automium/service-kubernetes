@@ -33,6 +33,7 @@
         - type: log
           paths:
             - /var/log/audit/kube-apiserver-audit.log
+          close_timeout: 5m
           json.keys_under_root: true
       processors:
         - decode_json_fields:
