@@ -30,7 +30,7 @@
   k8s:
     kubeconfig: /etc/kubernetes/admin.conf
     src: /etc/kubernetes/calico.yaml
-  when: calico_cluster_version != calicoctl_version
+  when: calico_cluster_version != calico_version
 
 - name: "others | master | postconfigure | Check if almost one control plane is updated to the desired version ( v{{ k8s_version }} )"
   shell: "python3 {{ role_path }}/files/scripts/vercheck.py '{{ cluster_name }}' 'v{{ k8s_version }}'"
