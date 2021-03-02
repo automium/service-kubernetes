@@ -145,8 +145,16 @@
     docker_end_status: started
     docker_version: 5:18.09.9~3-0~ubuntu-bionic
 
-- name: image | download Kubernetes system containers
+- name: image | download Kubernetes system images
   command: "kubeadm config images pull --kubernetes-version v{{ k8s_version }}"
+
+- name: image | download Calico images
+  command: "docker pull {{ item }}:{{ calico_version }}"
+  with_items:
+  - "calico/cni"
+  - "calico/pod2daemon-flexvol"
+  - "calico/node"
+  - "calico/kube-controllers"
 
 - name: image | install calicoctl tools
   get_url:
