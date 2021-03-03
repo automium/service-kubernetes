@@ -29,14 +29,13 @@
       ]
     state: present
 
-- name: image | install consul.py
+- name: image | install pip deps
   pip:
-    name: "{{ item }}"
+    name:
+      - python-consul==1.0.0
+      - openshift==0.11.2
+      - netaddr
     executable: pip3
-  with_items:
-    - python-consul==1.0.0
-    - netaddr
-    - openshift
 
 - name: image | enable kubelet service
   service:
