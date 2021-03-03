@@ -44,3 +44,5 @@ kubeadm_custom: ""
 #      extraArgs:
 kubeadm_custom_row: ""
 kube_provider: ""
+enable_docker_registry_mirror: "false"
+docker_registry_mirror_address: ""

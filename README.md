@@ -79,6 +79,14 @@ basic auth username for elasticsearch
 
 basic auth password for elasticsearch 
 
+### ENABLE_DOCKER_REGISTRY_MIRROR _optional_
+
+if true, enable the configuration of a Docker registry proxy
+
+### DOCKER_REGISTRY_MIRROR_ADDRESS _optional_
+
+the full URL with `https://` for the registry proxy. valid only if ENABLE_DOCKER_REGISTRY_MIRROR is set to true
+
 ## usage
 
 setup service var:
