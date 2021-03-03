@@ -36,6 +36,12 @@
     mode: 0600
   when: enable_docker_registry_mirror == "true"
 
+- name: configure | restart Docker daemon
+  service:
+    name: docker
+    state: restarted
+  when: enable_docker_registry_mirror == "true"
+
 - name: configure | ensure Docker service is started
   service:
     name: docker
