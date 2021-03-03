@@ -16,6 +16,26 @@
     mode: 0600
   when: (service_provider != "none") and (service_provider != "vcd")
 
+- name: configure | load Docker daemon configuration
+  include_vars:
+    name: docker_daemon_configuration
+    file: /etc/docker/daemon.json
+  when: enable_docker_registry_mirror == "true"
+
+- name: configure | setup the registry mirror in Docker configuration
+  set_fact:
+    updated_docker_daemon_configuration: "{{ docker_daemon_configuration | combine({ \"registry-mirrors\": [\"{{ docker_registry_mirror_address }}\"] }) }}"
+  when: enable_docker_registry_mirror == "true"
+
+- name: configure | write the updated Docker daemon configuration
+  copy:
+    content: "{{ updated_docker_daemon_configuration | to_nice_json }}"
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0600
+  when: enable_docker_registry_mirror == "true"
+
 - name: configure | ensure Docker service is started
   service:
     name: docker
