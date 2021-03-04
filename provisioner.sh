@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CONSUL_SERVICES_CHECK_NUMBER=4
+if [ "$MASTER" == "true" ]; then
+    CONSUL_SERVICES_CHECK_NUMBER=$( echo "$CONSUL_SERVICES_CHECK_NUMBER + 16" | bc )
+fi
