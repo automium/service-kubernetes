@@ -176,7 +176,7 @@
     configure: true
     install: false
     consul_service_status: "started"
-    consul_version: "{{ consul_version }}"
+    consul_version: "{{ service_consul_version }}"
     consul_config_validate: "{{ consul_user_home }}/bin/consul validate -config-format=json %s"
     consul_configs:
       main:
