@@ -102,7 +102,7 @@
     name: automium.consul
     public: yes
   vars:
-    consul_version: 1.6.5
+    consul_version: "{{ consul_version }}"
     configure: false
     install: true
     consul_service_status: "stopped"
