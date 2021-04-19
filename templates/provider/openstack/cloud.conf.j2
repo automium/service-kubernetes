@@ -5,6 +5,8 @@ password="{{ os_password }}"
 region="{{ os_region }}"
 tenant-id="{{ os_tenant_id }}"
 tenant-name="{{ os_tenant_name }}"
+{% if (availability_zones | length) == 1 %}
 
 [BlockStorage]
 ignore-volume-az=True
+{% endif %}
