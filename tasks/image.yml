@@ -169,7 +169,7 @@
     IMAGENAME=$(docker image ls | grep etcd | awk '{print $1":"$2 }')
     # copy etcdctl from container to hosts
 
-    ID=$(docker create $IMAGENAME)
+    ID=$(docker create $IMAGENAME echo)
     docker cp $ID:/usr/local/bin/etcdctl /usr/local/bin/etcdctl
     docker rm -v $ID
 
