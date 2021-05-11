@@ -313,7 +313,7 @@
 
 - name: image | add falco repo
   apt_repository:
-    repo: deb https://dl.bintray.com/falcosecurity/deb stable main
+    repo: deb https://download.falco.org/packages/deb stable main
     state: present
   when:
     - testmode != "true"
