@@ -25,7 +25,9 @@
         "nfs-common",
         "python3-pip",
         "python3-venv",
-        "python3-dev"
+        "python3-dev",
+        "jq",
+        "unzip"
       ]
     state: present
 
@@ -154,6 +156,32 @@
     - "calico/pod2daemon-flexvol"
     - "calico/node"
     - "calico/kube-controllers"
+
+- name: image | download Vault
+  get_url:
+    url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip"
+    dest: /tmp/vault.zip
+
+- name: image | extract Vault binary
+  unarchive:
+    src: /tmp/vault.zip
+    dest: /tmp/
+    remote_src: true
+
+- name: image | install Vault binary
+  copy:
+    src: /tmp/vault
+    dest: /usr/local/bin/vault
+    remote_src: true
+    mode: "0755"
+
+- name: image | cleanup Vault downloaded files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/vault.zip
+    - /tmp/vault
 
 - name: image | install calicoctl tools
   get_url:
