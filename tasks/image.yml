@@ -17,6 +17,7 @@
 - name: image | add Gluster repository in APT
   apt_repository:
     repo: "{{ glusterfs_ppa_repo }}"
+    codename: "{{ ansible_distribution_release }}"
     state: present
 
 - name: image | install kubernetes binaries
