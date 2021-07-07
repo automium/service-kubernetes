@@ -48,3 +48,4 @@ kube_provider: ""
 enable_docker_registry_mirror: "false"
 docker_registry_mirror_address: ""
 vault_version: 1.6.0
+glusterfs_ppa_repo: "ppa:gluster/glusterfs-9"

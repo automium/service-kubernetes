@@ -14,6 +14,11 @@
     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
     state: present
 
+- name: image | add Gluster repository in APT
+  apt_repository:
+    repo: "{{ glusterfs_ppa_repo }}"
+    state: present
+
 - name: image | install kubernetes binaries
   apt:
     name:
